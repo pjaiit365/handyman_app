@@ -80,7 +80,7 @@ The key objectives of this project are as follows:
  
  ● To allow customers to pay for services through the app.
 
-  Professional
+  	Professional
  ● The app will provide an easy-to-use but rigorous registration process for handymen to create their profiles and showcase their skills and experience.
  
  ● Handymen will be able to search for jobs based on their skills and location, with the ability to filter jobs by distance, pay rate, and job type.
