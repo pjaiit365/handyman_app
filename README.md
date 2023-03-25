@@ -22,7 +22,7 @@ IDE : Android Studio
 
 ### ABSTRACT
 
-Are you tired of the stressful and cumbersome graduation process? Look no further than G-to-G: Graduands to Graduates! This innovative project automates the graduation process for students, making it more efficient and less stressful. With features such as a personalized scheduler, online payment and booking options, and a customizable profile, G-to-G streamlines the graduation experience for both students and staff. Say goodbye to wasted university resources, missed deadlines, and difficulty finding photographers - G-to-G has got you covered.
+Are you tired of struggling to find reliable and professional handyman services? Are you a handyman looking to expand your business and reach a wider audience? HomeCareX is the solution you've been waiting for! HomeCareX is a cross-platform mobile application developed using Flutter Framework with Dart as its programming language that provides customers with a user-friendly platform to search for and book a variety of handyman services. With features such as a search bar, booking system, payment gateway, and rating and review system, HomeCareX makes finding and booking handyman services easier and more efficient than ever before. For handyman service providers, HomeCareX offers an easy-to-use registration process, the ability to search for jobs based on skills and location, a simple and efficient job application process, and a review and rating system to improve reputation. Don't wait any longer to simplify your life and grow your business with HomeCareX!
 
 ### TITLE OF PROJECT
 
@@ -47,6 +47,16 @@ The app will have features such as a search bar for customers to search for serv
 Overall, the proposed handyman service mobile app for Flutter will be a game-changer in the handyman services industry, providing a seamless platform for customers and service providers to connect and grow their businesses.
 
 ### LITERATURE REVIEW
+
+The demand for handyman services has been on the rise in recent years, as people have less time to take care of home maintenance themselves. Many people have a hard time finding trustworthy and skilled handymen to do the work for them, which has created a need for a comprehensive mobile app that can connect customers with reliable service providers.
+
+Various studies have shown that mobile apps are becoming increasingly popular for booking and paying for services, including home maintenance services. According to a report by comScore, mobile devices account for 60% of time spent on digital media, with mobile apps accounting for the majority of that time. This highlights the potential for a mobile app to provide a seamless and convenient platform for customers to find and book handyman services.
+
+Research has also shown that user reviews and ratings are critical for building trust and confidence in the quality of services provided by handymen. A study by Nielsen found that 92% of customers trust recommendations from people they know, and 70% trust reviews from strangers. This underscores the importance of a rating and review system in the proposed HomeCareX app, which can help customers make informed decisions about the quality of service providers.
+
+In terms of mobile app development, cross-platform development using Flutter has emerged as a popular choice among developers due to its ease of use, flexibility, and ability to build high-performance apps. Flutter has a rich set of pre-built widgets and a hot-reload feature that makes it easy to develop and test code, reducing development time and costs.
+
+Overall, the literature suggests that a mobile app for handyman services like HomeCareX can provide a convenient and efficient platform for customers to find and book reliable services. The use of cross-platform development tools like Flutter can help reduce development costs and improve app performance, while a rating and review system can build trust and confidence among customers.
 
 ### AIM OF PROJECT
 
