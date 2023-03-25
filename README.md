@@ -69,22 +69,31 @@ The key objectives of this project are as follows:
 
 	Customer
  ● To develop a user-friendly and intuitive mobile app for customers to book handyman services.
+ 
  ● To provide customers with a range of handyman services that can be booked through the app.
+ 
  ● To allow customers to browse handyman service providers and their profiles before booking.
+ 
  ● To ensure a seamless booking process and scheduling of appointments.
+ 
  ● To provide customers with real-time updates on their bookings, including the status of the job and estimated completion time.
+ 
  ● To allow customers to pay for services through the app.
 
   Professional
  ● The app will provide an easy-to-use but rigorous registration process for handymen to create their profiles and showcase their skills and experience.
+ 
  ● Handymen will be able to search for jobs based on their skills and location, with the ability to filter jobs by distance, pay rate, and job type.
+ 
  ● The app will provide a simple and efficient job application process for handymen, allowing them to easily apply for jobs that match their skills and experience.
+ 
  ● Handymen will be able to accept or reject job offers based on their availability and interest and can communicate with users to negotiate job details.
+ 
  ● The app will provide in-app navigation to guide handymen to the job location, ensuring that they arrive on time and can start the job efficiently.
+ 
  ● Once the job is completed, handymen can mark the job as finished and request payment from the user, with a review and rating system to improve their reputation.
+ 
  ● Handymen can view their job history and analytics in the app, including earnings and ratings, to help them track their progress and improve their services.
-
-
 
 ### METHODOLOGY
 
