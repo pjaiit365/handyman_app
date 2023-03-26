@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
+import 'package:handyman_app/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +18,9 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Inter',
-      ),
+          appBarTheme: AppBarTheme(color: white),
+          fontFamily: 'Inter',
+          backgroundColor: white),
     );
   }
 }

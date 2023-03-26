@@ -64,7 +64,7 @@ class CategoryItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'By:' + 'Harry Garret',
+                      'By: ' + 'Harry Garret',
                       style: TextStyle(
                         fontSize: 14,
                         color: textGreyColor,

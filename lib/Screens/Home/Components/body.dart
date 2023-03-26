@@ -69,7 +69,7 @@ class Body extends StatelessWidget {
               Container(
                 height: size.height * 40 / 820.5714,
                 width: size.width * 2 / 411.4285,
-                color: chatBlue,
+                color: grey,
               ),
               HomeButtons(press: () {}, title: 'Profile'),
             ],

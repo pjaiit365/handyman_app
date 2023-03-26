@@ -14,7 +14,7 @@ class HorizontalDivider extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-          color: chatBlue,
+          color: sectionColor,
           height: 2,
           width: size.width * 0.277,
         ),
@@ -24,7 +24,7 @@ class HorizontalDivider extends StatelessWidget {
               color: black, fontSize: 12, fontWeight: FontWeight.w700),
         ),
         Container(
-          color: chatBlue,
+          color: sectionColor,
           height: 2,
           width: size.width * 0.277,
         )
