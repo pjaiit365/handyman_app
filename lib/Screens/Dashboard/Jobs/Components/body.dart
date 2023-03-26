@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:handyman_app/constants.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:handyman_app/Components/job_category_item.dart';
 
 import '../../../../Components/category_item.dart';
 import '../../../../Components/dashboard_tab.dart';
+import '../../../../constants.dart';
 
 class Body extends StatefulWidget {
-  const Body({
-    Key? key,
-  }) : super(key: key);
+  const Body({Key? key}) : super(key: key);
 
   @override
   State<Body> createState() => _BodyState();
@@ -48,74 +47,6 @@ class _BodyState extends State<Body> {
                       ),
                     )
                   ],
-                ),
-              ),
-            ),
-            SizedBox(height: screenHeight * 30),
-            Center(
-              child: Container(
-                height: screenHeight * 150,
-                width: screenWidth * 305,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xffEEFFF2),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 20.0, top: screenHeight * 15),
-                  child: Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: screenHeight * 15),
-                          Text(
-                            '25% OFF',
-                            style: TextStyle(
-                                color: black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          SizedBox(height: screenHeight * 6),
-                          Text(
-                            'On the first cleaning service',
-                            style: TextStyle(
-                                color: black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(height: screenHeight * 10),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              height: 41 * screenHeight,
-                              width: screenWidth * 134,
-                              decoration: BoxDecoration(
-                                color: Color(0xff48C945),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Book Now!',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16,
-                                      color: white),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      SvgPicture.asset(
-                        'assets/icons/repair_illustration.svg',
-                        height: 90 * screenHeight,
-                        width: 94 * screenWidth,
-                        // fit: BoxFit.fill,
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -161,9 +92,9 @@ class _BodyState extends State<Body> {
             ListView.separated(
               physics: BouncingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 5,
+              itemCount: 9,
               itemBuilder: (context, index) {
-                return CategoryItem();
+                return JobCategoryItem(status: statusOptions[index]);
               },
               separatorBuilder: (context, index) {
                 return SizedBox(height: screenHeight * 20);

@@ -17,3 +17,8 @@ Color chatTimeColor = Color(0xffA7A4A4);
 Color dividerColor = Color(0xff929292);
 double screenWidth = 411.42857142857144 / 390;
 double screenHeight = 820.5714285714286 / 844;
+
+final bool status = true;
+bool call = true;
+
+List statusOptions = [false, true, true, false, false, false, true, true, true];

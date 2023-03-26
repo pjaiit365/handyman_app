@@ -10,15 +10,13 @@ class DefaultBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      highlightColor: tabLight,
       onPressed: () {
         Navigator.pop(context);
       },
       icon: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Icon(
-          Icons.arrow_back_ios,
-          color: primary,
-        ),
+        padding: EdgeInsets.only(left: screenWidth * 12.0),
+        child: Image.asset('assets/icons/back_button.png'),
       ),
     );
   }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
+import 'package:handyman_app/Screens/Job%20Deatils/job_details_screen.dart';
 
 import '../constants.dart';
 
-class CategoryItem extends StatelessWidget {
-  const CategoryItem({
-    Key? key,
-  }) : super(key: key);
+class JobCategoryItem extends StatelessWidget {
+  final bool status;
+  const JobCategoryItem({Key? key, required this.status}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class CategoryItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HandymanDetailsScreen(),
+              builder: (context) => JobDetailsScreen(),
             ),
           );
         },
@@ -77,17 +76,35 @@ class CategoryItem extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(
-                              top: screenHeight * 2.0, right: 3 * screenWidth),
-                          child: Image.asset('assets/icons/gold_star.png'),
+                              top: screenHeight * 2.0, right: 5 * screenWidth),
+                          child: status == true
+                              ? Image.asset('assets/icons/green_valid.png')
+                              : Image.asset('assets/icons/red_invalid.png'),
                         ),
-                        Text(
-                          '(4.9)',
-                          style: TextStyle(
-                              color: primary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16),
-                        ),
-                        SizedBox(width: screenWidth * 100),
+                        status == true
+                            ? Padding(
+                                padding:
+                                    EdgeInsets.only(top: screenHeight * 3.0),
+                                child: Text(
+                                  'Valid',
+                                  style: TextStyle(
+                                      color: green,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16),
+                                ),
+                              )
+                            : Padding(
+                                padding:
+                                    EdgeInsets.only(top: screenHeight * 2.0),
+                                child: Text(
+                                  'Invalid',
+                                  style: TextStyle(
+                                      color: red,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16),
+                                ),
+                              ),
+                        SizedBox(width: screenWidth * 80),
                         Text(
                           '\$' + '15/hr',
                           style: TextStyle(

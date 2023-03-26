@@ -19,7 +19,7 @@ class _HandymanDashboardScreenState extends State<HandymanDashboardScreen> {
         leading: Padding(
             padding: EdgeInsets.only(left: screenWidth * 14.0),
             child: Image.asset(
-              'assets/images/menu.png',
+              'assets/icons/menu.png',
               color: primary,
             )),
         elevation: 0.0,
