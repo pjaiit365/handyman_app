@@ -13,9 +13,14 @@ class ContactPersonnelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      splashColor: (call == true)
+          ? green.withOpacity(0.5)
+          : Color(0xff361BDE).withOpacity(0.3),
+      highlightColor: Colors.transparent,
       onTap: press,
-      child: Container(
+      borderRadius: BorderRadius.circular(7),
+      child: Ink(
         height: 53 * screenHeight,
         width: 168.05 * screenWidth,
         decoration: BoxDecoration(

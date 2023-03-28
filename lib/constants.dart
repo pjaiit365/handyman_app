@@ -18,6 +18,7 @@ Color chatRed = Color(0xffFF1AA3);
 Color textGreyColor = Color(0xff9BA1A9);
 Color chatTimeColor = Color(0xffA7A4A4);
 Color dividerColor = Color(0xff929292);
+Color ratingTextColor = Color(0xff666060);
 
 double screenWidth = width / 390;
 double screenHeight = height / 844;
@@ -39,6 +40,20 @@ List<String> servicesList = [
   'Grass Cutting'
 ];
 
+List<String> ratingNames = ['Khufra', 'Eben', 'Clay'];
+List<String> ratingTimePosted = ['Just now', '2 days ago', '1 week ago'];
+List<String> ratingComment = [
+  'Professional and hard-working painter. 👌',
+  'Neat work done. Highly recommended. 👍',
+  'Man used emulsion paint when I said I want oil paint. Bad choice.💩🚮'
+];
+List<bool> isCommentLiked = [true, false, true];
+
 List<double> ratingsWidth = [140, 100, 35, 12, 0];
 
 List statusOptions = [false, true, true, false, false, false, true, true, true];
+
+late int starsGiven;
+bool isGridViewSelected = true;
+bool isSingleViewSelected = false;
+List ratingStars = [4, 5, 1];
