@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Chat/chat_alternate_screen.dart';
 import 'package:handyman_app/Screens/Chat/chat_screen.dart';
 import 'package:handyman_app/constants.dart';
 import '../../../Components/contact_personnel_button.dart';
@@ -30,7 +31,14 @@ class Body extends StatelessWidget {
             children: <Widget>[
               ContactPersonnelButton(
                 call: true,
-                press: () {},
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatAlternateScreen(),
+                    ),
+                  );
+                },
               ),
               ContactPersonnelButton(
                 call: false,

@@ -97,6 +97,9 @@ flutter:
     - family: Habibi
       fonts:
         - asset: fonts/Habibi.ttf
+    - family: Sacramento
+      fonts:
+        - asset: fonts/Sacramento.ttf
 
   #
   # For details regarding fonts from package dependencies,

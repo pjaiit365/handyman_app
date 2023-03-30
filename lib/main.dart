@@ -18,7 +18,10 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          appBarTheme: AppBarTheme(color: white),
+          appBarTheme: AppBarTheme(
+            color: white,
+            elevation: 0.0,
+          ),
           fontFamily: 'Inter',
           backgroundColor: white),
     );

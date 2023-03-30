@@ -15,6 +15,7 @@ Color sectionColor = Color(0xffF5F7F9);
 Color grey = Color(0xffD9D9D9);
 Color chatBlue = Color(0xff0076F7);
 Color chatRed = Color(0xffFF1AA3);
+Color chatGrey = Color(0xffF2F4F5);
 Color textGreyColor = Color(0xff9BA1A9);
 Color chatTimeColor = Color(0xffA7A4A4);
 Color dividerColor = Color(0xff929292);
