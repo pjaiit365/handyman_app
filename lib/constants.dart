@@ -4,7 +4,7 @@ late double width;
 late double height;
 
 Color white = Color(0xffffffff);
-Color primary = Color(0xff32B5BD);
+Color primary = const Color(0xff32B5BD);
 Color tabLight = Color(0xffFAFAFA);
 Color red = Color(0xffF53939);
 Color green = Color(0xff1EDB53);
@@ -18,6 +18,7 @@ Color chatRed = Color(0xffFF1AA3);
 Color chatGrey = Color(0xffF2F4F5);
 Color textGreyColor = Color(0xff9BA1A9);
 Color chatTimeColor = Color(0xffA7A4A4);
+Color appointmentTimeColor = Color(0xffA7A5A5);
 Color dividerColor = Color(0xff929292);
 Color ratingTextColor = Color(0xff666060);
 
@@ -58,3 +59,33 @@ late int starsGiven;
 bool isGridViewSelected = true;
 bool isSingleViewSelected = false;
 List ratingStars = [4, 5, 1];
+
+List<String> daysList = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
+List<String> dateList = ['11', '12', '13', '14', '15', '16', '17'];
+List<String> timeList = [
+  '8:00 AM',
+  '10:00 AM',
+  '12:30 PM',
+  '3:00 PM',
+  '5:00 PM'
+];
+bool isDateSelected = false;
+bool isAddressBarClicked = false;
+bool isTimeSelected = false;
+bool isDashboardTabSelected = false;
+bool isSummaryClicked = false;
+
+List<String> addressTypesDD = [
+  'Home',
+  'Office',
+  'Hotel / Hostel',
+  'Warehouse',
+];
+
+List<String> dashBoardTabList = [
+  'Painter',
+  'Electrician',
+  'Carpenter',
+  'Gardener',
+  'Gardener on the rollll',
+];

@@ -3,18 +3,21 @@ import 'package:handyman_app/Screens/Chat/chat_alternate_screen.dart';
 import 'package:handyman_app/Screens/Chat/chat_screen.dart';
 import 'package:handyman_app/constants.dart';
 import '../../../Components/contact_personnel_button.dart';
-import '../../../Components/grid_media.dart';
-import '../../../Components/media_view_type_tab.dart';
+
 import '../../../Components/personnel_details_tab.dart';
 import '../../../Components/portfolio_tab.dart';
 import '../../../Components/reviews_tab.dart';
 import '../../../Components/about_tab.dart';
 import '../../../Components/section_tabs.dart';
-import '../../../Components/single_view.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
 
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

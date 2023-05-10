@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Components/personnel_rating_summary.dart';
+import 'package:handyman_app/Screens/Appointment/appointment_screen.dart';
 
 import '../constants.dart';
 
@@ -47,32 +49,7 @@ class PersonnelDetailsTab extends StatelessWidget {
                       fontSize: 20, fontWeight: FontWeight.w700, color: black),
                 ),
                 SizedBox(height: 11 * screenHeight),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: screenHeight * 2.0, right: 3 * screenWidth),
-                      child: Image.asset('assets/icons/gold_star.png'),
-                    ),
-                    Text(
-                      '(4.9)',
-                      style: TextStyle(
-                          color: primary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16),
-                    ),
-                    SizedBox(width: 4 * screenWidth),
-                    Text(
-                      'rating(s)',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: black),
-                    ),
-                  ],
-                ),
+                PersonnelRatingSummary(),
                 SizedBox(height: screenHeight * 11),
                 Text(
                   '149.5 km',
@@ -111,7 +88,14 @@ class PersonnelDetailsTab extends StatelessWidget {
                   ),
                   SizedBox(height: 15 * screenHeight),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AppointmentScreen(),
+                        ),
+                      );
+                    },
                     child: Container(
                       height: 47 * screenHeight,
                       width: 109 * screenWidth,

@@ -71,22 +71,21 @@ class _BodyState extends State<Body> {
                 Image.asset('assets/icons/sort.png'),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DashboardTab(
-                    backgroundColor: primary.withOpacity(0.81),
-                    textColor: white,
-                    text: 'Painter'),
-                DashboardTab(
-                    backgroundColor: tabLight,
-                    textColor: Colors.black,
-                    text: 'Electrician'),
-                DashboardTab(
-                    backgroundColor: tabLight,
-                    textColor: Colors.black,
-                    text: 'Carpenter')
-              ],
+            SizedBox(
+              height: 48 * screenHeight,
+              child: ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 10 * screenWidth),
+                itemCount: dashBoardTabList.length,
+                shrinkWrap: true,
+                // physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => DashboardTab(
+                  text: dashBoardTabList[index],
+                ),
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: screenWidth * 15);
+                },
+              ),
             ),
             SizedBox(height: screenHeight * 25),
             ListView.separated(

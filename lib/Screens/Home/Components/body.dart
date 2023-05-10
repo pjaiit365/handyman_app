@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
+import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
+import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
 import 'package:handyman_app/constants.dart';
 
 import '../../../Components/home_buttons.dart';
@@ -70,7 +72,16 @@ class Body extends StatelessWidget {
                 width: size.width * 2 / 411.4285,
                 color: grey,
               ),
-              HomeButtons(press: () {}, title: 'Profile'),
+              HomeButtons(
+                  press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentOptionsScreen(),
+                      ),
+                    );
+                  },
+                  title: 'Profile'),
             ],
           ),
         ],

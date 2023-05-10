@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class SectionTabs extends StatelessWidget {
+class SectionTabs extends StatefulWidget {
   const SectionTabs({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<SectionTabs> createState() => _SectionTabsState();
+}
+
+class _SectionTabsState extends State<SectionTabs> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -17,13 +22,15 @@ class SectionTabs extends StatelessWidget {
           highlightColor: tabLight,
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            aboutSelected = !aboutSelected;
-            if (aboutSelected == true) {
-              reviewsSelected = false;
-              portfolioSelected = false;
-            }
-            if (reviewsSelected == false && portfolioSelected == false)
-              aboutSelected = true;
+            setState(() {
+              aboutSelected = !aboutSelected;
+              if (aboutSelected == true) {
+                reviewsSelected = false;
+                portfolioSelected = false;
+              }
+              if (reviewsSelected == false && portfolioSelected == false)
+                aboutSelected = true;
+            });
           },
           child: Container(
             height: 35 * screenHeight,
@@ -56,13 +63,15 @@ class SectionTabs extends StatelessWidget {
           highlightColor: tabLight,
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            reviewsSelected = !reviewsSelected;
-            if (reviewsSelected == true) {
-              aboutSelected = false;
-              portfolioSelected = false;
-            }
-            if (aboutSelected == false && portfolioSelected == false)
-              reviewsSelected = true;
+            setState(() {
+              reviewsSelected = !reviewsSelected;
+              if (reviewsSelected == true) {
+                aboutSelected = false;
+                portfolioSelected = false;
+              }
+              if (aboutSelected == false && portfolioSelected == false)
+                reviewsSelected = true;
+            });
           },
           child: Container(
             height: 35 * screenHeight,
@@ -95,13 +104,15 @@ class SectionTabs extends StatelessWidget {
           highlightColor: tabLight,
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            portfolioSelected = !portfolioSelected;
-            if (portfolioSelected == true) {
-              reviewsSelected = false;
-              aboutSelected = false;
-            }
-            if (reviewsSelected == false && aboutSelected == false)
-              portfolioSelected = true;
+            setState(() {
+              portfolioSelected = !portfolioSelected;
+              if (portfolioSelected == true) {
+                reviewsSelected = false;
+                aboutSelected = false;
+              }
+              if (reviewsSelected == false && aboutSelected == false)
+                portfolioSelected = true;
+            });
           },
           child: Container(
             height: 35 * screenHeight,

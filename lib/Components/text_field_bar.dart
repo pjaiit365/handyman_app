@@ -54,6 +54,9 @@ class TextfieldBar extends StatelessWidget {
                     enableSuggestions: true,
                     clipBehavior: Clip.antiAlias,
                     cursorColor: black.withOpacity(0.6),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    minLines: 1,
                     decoration: InputDecoration(
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,

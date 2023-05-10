@@ -25,32 +25,7 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(
-              child: Container(
-                height: screenHeight * 53,
-                width: 355 * screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xffEBF6F9),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(width: screenWidth * 20),
-                    Image.asset('assets/icons/search.png'),
-                    SizedBox(width: screenWidth * 20),
-                    Text(
-                      'Search personnel: painters,etc.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            SearchBar(hintText: 'Search personnel: painters,etc.'),
             SizedBox(height: screenHeight * 30),
             Center(
               child: Container(
@@ -140,26 +115,26 @@ class _BodyState extends State<Body> {
                 Image.asset('assets/icons/sort.png'),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DashboardTab(
-                    backgroundColor: primary.withOpacity(0.81),
-                    textColor: white,
-                    text: 'Painter'),
-                DashboardTab(
-                    backgroundColor: tabLight,
-                    textColor: Colors.black,
-                    text: 'Electrician'),
-                DashboardTab(
-                    backgroundColor: tabLight,
-                    textColor: Colors.black,
-                    text: 'Carpenter')
-              ],
+            SizedBox(
+              height: 48 * screenHeight,
+              child: ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 10 * screenWidth),
+
+                itemCount: dashBoardTabList.length,
+                shrinkWrap: true,
+                // physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => DashboardTab(
+                  text: dashBoardTabList[index],
+                ),
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: screenWidth * 15);
+                },
+              ),
             ),
             SizedBox(height: screenHeight * 25),
             ListView.separated(
-              physics: BouncingScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: 5,
               itemBuilder: (context, index) {
@@ -169,6 +144,44 @@ class _BodyState extends State<Body> {
                 return SizedBox(height: screenHeight * 20);
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  final String hintText;
+  const SearchBar({
+    Key? key,
+    required this.hintText,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        height: screenHeight * 53,
+        width: 355 * screenWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color(0xffEBF6F9),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: screenWidth * 20),
+            Image.asset('assets/icons/search.png'),
+            SizedBox(width: screenWidth * 20),
+            Text(
+              hintText,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w300,
+              ),
+            )
           ],
         ),
       ),

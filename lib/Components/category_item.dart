@@ -34,14 +34,16 @@ class CategoryItem extends StatelessWidget {
               Container(
                 height: 123 * screenHeight,
                 width: 115 * screenWidth,
+                clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage(
-                        'assets/images/profile_pic.jpeg',
-                      ),
-                    )),
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      'assets/images/profile_pic.jpeg',
+                    ),
+                  ),
+                ),
               ),
               VerticalDivider(thickness: 3.5, color: Colors.white),
               Padding(
@@ -73,7 +75,7 @@ class CategoryItem extends StatelessWidget {
                     SizedBox(height: screenHeight * 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(

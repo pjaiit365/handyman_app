@@ -26,8 +26,8 @@ class _JobsDashboardScreenState extends State<JobsDashboardScreen> {
         actions: [
           Container(
             margin: EdgeInsets.only(right: screenWidth * 20),
-            height: screenHeight * 50,
-            width: screenWidth * 50,
+            height: screenHeight * 40,
+            width: screenWidth * 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
