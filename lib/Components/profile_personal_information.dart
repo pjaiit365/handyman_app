@@ -39,13 +39,20 @@ class ProfilePersonalInformation extends StatelessWidget {
               ProfileItem(
                 title: 'Name',
                 hintText: 'Enter name here...',
+                keyboardType: TextInputType.name,
               ),
               SizedBox(height: 20 * screenHeight),
-              ProfileItem(title: 'Email', hintText: 'Enter email here...'),
+              ProfileItem(
+                title: 'Email',
+                hintText: 'Enter email here...',
+                keyboardType: TextInputType.emailAddress,
+              ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
-                  title: 'Mobile Number',
-                  hintText: 'Enter contact number here...')
+                title: 'Mobile Number',
+                hintText: 'Enter contact number here...',
+                keyboardType: TextInputType.number,
+              )
             ],
           ),
         ),

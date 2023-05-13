@@ -89,3 +89,66 @@ List<String> dashBoardTabList = [
   'Gardener',
   'Gardener on the rollll',
 ];
+
+final serviceCategoryList = [
+  'Plumbing',
+  'Painting',
+  'Electrical Repairs',
+  'Gardeners'
+];
+List selectedServiceProvList = [];
+
+final servicesProvidedList = [
+  'Furniture Painting',
+  'Building Painting',
+  'Room Painting',
+];
+List selectedChargeRateList = [];
+
+final expertiseList = [
+  'Beginner (0 - 1 year)',
+  'Amateur (1 - 3 years)',
+  'Professional (3 - 6 years)',
+  'Expert (6+ years)',
+];
+List selectedExpertiseList = [];
+
+final momoListOptions = [
+  'MTN Mobile Money',
+  'Vodafone Cash',
+  'Airtel/Tigo Money',
+];
+List selectedMomoOptions = [];
+
+final chargePerList = ['N/A', 'Hour', '6 hours', '12 hours', 'Day'];
+final regionsList = [
+  'N/A',
+  'Volta Region',
+  'Greater Accra Region',
+  'Central Region',
+  'Western Region',
+  'Eastern Region',
+  'Savanna Region',
+  'Ashanti Region',
+  'Northern Region',
+  'Upper-West Region',
+  'North-East Region',
+  'Bono-East Region',
+  'Brong Ahafo Region',
+  'Ahafo Region',
+  'Oti Region',
+  'Upper-East Region',
+  'Northern Region',
+];
+
+String dropdownvalue = 'N/A';
+List selectedServiceCatList = [];
+
+int priceIndex = 0;
+
+late String regionValue;
+
+List addressStreetName = [];
+List addressTownName = [];
+List addressRegionName = [];
+List addressHouseNum = [];

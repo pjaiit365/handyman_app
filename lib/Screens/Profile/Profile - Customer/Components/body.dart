@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Components/profile_item.dart';
-import 'package:handyman_app/Components/profile_service_information.dart';
-import 'package:handyman_app/Components/saved_addresses.dart';
 import 'package:handyman_app/constants.dart';
-
-import '../../../../Components/profile_item_dropdown.dart';
 import '../../../../Components/profile_location_information.dart';
 import '../../../../Components/profile_payment_information.dart';
 import '../../../../Components/profile_personal_information.dart';
-import '../../../../Components/profile_work_cert_information.dart';
 
 class Body extends StatefulWidget {
   const Body({
@@ -69,10 +63,6 @@ class _BodyState extends State<Body> {
             ),
             SizedBox(height: 25 * screenHeight),
             ProfilePersonalInformation(),
-            SizedBox(height: 25 * screenHeight),
-            ProfileServiceInformation(),
-            SizedBox(height: 25 * screenHeight),
-            ProfileWorkExpInformation(),
             SizedBox(height: 25 * screenHeight),
             ProfilePaymentInformation(),
             SizedBox(height: 25 * screenHeight),

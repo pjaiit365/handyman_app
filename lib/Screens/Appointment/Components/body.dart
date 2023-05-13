@@ -29,6 +29,7 @@ class _BodyState extends State<Body> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.all(10),
           backgroundColor: Colors.transparent,
           scrollable: true,
           content: isSummaryClicked
@@ -49,8 +50,8 @@ class _BodyState extends State<Body> {
                         );
                       },
                       child: Container(
-                        height: 44 * screenHeight,
-                        width: 315 * screenWidth,
+                        height: 49 * screenHeight,
+                        width: 312 * screenWidth,
                         decoration: BoxDecoration(
                             color: primary,
                             borderRadius: BorderRadius.circular(5),

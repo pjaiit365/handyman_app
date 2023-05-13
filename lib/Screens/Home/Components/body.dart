@@ -3,6 +3,7 @@ import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_scree
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
 import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
+import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
 import 'package:handyman_app/constants.dart';
 
 import '../../../Components/home_buttons.dart';
@@ -77,7 +78,7 @@ class Body extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PaymentOptionsScreen(),
+                        builder: (context) => HandymanProfileScreen(),
                       ),
                     );
                   },
