@@ -55,7 +55,7 @@ class ProfileServiceInformation extends StatelessWidget {
               ),
               SizedBox(height: 20 * screenHeight),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ProfileItem(
@@ -90,15 +90,17 @@ class ProfileServiceInformation extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 70 * screenWidth),
-                  ChargePerItem(),
+                  ChargePerItem(
+                    title: 'Charge per',
+                    listName: chargePerList,
+                  ),
                 ],
               ),
               SizedBox(height: 20 * screenHeight),
-              ProfileItemDropDown(
-                selectedOptions: selectedExpertiseList,
+              ChargePerItem(
                 title: 'Level of Expertise',
-                hintText: 'Choose only one...',
                 listName: expertiseList,
+                width: 310,
               ),
             ],
           ),

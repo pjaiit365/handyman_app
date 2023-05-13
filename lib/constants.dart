@@ -106,6 +106,7 @@ final servicesProvidedList = [
 List selectedChargeRateList = [];
 
 final expertiseList = [
+  'N/A',
   'Beginner (0 - 1 year)',
   'Amateur (1 - 3 years)',
   'Professional (3 - 6 years)',
@@ -152,3 +153,6 @@ List addressStreetName = [];
 List addressTownName = [];
 List addressRegionName = [];
 List addressHouseNum = [];
+
+bool isJobAboutClicked = true;
+bool isJobPortfolioClicked = false;

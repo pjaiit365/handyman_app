@@ -7,7 +7,9 @@ import 'package:handyman_app/Screens/Chat/chat_alternate_screen.dart';
 import '../../constants.dart';
 
 class AppointmentScreen extends StatelessWidget {
-  const AppointmentScreen({Key? key}) : super(key: key);
+  const AppointmentScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

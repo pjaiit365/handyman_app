@@ -28,7 +28,7 @@ class PersonnelDetailsTab extends StatelessWidget {
             Center(
               child: Container(
                 height: 97 * screenHeight,
-                width: 87.65 * screenWidth,
+                width: 86 * screenWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(

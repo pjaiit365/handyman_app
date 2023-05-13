@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../Components/drawer_header.dart';
 import '../../../constants.dart';
+import '../../Home/home_screen.dart';
+import '../../Notifications/notification_screen.dart';
+import '../Handymen/handymen_dashboard_screen.dart';
 import '../Jobs/Components/body.dart';
+import 'Components/handyman_drawer.dart';
 
 class JobsDashboardScreen extends StatefulWidget {
   const JobsDashboardScreen({Key? key}) : super(key: key);
@@ -15,12 +20,23 @@ class _JobsDashboardScreenState extends State<JobsDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-            padding: EdgeInsets.only(left: screenWidth * 14.0),
-            child: Image.asset(
-              'assets/icons/menu.png',
-              color: primary,
-            )),
+        leading: Builder(
+          builder: (context) => InkWell(
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+            },
+            borderRadius: BorderRadius.circular(15),
+            splashColor: sectionColor,
+            child: Center(
+              child: Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 14.0),
+                  child: Image.asset(
+                    'assets/icons/menu.png',
+                    color: primary,
+                  )),
+            ),
+          ),
+        ),
         elevation: 0.0,
         backgroundColor: white,
         actions: [
@@ -39,6 +55,7 @@ class _JobsDashboardScreenState extends State<JobsDashboardScreen> {
       ),
       backgroundColor: Colors.white,
       body: Body(),
+      drawer: HandymanDrawer(),
     );
   }
 }

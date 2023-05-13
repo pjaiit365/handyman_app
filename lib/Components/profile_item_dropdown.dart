@@ -152,7 +152,12 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
 }
 
 class ChargePerItem extends StatefulWidget {
-  const ChargePerItem({Key? key}) : super(key: key);
+  final String title;
+  num width;
+  List<String> listName;
+  ChargePerItem(
+      {Key? key, required this.title, this.width = 117, required this.listName})
+      : super(key: key);
 
   @override
   State<ChargePerItem> createState() => _ChargePerItemState();
@@ -168,7 +173,7 @@ class _ChargePerItemState extends State<ChargePerItem> {
         Padding(
           padding: EdgeInsets.only(left: screenWidth * 11.0),
           child: Text(
-            'Charge per',
+            widget.title,
             style: TextStyle(
               color: black,
               fontSize: 17,
@@ -181,7 +186,7 @@ class _ChargePerItemState extends State<ChargePerItem> {
           buttonStyleData: ButtonStyleData(
             elevation: 0,
             height: 49 * screenHeight,
-            width: 117 * screenWidth,
+            width: widget.width * screenWidth,
             decoration: BoxDecoration(
               color: white,
               borderRadius: BorderRadius.circular(7),
@@ -210,7 +215,7 @@ class _ChargePerItemState extends State<ChargePerItem> {
                   fontSize: 16, color: black, fontWeight: FontWeight.w200),
             ),
           ),
-          items: chargePerList.map((String serviceCategoryList) {
+          items: widget.listName.map((String serviceCategoryList) {
             return DropdownMenuItem(
               child: Text(serviceCategoryList),
               value: serviceCategoryList,
