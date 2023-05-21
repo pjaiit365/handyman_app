@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
 
 import '../../../../Components/drawer_header.dart';
@@ -107,7 +108,7 @@ class HandymanDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'My Jobs',
                     icon: Icons.work_history_rounded,
-                    screen: NotificationScreen(),
+                    screen: MyJobsScreen(),
                   ),
                   SizedBox(height: 27 * screenHeight),
                   Center(

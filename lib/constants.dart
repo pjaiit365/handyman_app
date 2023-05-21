@@ -115,6 +115,7 @@ final expertiseList = [
 List selectedExpertiseList = [];
 
 final momoListOptions = [
+  'N/A',
   'MTN Mobile Money',
   'Vodafone Cash',
   'Airtel/Tigo Money',
@@ -139,7 +140,14 @@ final regionsList = [
   'Ahafo Region',
   'Oti Region',
   'Upper-East Region',
-  'Northern Region',
+];
+
+final creditCardList = [
+  'N/A',
+  'MasterCard',
+  'Visa Card',
+  'American Express',
+  'Discover Card',
 ];
 
 String dropdownvalue = 'N/A';
@@ -156,3 +164,126 @@ List addressHouseNum = [];
 
 bool isJobAboutClicked = true;
 bool isJobPortfolioClicked = false;
+
+late String cardSelected = 'N/A';
+
+bool isJobUpcomingClicked = true;
+bool isJobOffersClicked = false;
+bool isJobCompletedClicked = false;
+
+final upcomingOrderStatusList = [
+  'View Order',
+  'Ongoing',
+  'View Order',
+  'View Order',
+];
+final upcomingNameList = [
+  'Leo Messi',
+  'Erling Halaand',
+  'Cristiano Ronaldo',
+  'Walter White'
+];
+final upcomingDateList = [
+  '11-01-2023',
+  '04-01-2023',
+  '23-05-2023',
+  '30-01-2023',
+];
+final upcomingTimeList = [
+  '12:30 AM',
+  '03:10 PM',
+  '10:30 AM,',
+  '05:00 PM',
+];
+final upcomingImageLocation = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+final upcomingServices = [
+  'Painting',
+  'Electrical Repair',
+  'Building Renovation',
+  'Furniture Painting',
+];
+
+final offerOrderStatusList = [
+  'View Offer',
+  'View Offer',
+  'View Offer',
+  'View Offer',
+];
+final offerNameList = [
+  'Leo Messi',
+  'Erling Halaand',
+  'Cristiano Ronaldo',
+  'Walter White'
+];
+final offerDateList = [
+  '11-01-2023',
+  '04-01-2023',
+  '23-05-2023',
+  '30-01-2023',
+];
+final offerTimeList = [
+  '12:30 AM',
+  '03:10 PM',
+  '10:30 AM,',
+  '05:00 PM',
+];
+final offerImageLocation = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+final offerServices = [
+  'Painting',
+  'Electrical Repair',
+  'Building Renovation',
+  'Furniture Painting',
+];
+
+final completedOrderStatusList = [
+  'Cancelled',
+  'Complete',
+  'Cancelled',
+  'Cancelled',
+];
+final completedNameList = [
+  'Leo Messi',
+  'Erling Halaand',
+  'Cristiano Ronaldo',
+  'Walter White'
+];
+final completedDateList = [
+  '11-01-2023',
+  '04-01-2023',
+  '23-05-2023',
+  '30-01-2023',
+];
+final completedTimeList = [
+  '12:30 AM',
+  '03:10 PM',
+  '10:30 AM,',
+  '05:00 PM',
+];
+final completedImageLocation = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+final completedServices = [
+  'Painting',
+  'Electrical Repair',
+  'Building Renovation',
+  'Furniture Painting',
+];
+
+// bool isJobPendingActive = false;
+// bool isJobInProgressActive = false;
+// bool isJobCompletedActive = false;
+
+bool isJobOfferScreen = false;

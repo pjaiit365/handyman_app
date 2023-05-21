@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class PaymentOptionItem extends StatelessWidget {
-  final VoidCallback press;
+  final Widget press;
   final String optionTitle;
   final String logoLocation;
   const PaymentOptionItem({
@@ -16,7 +16,14 @@ class PaymentOptionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: press,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => press,
+          ),
+        );
+      },
       child: Container(
         height: 175 * screenHeight,
         width: 146 * screenWidth,

@@ -67,7 +67,16 @@ class Body extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              HomeButtons(press: () {}, title: 'My Jobs'),
+              HomeButtons(
+                  press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentOptionsScreen(),
+                      ),
+                    );
+                  },
+                  title: 'My Jobs'),
               Container(
                 height: size.height * 40 / 820.5714,
                 width: size.width * 2 / 411.4285,

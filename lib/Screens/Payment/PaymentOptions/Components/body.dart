@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Payment/CreditCardPayment/credit_card_payment.dart';
+import 'package:handyman_app/Screens/Payment/MobileMoneyPayment/mobile_money_payment.dart';
 import 'package:handyman_app/constants.dart';
 
 import '../../../../Components/payment_option_item.dart';
@@ -35,13 +37,13 @@ class Body extends StatelessWidget {
               PaymentOptionItem(
                 logoLocation: 'assets/images/mobile_money.png',
                 optionTitle: 'Mobile Money',
-                press: () {},
+                press: MobileMoneyPayment(),
               ),
               SizedBox(width: 41 * screenWidth),
               PaymentOptionItem(
                 logoLocation: 'assets/images/credit_card.png',
                 optionTitle: 'Credit/Debit \nCard',
-                press: () {},
+                press: CreditCardPayment(),
               )
             ],
           ),
@@ -98,7 +100,7 @@ class Body extends StatelessWidget {
               PaymentOptionItem(
                 logoLocation: 'assets/images/bank_transfer.png',
                 optionTitle: 'Bank Transfer',
-                press: () {},
+                press: MobileMoneyPayment(),
               )
             ],
           ),

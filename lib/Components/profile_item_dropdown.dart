@@ -153,11 +153,16 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
 
 class ChargePerItem extends StatefulWidget {
   final String title;
+  String hintText;
   num width;
   List<String> listName;
-  ChargePerItem(
-      {Key? key, required this.title, this.width = 117, required this.listName})
-      : super(key: key);
+  ChargePerItem({
+    Key? key,
+    required this.title,
+    this.width = 117,
+    required this.listName,
+    this.hintText = 'N/A',
+  }) : super(key: key);
 
   @override
   State<ChargePerItem> createState() => _ChargePerItemState();
@@ -224,6 +229,7 @@ class _ChargePerItemState extends State<ChargePerItem> {
           onChanged: (String? newValue) {
             setState(() {
               dropdownvalue = newValue!;
+              cardSelected = dropdownvalue;
             });
           },
           value: dropdownvalue,
