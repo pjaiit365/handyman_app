@@ -21,6 +21,7 @@ Color chatTimeColor = Color(0xffA7A4A4);
 Color appointmentTimeColor = Color(0xffA7A5A5);
 Color dividerColor = Color(0xff929292);
 Color ratingTextColor = Color(0xff666060);
+Color semiGrey = Color(0xff808080);
 
 double screenWidth = width / 390;
 double screenHeight = height / 844;
@@ -287,3 +288,5 @@ final completedServices = [
 // bool isJobCompletedActive = false;
 
 bool isJobOfferScreen = false;
+bool isPasswordVisible = false;
+bool isRememberMeClicked = false;

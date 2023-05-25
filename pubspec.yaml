@@ -98,6 +98,9 @@ flutter:
     - family: Habibi
       fonts:
         - asset: fonts/Habibi.ttf
+    - family: Junge
+      fonts:
+        - asset: fonts/Junge.ttf
     - family: Sacramento
       fonts:
         - asset: fonts/Sacramento.ttf
