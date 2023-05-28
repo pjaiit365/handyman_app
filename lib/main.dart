@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
+import 'package:handyman_app/Screens/Splash/splash_screen.dart';
 import 'package:handyman_app/Screens/Welcome/welcome_screen.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Handyman Service App',
-      home: const WelcomeScreen(),
+      home: const SplashScreen(),
       color: Colors.white,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

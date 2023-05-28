@@ -5,7 +5,23 @@ import '../constants.dart';
 
 class JobCategoryItem extends StatelessWidget {
   final bool status;
-  const JobCategoryItem({Key? key, required this.status}) : super(key: key);
+  bool isFavouriteSelected;
+  final String jobType;
+  final String name;
+  final String price;
+  final String imageLocation;
+  final int index;
+
+  JobCategoryItem({
+    Key? key,
+    required this.status,
+    this.isFavouriteSelected = false,
+    required this.jobType,
+    required this.name,
+    required this.price,
+    required this.imageLocation,
+    required this.index,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +34,7 @@ class JobCategoryItem extends StatelessWidget {
               builder: (context) => JobDetailsScreen(),
             ),
           );
+          jobSelectedIndex = index;
         },
         child: Container(
           height: 123 * screenHeight,
@@ -38,81 +55,123 @@ class JobCategoryItem extends StatelessWidget {
                     image: DecorationImage(
                       fit: BoxFit.fill,
                       image: AssetImage(
-                        'assets/images/profile_pic.jpeg',
+                        imageLocation,
                       ),
                     )),
               ),
               VerticalDivider(thickness: 3.5, color: Colors.white),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 6.0, vertical: screenHeight * 10),
+                padding: isFavouriteSelected
+                    ? EdgeInsets.only(
+                        left: 6 * screenWidth,
+                        right: 6 * screenWidth,
+                        bottom: 10 * screenHeight,
+                      )
+                    : EdgeInsets.symmetric(
+                        horizontal: screenWidth * 6.0,
+                        vertical: screenHeight * 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    isFavouriteSelected
+                        ? SizedBox(
+                            width: 212 * screenWidth,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '',
+                                  textDirection: TextDirection.rtl,
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.bookmark,
+                                  color: chatBlue,
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: screenHeight * 5.0),
-                      child: Text(
-                        'Furniture Painting',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: black,
+                      padding: isFavouriteSelected
+                          ? EdgeInsets.only(top: 0 * screenHeight)
+                          : EdgeInsets.symmetric(vertical: screenHeight * 5.0),
+                      child: SizedBox(
+                        width: 190 * screenWidth,
+                        child: Text(
+                          jobType,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: black,
+                          ),
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
                         ),
                       ),
                     ),
-                    Text(
-                      'By:' + 'Harry Garret',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: textGreyColor,
+                    SizedBox(
+                      width: 180 * screenWidth,
+                      child: Text(
+                        'By: ' + name,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: textGreyColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     SizedBox(height: screenHeight * 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 2.0, right: 5 * screenWidth),
-                          child: status == true
-                              ? Image.asset('assets/icons/green_valid.png')
-                              : Image.asset('assets/icons/red_invalid.png'),
-                        ),
-                        status == true
-                            ? Padding(
-                                padding:
-                                    EdgeInsets.only(top: screenHeight * 3.0),
-                                child: Text(
-                                  'Valid',
-                                  style: TextStyle(
-                                      color: green,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
+                    SizedBox(
+                      width: 210 * screenWidth,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: screenHeight * 2.0,
+                                right: 5 * screenWidth),
+                            child: status == true
+                                ? Image.asset('assets/icons/green_valid.png')
+                                : Image.asset('assets/icons/red_invalid.png'),
+                          ),
+                          status == true
+                              ? Padding(
+                                  padding:
+                                      EdgeInsets.only(top: screenHeight * 3.0),
+                                  child: Text(
+                                    'Valid',
+                                    style: TextStyle(
+                                        color: green,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                )
+                              : Padding(
+                                  padding:
+                                      EdgeInsets.only(top: screenHeight * 2.0),
+                                  child: Text(
+                                    'Invalid',
+                                    style: TextStyle(
+                                        color: red,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
                                 ),
-                              )
-                            : Padding(
-                                padding:
-                                    EdgeInsets.only(top: screenHeight * 2.0),
-                                child: Text(
-                                  'Invalid',
-                                  style: TextStyle(
-                                      color: red,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                              ),
-                        SizedBox(width: screenWidth * 80),
-                        Text(
-                          '\$' + '15/hr',
-                          style: TextStyle(
-                              fontSize: 19,
-                              color: primary,
-                              fontWeight: FontWeight.w800),
-                        )
-                      ],
+                          Spacer(),
+                          Text(
+                            '\$' + price,
+                            style: TextStyle(
+                                fontSize: 19,
+                                color: primary,
+                                fontWeight: FontWeight.w800),
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Favourites/Customer/customer_favourite_screen.dart';
+import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
+import 'package:handyman_app/Screens/Settings/settings_screen.dart';
 
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
@@ -128,13 +131,13 @@ class CustomerDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Favourites',
                     icon: Icons.favorite,
-                    screen: NotificationScreen(),
+                    screen: CustomerFavouritesScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(
                     title: 'Payment & Cards',
                     icon: Icons.wallet_rounded,
-                    screen: NotificationScreen(),
+                    screen: PaymentAndCardsScreen(),
                   ),
                   SizedBox(height: 27 * screenHeight),
                   Center(
@@ -168,7 +171,7 @@ class CustomerDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Settings',
                     icon: Icons.settings,
-                    screen: NotificationScreen(),
+                    screen: SettingsScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(

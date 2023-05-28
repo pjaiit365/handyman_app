@@ -11,112 +11,114 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 50 * screenHeight),
-        Padding(
-          padding: EdgeInsets.only(left: 95 * screenWidth),
-          child: Image.asset(
-            'assets/images/check_mail.png',
-            height: 190 * screenHeight,
-            width: 231.49 * screenWidth,
-          ),
-        ),
-        SizedBox(height: 22 * screenHeight),
-        Center(
-          child: Text(
-            'Check your mail',
-            style: TextStyle(
-              color: black,
-              fontSize: 25,
-              fontWeight: FontWeight.w600,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 50 * screenHeight),
+          Padding(
+            padding: EdgeInsets.only(left: 95 * screenWidth),
+            child: Image.asset(
+              'assets/images/check_mail.png',
+              height: 190 * screenHeight,
+              width: 231.49 * screenWidth,
             ),
           ),
-        ),
-        SizedBox(height: 15 * screenHeight),
-        Center(
-          child: Container(
-            width: 254 * screenWidth,
+          SizedBox(height: 22 * screenHeight),
+          Center(
             child: Text(
-              'We have sent password recovery instructions to your email.',
+              'Check your mail',
               style: TextStyle(
-                height: 1.45,
-                color: semiGrey,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
+                color: black,
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
-        ),
-        SizedBox(height: 50 * screenHeight),
-        Center(
-          child: CredentialsButton(
-            screen: CreateNewPasswordScreen(),
-            buttonText: 'Open Email App',
-          ),
-        ),
-        SizedBox(height: 22 * screenHeight),
-        Center(
-          child: CredentialsButton(
-            screen: LoginScreen(),
-            buttonText: "Skip, I'll confirm later",
-            isConfirmLater: true,
-          ),
-        ),
-        SizedBox(height: 95 * screenHeight),
-        Center(
-          child: Text(
-            'Did not receive the email? Check your spam folder.',
-            style: TextStyle(
-              height: 1.45,
-              color: semiGrey,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'or',
-              style: TextStyle(
-                height: 1.45,
-                color: semiGrey,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(width: 4 * screenWidth),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ForgotPasswordScreen(),
-                  ),
-                );
-              },
+          SizedBox(height: 15 * screenHeight),
+          Center(
+            child: Container(
+              width: 254 * screenWidth,
               child: Text(
-                'try another email address',
+                'We have sent password recovery instructions to your email.',
                 style: TextStyle(
                   height: 1.45,
-                  color: primary,
+                  color: semiGrey,
                   fontSize: 15,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-          ],
-        )
-      ],
+          ),
+          SizedBox(height: 50 * screenHeight),
+          Center(
+            child: CredentialsButton(
+              screen: CreateNewPasswordScreen(),
+              buttonText: 'Open Email App',
+            ),
+          ),
+          SizedBox(height: 22 * screenHeight),
+          Center(
+            child: CredentialsButton(
+              screen: LoginScreen(),
+              buttonText: "Skip, I'll confirm later",
+              isConfirmLater: true,
+            ),
+          ),
+          SizedBox(height: 95 * screenHeight),
+          Center(
+            child: Text(
+              'Did not receive the email? Check your spam folder.',
+              style: TextStyle(
+                height: 1.45,
+                color: semiGrey,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'or',
+                style: TextStyle(
+                  height: 1.45,
+                  color: semiGrey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(width: 4 * screenWidth),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPasswordScreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'try another email address',
+                  style: TextStyle(
+                    height: 1.45,
+                    color: primary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

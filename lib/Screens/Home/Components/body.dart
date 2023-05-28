@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
+import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
 import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
+import 'package:handyman_app/Screens/Profile/Profile%20-%20Customer/profile_customer.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -64,36 +66,69 @@ class Body extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              HomeButtons(
-                  press: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentOptionsScreen(),
-                      ),
-                    );
-                  },
-                  title: 'My Jobs'),
-              Container(
-                height: size.height * 40 / 820.5714,
-                width: size.width * 2 / 411.4285,
-                color: grey,
-              ),
-              HomeButtons(
-                  press: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HandymanProfileScreen(),
-                      ),
-                    );
-                  },
-                  title: 'Profile'),
-            ],
-          ),
+          //TODO: Obtain user role status to determine button text and screens to display from firebase
+          //TODO: THIS IS JUST A WORKING DUMMY
+          roleSelected == 'Regular Customer'
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    HomeButtons(
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NotificationScreen(),
+                            ),
+                          );
+                        },
+                        title: 'Bookings'),
+                    Container(
+                      height: size.height * 40 / 820.5714,
+                      width: size.width * 2 / 411.4285,
+                      color: grey,
+                    ),
+                    HomeButtons(
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileCustomer(),
+                            ),
+                          );
+                        },
+                        title: 'Profile'),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    HomeButtons(
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyJobsScreen(),
+                            ),
+                          );
+                        },
+                        title: 'My Jobs'),
+                    Container(
+                      height: size.height * 40 / 820.5714,
+                      width: size.width * 2 / 411.4285,
+                      color: grey,
+                    ),
+                    HomeButtons(
+                        press: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HandymanProfileScreen(),
+                            ),
+                          );
+                        },
+                        title: 'Profile'),
+                  ],
+                ),
         ],
       ),
     );

@@ -136,9 +136,16 @@ class _BodyState extends State<Body> {
             ListView.separated(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 5,
+              itemCount: handymanDashboardPrice.length,
               itemBuilder: (context, index) {
-                return CategoryItem();
+                return CategoryItem(
+                  imageLocation: handymanDashboardImage[index],
+                  jobType: handymanDashboardJobType[index],
+                  name: handymanDashboardName[index],
+                  price: handymanDashboardPrice[index],
+                  rating: handymanDashboardRating[index],
+                  index: index,
+                );
               },
               separatorBuilder: (context, index) {
                 return SizedBox(height: screenHeight * 20);

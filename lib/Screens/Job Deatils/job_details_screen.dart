@@ -3,8 +3,15 @@ import 'package:handyman_app/Components/default_back_button.dart';
 import 'package:handyman_app/Screens/Job Deatils/Components/body.dart';
 import 'package:handyman_app/constants.dart';
 
-class JobDetailsScreen extends StatelessWidget {
+class JobDetailsScreen extends StatefulWidget {
   const JobDetailsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<JobDetailsScreen> createState() => _JobDetailsScreenState();
+}
+
+class _JobDetailsScreenState extends State<JobDetailsScreen> {
+  bool isJobBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +28,46 @@ class JobDetailsScreen extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onPressed: () {
+              setState(() {
+                isJobBookmarked = !isJobBookmarked;
+              });
+              if (isJobBookmarked == false) {
+                handymanFavouritesImageList.removeAt(jobSelectedIndex);
+                handymanFavouritesNameList.removeAt(jobSelectedIndex);
+                handymanFavouritesPriceList.removeAt(jobSelectedIndex);
+                handymanFavouritesStatusList.removeAt(jobSelectedIndex);
+                handymanFavouritesJobTypeList.removeAt(jobSelectedIndex);
+              }
+              if (isJobBookmarked == true) {
+                handymanFavouritesImageList
+                    .add(jobDashboardImage[jobSelectedIndex]);
+                handymanFavouritesNameList
+                    .add(jobDashboardName[jobSelectedIndex]);
+                handymanFavouritesPriceList
+                    .add(jobDashboardPrice[jobSelectedIndex]);
+                handymanFavouritesStatusList
+                    .add(statusOptions[jobSelectedIndex]);
+                handymanFavouritesJobTypeList
+                    .add(jobDashboardJobType[jobSelectedIndex]);
+              }
+            },
+            icon: isJobBookmarked
+                ? Icon(
+                    Icons.bookmark,
+                    color: chatBlue,
+                  )
+                : Icon(
+                    Icons.bookmark,
+                    color: semiGrey,
+                  ),
+          ),
+          SizedBox(width: 18 * screenWidth),
+        ],
       ),
       body: Body(),
       backgroundColor: white,

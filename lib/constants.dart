@@ -22,6 +22,7 @@ Color appointmentTimeColor = Color(0xffA7A5A5);
 Color dividerColor = Color(0xff929292);
 Color ratingTextColor = Color(0xff666060);
 Color semiGrey = Color(0xff808080);
+Color complementaryRed = Color(0xffBD3A32);
 
 double screenWidth = width / 390;
 double screenHeight = height / 844;
@@ -121,6 +122,11 @@ final momoListOptions = [
   'Vodafone Cash',
   'Airtel/Tigo Money',
 ];
+
+final userRoleList = [
+  'Regular Customer',
+  'Professional Handyman',
+];
 List selectedMomoOptions = [];
 
 final chargePerList = ['N/A', 'Hour', '6 hours', '12 hours', 'Day'];
@@ -152,6 +158,7 @@ final creditCardList = [
 ];
 
 String dropdownvalue = 'N/A';
+String roleValue = 'Regular Customer';
 List selectedServiceCatList = [];
 
 int priceIndex = 0;
@@ -167,6 +174,7 @@ bool isJobAboutClicked = true;
 bool isJobPortfolioClicked = false;
 
 late String cardSelected = 'N/A';
+late String roleSelected = 'N/A';
 
 bool isJobUpcomingClicked = true;
 bool isJobOffersClicked = false;
@@ -283,10 +291,191 @@ final completedServices = [
   'Furniture Painting',
 ];
 
-// bool isJobPendingActive = false;
-// bool isJobInProgressActive = false;
-// bool isJobCompletedActive = false;
-
 bool isJobOfferScreen = false;
 bool isPasswordVisible = false;
 bool isRememberMeClicked = false;
+bool isTermsAndCondAgreed = false;
+
+List<String> generalSectionList = [
+  'Account Information',
+  'Address Information',
+  'Payment Information',
+  'Appearance',
+  'Notification',
+];
+
+List<String> generalSectionIcons = [
+  'user_icon',
+  'location_icon',
+  'wallet_icon',
+  'settings_icon',
+  'notification_icon',
+];
+
+List<String> supportSectionList = [
+  'Change Language',
+  'Report on Issue',
+  'FAQ',
+];
+
+List<String> supportSectionIcons = [
+  'world_icon',
+  'danger_icon',
+  'help_icon',
+];
+
+List<String> customerFavouritesImageList = [];
+List<String> customerFavouritesNameList = [];
+List<String> customerFavouritesPriceList = [];
+List<String> customerFavouritesRatingList = [];
+List<String> customerFavouritesJobTypeList = [];
+//-----------------------------------------------------------
+List<String> handymanFavouritesImageList = [];
+List<String> handymanFavouritesNameList = [];
+List<String> handymanFavouritesPriceList = [];
+List<bool> handymanFavouritesStatusList = [];
+List<String> handymanFavouritesJobTypeList = [];
+
+late int handymanSelectedIndex;
+late int jobSelectedIndex;
+
+List<String> handymanDashboardJobType = [
+  'Furniture Painting',
+  'Building Renovations',
+  'Playground Painting',
+  'Painting',
+  'Willow Painting',
+];
+
+List<String> handymanDashboardImage = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+
+List<String> handymanDashboardName = [
+  'Harry Garret',
+  'Kevin De Bruyne',
+  'PJ Agrolics',
+  'Ekow Armah',
+  'Harry Garret',
+];
+
+List<String> handymanDashboardPrice = [
+  '15/hr',
+  '35/hr',
+  '75/hr',
+  '15/hr',
+  '100/hr',
+];
+
+List<String> handymanDashboardRating = [
+  '4.9',
+  '2.5',
+  '4.7',
+  '4.3',
+  '3.4',
+];
+
+//------------------------------------------------
+
+List<String> jobDashboardJobType = [
+  'Furniture Painting asd asds asd asd',
+  'Building Renovations',
+  'Playground Painting',
+  'Painting',
+  'Willow Painting',
+];
+
+List<String> jobDashboardImage = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+
+List<String> jobDashboardName = [
+  'Harry Garret',
+  'Kevin De Bruyne',
+  'PJ Agrolics',
+  'Ekow Armah',
+  'Harry Garret',
+];
+
+List<String> jobDashboardPrice = [
+  '15/hr',
+  '35/hr',
+  '75/hr',
+  '15/hr',
+  '100/hr',
+];
+
+//------------------------------------------
+
+List<String> cardLogo = [
+  'assets/icons/visa_logo.png',
+  'assets/icons/visa_logo.png',
+  'assets/icons/visa_logo.png',
+  'assets/icons/visa_logo.png',
+  'assets/icons/visa_logo.png',
+];
+
+List<String> cardName = [
+  'PJ Agrolics',
+  'PJ Agrolics',
+  'PJ Agrolics',
+];
+
+List<String> cardNumber = [
+  '**** **** **** 4765',
+  '**** **** **** 4765',
+  '**** **** **** 4765',
+];
+
+List<String> cardExpiryDate = [
+  '**/**',
+  '**/**',
+  '**/**',
+];
+
+List<String> historyPicList = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+
+List<String> historyNameList = [
+  'Harry Garret',
+  'Harry Garret',
+  'Harry Garret',
+  'Harry Garret',
+  'Harry Garret',
+];
+
+List<String> historyJobTypeList = [
+  'Plumbing',
+  'Plumbing',
+  'Plumbing',
+  'Plumbing',
+  'Plumbing',
+];
+
+List<String> historyDateList = [
+  '22-10-23 || 09:30 PM',
+  '22-10-23 || 09:30 PM',
+  '22-10-23 || 09:30 PM',
+  '22-10-23 || 09:30 PM',
+  '22-10-23 || 09:30 PM',
+];
+
+List<String> historyPriceList = [
+  '15',
+  '15',
+  '15',
+  '15',
+  '15',
+];

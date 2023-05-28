@@ -91,9 +91,16 @@ class _BodyState extends State<Body> {
             ListView.separated(
               physics: BouncingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 9,
+              itemCount: jobDashboardPrice.length,
               itemBuilder: (context, index) {
-                return JobCategoryItem(status: statusOptions[index]);
+                return JobCategoryItem(
+                  index: index,
+                  status: statusOptions[index],
+                  name: jobDashboardName[index],
+                  imageLocation: jobDashboardImage[index],
+                  jobType: jobDashboardJobType[index],
+                  price: jobDashboardPrice[index],
+                );
               },
               separatorBuilder: (context, index) {
                 return SizedBox(height: screenHeight * 20);

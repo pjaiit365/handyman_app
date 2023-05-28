@@ -10,86 +10,88 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 19.5 * screenWidth),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 15 * screenHeight),
-          Center(
-            child: Image.asset(
-              'assets/images/new_password.png',
-              height: 161.44 * screenHeight,
-              width: 242.77 * screenWidth,
-            ),
-          ),
-          SizedBox(height: 37.56 * screenHeight),
-          Padding(
-            padding: EdgeInsets.only(left: screenWidth * 5.5),
-            child: Text(
-              'Create New Password',
-              style: TextStyle(
-                color: black,
-                fontSize: 25,
-                fontWeight: FontWeight.w600,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 19.5 * screenWidth),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 15 * screenHeight),
+            Center(
+              child: Image.asset(
+                'assets/images/new_password.png',
+                height: 161.44 * screenHeight,
+                width: 242.77 * screenWidth,
               ),
             ),
-          ),
-          SizedBox(height: 15 * screenHeight),
-          Padding(
-            padding: EdgeInsets.only(left: screenWidth * 7.5),
-            child: Container(
-              width: 310 * screenWidth,
+            SizedBox(height: 37.56 * screenHeight),
+            Padding(
+              padding: EdgeInsets.only(left: screenWidth * 5.5),
               child: Text(
-                'Your new password must be different from previously used passwords',
+                'Create New Password',
                 style: TextStyle(
-                  height: 1.45,
-                  color: semiGrey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  color: black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 21 * screenHeight),
-          CredentialsContainer(
-            isPassword: true,
-            title: 'Password',
-            hintText: 'Enter your password',
-          ),
-          SizedBox(height: 8 * screenHeight),
-          Text(
-            'Must be at least 8 characters long',
-            style: TextStyle(
-              height: 1.45,
-              color: semiGrey,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
+            SizedBox(height: 15 * screenHeight),
+            Padding(
+              padding: EdgeInsets.only(left: screenWidth * 7.5),
+              child: Container(
+                width: 310 * screenWidth,
+                child: Text(
+                  'Your new password must be different from previously used passwords',
+                  style: TextStyle(
+                    height: 1.45,
+                    color: semiGrey,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 20 * screenHeight),
-          CredentialsContainer(
-            isPassword: true,
-            title: 'Confirm Password',
-            hintText: 'Enter your password',
-          ),
-          SizedBox(height: 8 * screenHeight),
-          Text(
-            'Both passwords must match',
-            style: TextStyle(
-              height: 1.45,
-              color: semiGrey,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
+            SizedBox(height: 21 * screenHeight),
+            CredentialsContainer(
+              isPassword: true,
+              title: 'Password',
+              hintText: 'Enter your password',
             ),
-          ),
-          SizedBox(height: 58 * screenHeight),
-          CredentialsButton(
-            screen: LoginScreen(),
-            buttonText: 'Reset Password',
-          )
-        ],
+            SizedBox(height: 8 * screenHeight),
+            Text(
+              'Must be at least 8 characters long',
+              style: TextStyle(
+                height: 1.45,
+                color: semiGrey,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 20 * screenHeight),
+            CredentialsContainer(
+              isPassword: true,
+              title: 'Confirm Password',
+              hintText: 'Enter your password',
+            ),
+            SizedBox(height: 8 * screenHeight),
+            Text(
+              'Both passwords must match',
+              style: TextStyle(
+                height: 1.45,
+                color: semiGrey,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 58 * screenHeight),
+            CredentialsButton(
+              screen: LoginScreen(),
+              buttonText: 'Reset Password',
+            )
+          ],
+        ),
       ),
     );
   }

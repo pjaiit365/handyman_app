@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
+import 'package:handyman_app/Screens/Settings/settings_screen.dart';
 
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
 import '../../../../constants.dart';
+import '../../../Favourites/Handyman/handyman_favourites_screen.dart';
 import '../../../Home/home_screen.dart';
 import '../../../Notifications/notification_screen.dart';
 
@@ -126,9 +128,9 @@ class HandymanDrawer extends StatelessWidget {
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(
-                    title: 'Jobs',
-                    icon: Icons.bookmark,
-                    screen: NotificationScreen(),
+                    title: 'Favourites',
+                    icon: Icons.favorite,
+                    screen: HandymanFavouritesScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(
@@ -168,7 +170,7 @@ class HandymanDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Settings',
                     icon: Icons.settings,
-                    screen: NotificationScreen(),
+                    screen: SettingsScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(

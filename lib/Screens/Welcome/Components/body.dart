@@ -66,7 +66,11 @@ class Body extends StatelessWidget {
             ),
           ),
           SizedBox(height: 50 * screenHeight),
-          Image.asset('assets/images/welcome_pic.png'),
+          Image.asset(
+            'assets/images/welcome_pic.png',
+            height: 223.41 * screenHeight,
+            width: 381 * screenWidth,
+          ),
           SizedBox(height: 48 * screenHeight),
           Center(
             child: Column(
@@ -115,7 +119,7 @@ class Body extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 68 * screenHeight),
+          SizedBox(height: 85 * screenHeight),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
