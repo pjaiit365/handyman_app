@@ -1,5 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/wrapper.dart';
 
 import '../../../constants.dart';
 import '../../Welcome/welcome_screen.dart';
@@ -17,7 +18,7 @@ class SplashScreenCont extends StatelessWidget {
           'assets/images/app_logo.png',
           color: white,
         ),
-        nextScreen: WelcomeScreen(),
+        nextScreen: Wrapper(),
         splashTransition: SplashTransition.rotationTransition,
         pageTransitionType: PageTransitionType.leftToRightWithFade,
         duration: 3000,

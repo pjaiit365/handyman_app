@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:handyman_app/Components/search_bar_item.dart';
 import 'package:handyman_app/constants.dart';
 
 import '../../../../Components/category_item.dart';
@@ -25,7 +26,6 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SearchBar(hintText: 'Search personnel: painters,etc.'),
             SizedBox(height: screenHeight * 30),
             Center(
               child: Container(
@@ -151,44 +151,6 @@ class _BodyState extends State<Body> {
                 return SizedBox(height: screenHeight * 20);
               },
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SearchBar extends StatelessWidget {
-  final String hintText;
-  const SearchBar({
-    Key? key,
-    required this.hintText,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: screenHeight * 53,
-        width: 355 * screenWidth,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xffEBF6F9),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(width: screenWidth * 20),
-            Image.asset('assets/icons/search.png'),
-            SizedBox(width: screenWidth * 20),
-            Text(
-              hintText,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w300,
-              ),
-            )
           ],
         ),
       ),
