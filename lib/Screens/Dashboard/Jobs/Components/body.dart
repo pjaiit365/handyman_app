@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:handyman_app/Components/job_category_item.dart';
+import 'package:handyman_app/Components/search_bar_item.dart';
 
 import '../../../../Components/category_item.dart';
 import '../../../../Components/dashboard_tab.dart';
@@ -24,32 +25,7 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(
-              child: Container(
-                height: screenHeight * 53,
-                width: 355 * screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xffEBF6F9),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(width: screenWidth * 20),
-                    Image.asset('assets/icons/search.png'),
-                    SizedBox(width: screenWidth * 20),
-                    Text(
-                      'Search personnel: painters,etc.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            SearchBarItem(hintText: 'Search personnel: painters, etc.'),
             SizedBox(height: screenHeight * 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
