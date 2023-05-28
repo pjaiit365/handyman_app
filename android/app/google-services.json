@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "512930624835",
+    "project_id": "handyman-app-gh",
+    "storage_bucket": "handyman-app-gh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512930624835:android:810efb2d74a12a3cbfabf6",
+        "android_client_info": {
+          "package_name": "com.pj.homecarex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSywdrmB8VKPbs48F6XwXIOb5-nLC0xmQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
