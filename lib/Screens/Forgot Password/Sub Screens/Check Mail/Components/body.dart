@@ -55,14 +55,28 @@ class Body extends StatelessWidget {
           SizedBox(height: 50 * screenHeight),
           Center(
             child: CredentialsButton(
-              screen: CreateNewPasswordScreen(),
+              screen: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateNewPasswordScreen(),
+                  ),
+                );
+              },
               buttonText: 'Open Email App',
             ),
           ),
           SizedBox(height: 22 * screenHeight),
           Center(
             child: CredentialsButton(
-              screen: LoginScreen(),
+              screen: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              },
               buttonText: "Skip, I'll confirm later",
               isConfirmLater: true,
             ),
