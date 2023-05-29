@@ -3,17 +3,23 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class CredentialsContainer extends StatefulWidget {
+  bool errorTextField;
+  final TextEditingController controller;
   final String title;
   String iconText;
   final String hintText;
   bool isPassword;
+  TextInputType keyboardType;
 
   CredentialsContainer({
     Key? key,
     required this.title,
     this.isPassword = false,
+    this.keyboardType = TextInputType.name,
     this.iconText = '@',
+    this.errorTextField = false,
     required this.hintText,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -49,7 +55,11 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
               decoration: BoxDecoration(
                 color: white,
                 borderRadius: BorderRadius.circular(7),
-                border: Border.all(color: appointmentTimeColor, width: 1),
+                border: Border.all(
+                    color: widget.errorTextField
+                        ? complementaryRed
+                        : appointmentTimeColor,
+                    width: 1),
               ),
               child: Center(
                 child: widget.isPassword
@@ -75,10 +85,16 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
               decoration: BoxDecoration(
                 color: white,
                 borderRadius: BorderRadius.circular(7),
-                border: Border.all(color: appointmentTimeColor, width: 1),
+                border: Border.all(
+                    color: widget.errorTextField
+                        ? complementaryRed
+                        : appointmentTimeColor,
+                    width: 1),
               ),
               padding: EdgeInsets.only(left: 16 * screenWidth),
               child: TextField(
+                keyboardType: widget.keyboardType,
+                controller: widget.controller,
                 obscureText: widget.isPassword ? true : false,
                 textCapitalization: TextCapitalization.sentences,
                 cursorHeight: 22,

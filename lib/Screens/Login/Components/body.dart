@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Forgot%20Password/forgot_password_screen.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
@@ -16,10 +17,42 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+          (route) => false);
+      loginTextFieldError = false;
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        loginTextFieldError = true;
+      });
+      print(e.message.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: screenWidth * 19.5,
@@ -56,16 +89,36 @@ class _BodyState extends State<Body> {
                 ),
               ),
               CredentialsContainer(
+                errorTextField: loginTextFieldError,
+                controller: _emailController,
                 title: 'Email Address',
                 hintText: 'Enter email address',
                 isPassword: false,
+                keyboardType: TextInputType.emailAddress,
               ),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                errorTextField: loginTextFieldError,
+                controller: _passwordController,
                 title: 'Password',
                 hintText: 'Enter password',
                 isPassword: true,
               ),
+              loginTextFieldError
+                  ? SizedBox(height: 20 * screenHeight)
+                  : SizedBox(),
+              loginTextFieldError
+                  ? Center(
+                      child: Text(
+                        'Incorrect email or password. Try again.',
+                        style: TextStyle(
+                          color: complementaryRed,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               Padding(
                 padding: EdgeInsets.only(left: screenWidth * 6.0),
@@ -133,7 +186,7 @@ class _BodyState extends State<Body> {
                       child: Text(
                         'Forgot Password',
                         style: TextStyle(
-                          color: Color(0xffbd3a32),
+                          color: complementaryRed,
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -144,7 +197,7 @@ class _BodyState extends State<Body> {
               ),
               SizedBox(height: 40 * screenHeight),
               CredentialsButton(
-                screen: HomeScreen(),
+                screen: signIn,
               ),
               SizedBox(height: 30 * screenHeight),
               Row(
@@ -188,7 +241,9 @@ class _BodyState extends State<Body> {
                   ),
                 ],
               ),
-              SizedBox(height: 89 * screenHeight),
+              loginTextFieldError
+                  ? SizedBox(height: 65 * screenHeight)
+                  : SizedBox(height: 89 * screenHeight),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

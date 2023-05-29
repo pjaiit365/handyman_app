@@ -174,7 +174,7 @@ bool isJobAboutClicked = true;
 bool isJobPortfolioClicked = false;
 
 late String cardSelected = 'N/A';
-late String roleSelected = 'N/A';
+late String roleSelected = 'Regular Customer';
 
 bool isJobUpcomingClicked = true;
 bool isJobOffersClicked = false;
@@ -479,3 +479,11 @@ List<String> historyPriceList = [
   '15',
   '15',
 ];
+
+bool loginTextFieldError = false;
+bool forgotPasswordEmailError = false;
+bool registerFirstNameError = false;
+bool registerLastNameError = false;
+bool registerEmailError = false;
+bool registerPasswordError = false;
+bool registerNumberError = false;

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Favourites/Customer/customer_favourite_screen.dart';
+import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
 
@@ -18,6 +20,16 @@ class CustomerDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future signOut() async {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
+          (route) => false);
+    }
+
     return SafeArea(
       child: Drawer(
         shape: RoundedRectangleBorder(
@@ -174,10 +186,24 @@ class CustomerDrawer extends StatelessWidget {
                     screen: SettingsScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
-                  DrawerTile(
-                    title: 'Log Out',
-                    icon: Icons.logout,
-                    screen: NotificationScreen(),
+                  GestureDetector(
+                    onTap: signOut,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.logout, color: primary),
+                        SizedBox(width: 22 * screenWidth),
+                        Text(
+                          'Log Out',
+                          style: TextStyle(
+                            color: black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20 * screenHeight),
                 ],
