@@ -33,8 +33,10 @@ class _ProfilePersonalInformationState
   }
 
   Future updatePersonalInfo() async {
-    isPersonalInfoReadOnly = true;
-    firstNameCheck();
+    setState(() {
+      isPersonalInfoReadOnly = true;
+    });
+    FieldsCheck();
     try {
       final String userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -49,8 +51,8 @@ class _ProfilePersonalInformationState
         {
           'First Name': _firstNameControlller.text.trim(),
           'Last Name': _lastNameControlller.text.trim(),
-          'Email Address': _numberControlller.text.trim(),
-          'Number': _numberControlller.text.trim(),
+          'Email Address': _emailControlller.text.trim(),
+          'Mobile Number': _numberControlller.text.trim(),
         },
       );
     } catch (e) {
@@ -58,9 +60,15 @@ class _ProfilePersonalInformationState
     }
   }
 
-  bool firstNameCheck() {
+  bool FieldsCheck() {
     if (_firstNameControlller.text.trim() != allUsers[0].first_name ||
-        _firstNameControlller.text.trim().isNotEmpty) {
+        _firstNameControlller.text.trim().isNotEmpty ||
+        _lastNameControlller.text.trim() != allUsers[0].last_name ||
+        _lastNameControlller.text.trim().isNotEmpty ||
+        _emailControlller.text.trim() != allUsers[0].email ||
+        _emailControlller.text.trim().isNotEmpty ||
+        _numberControlller.text.trim() != allUsers[0].last_name ||
+        _numberControlller.text.trim().isNotEmpty) {
       print('First Name can be updated');
       return true;
     } else {

@@ -292,7 +292,6 @@ final completedServices = [
 ];
 
 bool isJobOfferScreen = false;
-bool isPasswordVisible = false;
 bool isRememberMeClicked = false;
 bool isTermsAndCondAgreed = false;
 

@@ -16,7 +16,11 @@ class DefaultBackButton extends StatelessWidget {
       },
       icon: Padding(
         padding: EdgeInsets.only(left: screenWidth * 12.0),
-        child: Image.asset('assets/icons/back_button.png'),
+        child: Icon(
+          Icons.arrow_back_ios_rounded,
+          color: primary,
+          weight: 15,
+        ),
       ),
     );
   }

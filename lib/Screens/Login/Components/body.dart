@@ -163,6 +163,7 @@ class _BodyState extends State<Body> {
                 hintText: 'Enter email address',
                 isPassword: false,
                 keyboardType: TextInputType.emailAddress,
+                isPasswordVisible: false,
               ),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
@@ -171,6 +172,7 @@ class _BodyState extends State<Body> {
                 title: 'Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                isPasswordVisible: true,
               ),
               loginTextFieldError
                   ? SizedBox(height: 20 * screenHeight)
@@ -269,7 +271,7 @@ class _BodyState extends State<Body> {
               ),
               SizedBox(height: 30 * screenHeight),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(

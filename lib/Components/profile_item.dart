@@ -73,13 +73,14 @@ class ProfileItem extends StatelessWidget {
                   ],
                 )
               : TextField(
+                  textAlignVertical: TextAlignVertical.center,
                   controller: controller,
                   readOnly: isReadOnly,
                   obscureText: isInputObscured ? true : false,
                   obscuringCharacter: "*",
                   maxLength: isInputObscured ? 4 : null,
                   keyboardType: keyboardType,
-                  cursorHeight: 25 * screenHeight,
+                  cursorHeight: 18 * screenHeight,
                   enableSuggestions: true,
                   autocorrect: true,
                   cursorColor: black,
@@ -98,10 +99,11 @@ class ProfileItem extends StatelessWidget {
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     hintStyle: TextStyle(
-                        fontSize: 16,
-                        color: black,
-                        fontWeight:
-                            isHintText ? FontWeight.w200 : FontWeight.w400),
+                      fontSize: 16,
+                      color: black,
+                      fontWeight:
+                          isHintText ? FontWeight.w200 : FontWeight.w400,
+                    ),
                     contentPadding: EdgeInsets.symmetric(
                         horizontal: 15 * screenWidth,
                         vertical: 15 * screenHeight),
@@ -173,6 +175,7 @@ class ProfileAddressItem extends StatelessWidget {
             border: Border.all(color: appointmentTimeColor, width: 1),
           ),
           child: TextField(
+            textAlignVertical: TextAlignVertical.center,
             enableSuggestions: true,
             // autocorrect: true,
             obscureText: isInputObscured ? true : false,
