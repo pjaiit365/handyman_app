@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Registration/Sub%20Screen/Registration%20Continuation/registration_continuation_screen.dart';
 
@@ -51,10 +52,12 @@ class _BodyState extends State<Body> {
           context,
           MaterialPageRoute(
             builder: (context) => roleSelected == 'Regular Customer'
-                ? LoginScreen()
+                ? HomeScreen()
                 : RegistrationContinuationScreen(),
           ),
         );
+
+        final userId = await FirebaseAuth.instance.currentUser;
 
         addDetails(
           _firstNameController.text.trim(),
@@ -62,6 +65,7 @@ class _BodyState extends State<Body> {
           _emailController.text.trim(),
           int.parse(_numberController.text.trim()),
           roleSelected,
+          userId!.uid,
         );
       }
     } catch (e) {
@@ -145,7 +149,7 @@ class _BodyState extends State<Body> {
   }
 
   Future addDetails(String firstName, String lastName, String email, int number,
-      String role) async {
+      String role, String id) async {
     FirebaseFirestore.instance.collection('users').add(
       {
         'First Name': firstName,
@@ -153,6 +157,7 @@ class _BodyState extends State<Body> {
         'Email Address': email,
         'Mobile Number': number,
         'Role': role,
+        'User ID': id,
       },
     );
   }

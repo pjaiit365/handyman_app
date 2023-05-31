@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/Favourites/Customer/customer_favourite_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
@@ -22,6 +23,7 @@ class CustomerDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     Future signOut() async {
       await FirebaseAuth.instance.signOut();
+      allUsers.clear();
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -64,7 +66,10 @@ class CustomerDrawer extends StatelessWidget {
                         SizedBox(
                           width: 190 * screenWidth,
                           child: Text(
-                            'Harry Garret',
+                            allUsers[0].first_name +
+                                ' ' +
+                                allUsers[0].last_name,
+                            // 'Harry Garret',
                             style: TextStyle(
                               color: black,
                               fontSize: 17,
@@ -78,7 +83,7 @@ class CustomerDrawer extends StatelessWidget {
                         SizedBox(
                           width: 190 * screenWidth,
                           child: Text(
-                            'harrygarret69@gmail.com',
+                            allUsers[0].email,
                             style: TextStyle(
                               color: black,
                               fontSize: 15,

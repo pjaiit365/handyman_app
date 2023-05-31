@@ -9,21 +9,17 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isRememberMeClicked
-        ? Scaffold(
-            body: StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return HomeScreen();
-                } else {
-                  return WelcomeScreen();
-                }
-              },
-            ),
-          )
-        : Scaffold(
-            body: WelcomeScreen(),
-          );
+    return Scaffold(
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return HomeScreen();
+          } else {
+            return WelcomeScreen();
+          }
+        },
+      ),
+    );
   }
 }

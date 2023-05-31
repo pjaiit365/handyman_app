@@ -487,3 +487,7 @@ bool registerLastNameError = false;
 bool registerEmailError = false;
 bool registerPasswordError = false;
 bool registerNumberError = false;
+
+int activeIndex = 0;
+
+bool isPersonalInfoReadOnly = true;

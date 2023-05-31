@@ -41,6 +41,8 @@ dependencies:
   cloud_firestore: ^4.7.1
   firebase_core: ^2.13.0
   carousel_slider: ^4.2.1
+  url_launcher: ^6.1.7
+  shimmer_animation: ^2.1.0+1
 
 
 dev_dependencies:
