@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class CredentialsButton extends StatelessWidget {
-  final Widget screen;
+  final VoidCallback screen;
   String buttonText;
   bool isConfirmLater;
   CredentialsButton({
@@ -16,14 +16,7 @@ class CredentialsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => screen,
-          ),
-        );
-      },
+      onTap: screen,
       child: Container(
         height: 53 * screenHeight,
         width: 351 * screenWidth,

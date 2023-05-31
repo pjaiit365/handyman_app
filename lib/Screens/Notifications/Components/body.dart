@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Dashboard/Handymen/Components/body.dart';
-
 import '../../../Components/earlier_notifications.dart';
 import '../../../Components/new_notifications.dart';
-import '../../../Components/notification_item.dart';
 import '../../../constants.dart';
 
 class Body extends StatelessWidget {

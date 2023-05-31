@@ -114,12 +114,12 @@ class Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(
-              child: CredentialsButton(
-                screen: NotificationScreen(),
-                buttonText: 'In-app Funds',
-              ),
-            ),
+            // Center(
+            //   child: CredentialsButton(
+            //     screen: NotificationScreen(),
+            //     buttonText: 'In-app Funds',
+            //   ),
+            // ),
             SizedBox(height: 27 * screenHeight),
             Padding(
               padding: EdgeInsets.only(

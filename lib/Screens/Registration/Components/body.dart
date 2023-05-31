@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Registration/Sub%20Screen/Registration%20Continuation/registration_continuation_screen.dart';
 
@@ -16,10 +19,154 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _numberController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _numberController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
+
+  Future signUp() async {
+    try {
+      if (confirmPassword() &&
+          firstName() &&
+          lastName() &&
+          email() &&
+          number()) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => roleSelected == 'Regular Customer'
+                ? HomeScreen()
+                : RegistrationContinuationScreen(),
+          ),
+        );
+
+        final userId = await FirebaseAuth.instance.currentUser;
+
+        addDetails(
+          _firstNameController.text.trim(),
+          _lastNameController.text.trim(),
+          _emailController.text.trim(),
+          int.parse(_numberController.text.trim()),
+          roleSelected,
+          userId!.uid,
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  bool confirmPassword() {
+    if (_passwordController.text.trim() ==
+            _confirmPasswordController.text.trim() &&
+        _passwordController.text.trim() != null &&
+        _confirmPasswordController.text.trim() != null) {
+      return true;
+    } else {
+      setState(() {
+        registerPasswordError = true;
+      });
+      print("Passwords do not match");
+      return false;
+    }
+  }
+
+  bool firstName() {
+    if (_firstNameController.text.isNotEmpty) {
+      setState(() {
+        registerFirstNameError = false;
+      });
+      return true;
+    } else {
+      print("First Name is null");
+      setState(() {
+        registerFirstNameError = true;
+      });
+      return false;
+    }
+  }
+
+  bool lastName() {
+    if (_lastNameController.text.isNotEmpty) {
+      setState(() {
+        registerLastNameError = false;
+      });
+      return true;
+    } else {
+      print("Last Name is null");
+      setState(() {
+        registerLastNameError = true;
+      });
+      return false;
+    }
+  }
+
+  bool email() {
+    if (_emailController.text.isNotEmpty) {
+      setState(() {
+        registerEmailError = false;
+      });
+      return true;
+    } else {
+      print("Email is null");
+      setState(() {
+        registerEmailError = true;
+      });
+      return false;
+    }
+  }
+
+  bool number() {
+    if (_numberController.text.isNotEmpty) {
+      setState(() {
+        registerNumberError = false;
+      });
+      return true;
+    } else {
+      print("Number is null");
+      setState(() {
+        registerNumberError = true;
+      });
+      return false;
+    }
+  }
+
+  Future addDetails(String firstName, String lastName, String email, int number,
+      String role, String id) async {
+    FirebaseFirestore.instance.collection('users').add(
+      {
+        'First Name': firstName,
+        'Last Name': lastName,
+        'Email Address': email,
+        'Mobile Number': number,
+        'Role': role,
+        'User ID': id,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: screenWidth * 19.5,
@@ -56,29 +203,136 @@ class _BodyState extends State<Body> {
                 ),
               ),
               CredentialsContainer(
+                errorTextField: registerFirstNameError,
+                controller: _firstNameController,
+                title: 'First Name',
+                hintText: 'Enter first name',
+                isPassword: false,
+                iconText: 'T',
+              ),
+              registerFirstNameError
+                  ? SizedBox(height: 12 * screenHeight)
+                  : SizedBox(),
+              registerFirstNameError
+                  ? Text(
+                      'First Name field cannot be empty',
+                      style: TextStyle(
+                        color: complementaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(height: 20 * screenHeight),
+              CredentialsContainer(
+                errorTextField: registerLastNameError,
+                controller: _lastNameController,
+                title: 'Last Name',
+                hintText: 'Enter last name',
+                isPassword: false,
+                iconText: 'T',
+              ),
+              registerLastNameError
+                  ? SizedBox(height: 12 * screenHeight)
+                  : SizedBox(),
+              registerLastNameError
+                  ? Text(
+                      'Last Name field cannot be empty',
+                      style: TextStyle(
+                        color: complementaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(height: 20 * screenHeight),
+              CredentialsContainer(
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
                 title: 'Email Address',
                 hintText: 'Enter email address',
                 isPassword: false,
+                errorTextField: registerEmailError,
               ),
+              registerEmailError
+                  ? SizedBox(height: 12 * screenHeight)
+                  : SizedBox(),
+              registerEmailError
+                  ? Text(
+                      'Email Address field cannot be empty',
+                      style: TextStyle(
+                        color: complementaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                controller: _passwordController,
                 title: 'Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                errorTextField: registerPasswordError,
               ),
+              registerPasswordError
+                  ? SizedBox(height: 12 * screenHeight)
+                  : SizedBox(),
+              registerPasswordError
+                  ? Text(
+                      'Passwords do not match',
+                      style: TextStyle(
+                        color: complementaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                controller: _confirmPasswordController,
                 title: 'Confirm Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                errorTextField: registerPasswordError,
               ),
+              registerPasswordError
+                  ? SizedBox(height: 12 * screenHeight)
+                  : SizedBox(),
+              registerPasswordError
+                  ? Text(
+                      'Passwords do not match',
+                      style: TextStyle(
+                        color: complementaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                keyboardType: TextInputType.number,
+                controller: _numberController,
                 title: 'Mobile Number',
                 iconText: '#',
                 hintText: 'Enter mobile number',
                 isPassword: false,
+                errorTextField: registerNumberError,
               ),
+              registerNumberError
+                  ? SizedBox(height: 12 * screenHeight)
+                  : SizedBox(),
+              registerNumberError
+                  ? Text(
+                      'Mobile Number field cannot be empty',
+                      style: TextStyle(
+                        color: complementaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(height: 20 * screenHeight),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,12 +487,7 @@ class _BodyState extends State<Body> {
               ),
               SizedBox(height: 40 * screenHeight),
               isTermsAndCondAgreed
-                  ? CredentialsButton(
-                      buttonText: 'Sign Up',
-                      screen: roleSelected == 'Regular Customer'
-                          ? LoginScreen()
-                          : RegistrationContinuationScreen(),
-                    )
+                  ? CredentialsButton(buttonText: 'Sign Up', screen: signUp)
                   : Container(
                       height: 53 * screenHeight,
                       width: 351 * screenWidth,

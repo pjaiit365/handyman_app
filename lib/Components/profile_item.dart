@@ -5,6 +5,7 @@ import 'package:handyman_app/Components/personnel_rating_summary.dart';
 import '../constants.dart';
 
 class ProfileItem extends StatelessWidget {
+  TextEditingController? controller;
   String imageAssetLocation;
   final String title;
   final String hintText;
@@ -14,6 +15,8 @@ class ProfileItem extends StatelessWidget {
   bool isCreditCard;
   bool isTitlePresent;
   bool isInputObscured;
+  bool isReadOnly;
+  bool isHintText;
   num width;
   ProfileItem({
     Key? key,
@@ -24,10 +27,14 @@ class ProfileItem extends StatelessWidget {
     this.isOverallRating = false,
     this.isCreditCard = false,
     this.isTitlePresent = true,
+    this.isReadOnly = true,
     this.isInputObscured = false,
+    this.isHintText = true,
     this.imageAssetLocation = 'assets/icons/credit_card.png',
     this.width = 0,
-  }) : super(key: key);
+    TextEditingController? controller,
+  })  : controller = controller ?? TextEditingController(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +73,8 @@ class ProfileItem extends StatelessWidget {
                   ],
                 )
               : TextField(
+                  controller: controller,
+                  readOnly: isReadOnly,
                   obscureText: isInputObscured ? true : false,
                   obscuringCharacter: "*",
                   maxLength: isInputObscured ? 4 : null,
@@ -88,8 +97,11 @@ class ProfileItem extends StatelessWidget {
                         : null,
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
-                    hintStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        color: black,
+                        fontWeight:
+                            isHintText ? FontWeight.w200 : FontWeight.w400),
                     contentPadding: EdgeInsets.symmetric(
                         horizontal: 15 * screenWidth,
                         vertical: 15 * screenHeight),

@@ -5,8 +5,23 @@ import 'package:handyman_app/Screens/Login/login_screen.dart';
 import '../../../../../Components/credentials_container.dart';
 import '../../../../../constants.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +70,7 @@ class Body extends StatelessWidget {
             ),
             SizedBox(height: 21 * screenHeight),
             CredentialsContainer(
+              controller: _passwordController,
               isPassword: true,
               title: 'Password',
               hintText: 'Enter your password',
@@ -71,6 +87,7 @@ class Body extends StatelessWidget {
             ),
             SizedBox(height: 20 * screenHeight),
             CredentialsContainer(
+              controller: _confirmPasswordController,
               isPassword: true,
               title: 'Confirm Password',
               hintText: 'Enter your password',
@@ -86,10 +103,10 @@ class Body extends StatelessWidget {
               ),
             ),
             SizedBox(height: 58 * screenHeight),
-            CredentialsButton(
-              screen: LoginScreen(),
-              buttonText: 'Reset Password',
-            )
+            // CredentialsButton(
+            //   screen: LoginScreen(),
+            //   buttonText: 'Reset Password',
+            // )
           ],
         ),
       ),

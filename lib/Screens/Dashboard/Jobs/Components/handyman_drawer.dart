@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
@@ -8,6 +10,7 @@ import '../../../../Components/drawer_tile.dart';
 import '../../../../constants.dart';
 import '../../../Favourites/Handyman/handyman_favourites_screen.dart';
 import '../../../Home/home_screen.dart';
+import '../../../Login/login_screen.dart';
 import '../../../Notifications/notification_screen.dart';
 
 class HandymanDrawer extends StatelessWidget {
@@ -17,6 +20,17 @@ class HandymanDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future signOut() async {
+      await FirebaseAuth.instance.signOut();
+      allUsers.clear();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
+          (route) => false);
+    }
+
     return SafeArea(
       child: Drawer(
         shape: RoundedRectangleBorder(
@@ -51,7 +65,9 @@ class HandymanDrawer extends StatelessWidget {
                         SizedBox(
                           width: 190 * screenWidth,
                           child: Text(
-                            'Harry Garret',
+                            allUsers[0].first_name +
+                                ' ' +
+                                allUsers[0].last_name,
                             style: TextStyle(
                               color: black,
                               fontSize: 17,
@@ -65,7 +81,7 @@ class HandymanDrawer extends StatelessWidget {
                         SizedBox(
                           width: 190 * screenWidth,
                           child: Text(
-                            'harrygarret69@gmail.com',
+                            allUsers[0].email,
                             style: TextStyle(
                               color: black,
                               fontSize: 15,
@@ -173,10 +189,24 @@ class HandymanDrawer extends StatelessWidget {
                     screen: SettingsScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
-                  DrawerTile(
-                    title: 'Log Out',
-                    icon: Icons.logout,
-                    screen: NotificationScreen(),
+                  GestureDetector(
+                    onTap: signOut,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.logout, color: primary),
+                        SizedBox(width: 22 * screenWidth),
+                        Text(
+                          'Log Out',
+                          style: TextStyle(
+                            color: black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20 * screenHeight),
                 ],
