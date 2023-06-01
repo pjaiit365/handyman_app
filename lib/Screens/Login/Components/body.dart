@@ -45,11 +45,38 @@ class _BodyState extends State<Body> {
       //getting current user's data into in-app variable for easy access
       getUserData();
 
+      final userData = await getUserData();
+
+      // If user data is not found, show an error message
+      if (userData == 'User Not Found.') {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('User Not Found'),
+              content: Text('The provided user data was not found.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
+
       //display alert dialog box with loading indicator
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
             content: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,8 +85,11 @@ class _BodyState extends State<Body> {
                 (Platform.isIOS)
                     ? const CupertinoActivityIndicator(
                         radius: 20,
+                        color: Color(0xff32B5BD),
                       )
-                    : const CircularProgressIndicator(),
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
               ],
             ),
           );
@@ -76,7 +106,9 @@ class _BodyState extends State<Body> {
         );
       });
 
-      loginTextFieldError = false;
+      setState(() {
+        loginTextFieldError = false;
+      });
     } on FirebaseAuthException catch (e) {
       setState(() {
         loginTextFieldError = true;
@@ -96,9 +128,9 @@ class _BodyState extends State<Body> {
     if (querySnapshot.docs.isNotEmpty) {
       final userData = querySnapshot.docs.first.data();
       final userLogin = UserData(
-        user_id: userData['User ID'],
-        first_name: userData['First Name'],
-        last_name: userData['Last Name'],
+        userId: userData['User ID'],
+        firstName: userData['First Name'],
+        lastName: userData['Last Name'],
         number: userData['Mobile Number'],
         email: userData['Email Address'],
         role: userData['Role'],

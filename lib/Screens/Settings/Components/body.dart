@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Settings/Components/settings_divider.dart';
 import 'package:handyman_app/Screens/Settings/Components/settings_tab.dart';
 
@@ -80,21 +82,32 @@ class Body extends StatelessWidget {
               },
               itemCount: supportSectionList.length),
           SizedBox(height: 35.4 * screenHeight),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.asset('assets/icons/sign_out.png'),
-              SizedBox(width: 12.39 * screenWidth),
-              Text(
-                'Log Out',
-                style: TextStyle(
-                  color: complementaryRed,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            ],
+          GestureDetector(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                  (route) => false);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset('assets/icons/sign_out.png'),
+                SizedBox(width: 12.39 * screenWidth),
+                Text(
+                  'Log Out',
+                  style: TextStyle(
+                    color: complementaryRed,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),

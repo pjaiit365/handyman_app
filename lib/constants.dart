@@ -117,7 +117,6 @@ final expertiseList = [
 List selectedExpertiseList = [];
 
 final momoListOptions = [
-  'N/A',
   'MTN Mobile Money',
   'Vodafone Cash',
   'Airtel/Tigo Money',
@@ -127,7 +126,8 @@ final userRoleList = [
   'Regular Customer',
   'Professional Handyman',
 ];
-List selectedMomoOptions = [];
+List<String> selectedMomoOptions = [];
+List<String> selectedMomoOptionsIcons = [];
 
 final chargePerList = ['N/A', 'Hour', '6 hours', '12 hours', 'Day'];
 final regionsList = [
@@ -490,3 +490,4 @@ bool registerNumberError = false;
 int activeIndex = 0;
 
 bool isPersonalInfoReadOnly = true;
+bool isPaymentInfoReadOnly = true;

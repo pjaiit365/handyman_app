@@ -28,8 +28,6 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    // print(allUsers[0].first_name);
-    // print(allUsers[0].role);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15),

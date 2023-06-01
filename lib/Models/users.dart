@@ -1,15 +1,25 @@
 class UserData {
-  final String user_id;
-  final String first_name;
-  final String last_name;
+  final String userId;
+  final String firstName;
+  final String lastName;
   final int number;
   final String email;
   final String role;
+  List? momoType;
+  int? cardNumber;
+  int? expiryDate;
+  int? cvv;
+  int? payPalAddress;
 
-  const UserData({
-    required this.user_id,
-    required this.first_name,
-    required this.last_name,
+  UserData({
+    this.momoType,
+    this.cardNumber,
+    this.expiryDate,
+    this.cvv,
+    this.payPalAddress,
+    required this.userId,
+    required this.firstName,
+    required this.lastName,
     required this.number,
     required this.email,
     required this.role,

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
@@ -9,6 +12,8 @@ import 'package:handyman_app/Screens/Registration/Sub%20Screen/Registration%20Co
 import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
+import '../../../Models/users.dart';
+import '../../../Read Data/get_user_first_name.dart';
 import '../../../constants.dart';
 
 class Body extends StatefulWidget {
@@ -37,7 +42,7 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
-  Future signUp() async {
+  Future<void> signUp() async {
     try {
       if (confirmPassword() &&
           firstName() &&
@@ -45,28 +50,81 @@ class _BodyState extends State<Body> {
           email() &&
           number()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim());
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => roleSelected == 'Regular Customer'
-                ? HomeScreen()
-                : RegistrationContinuationScreen(),
-          ),
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
         );
 
-        final userId = await FirebaseAuth.instance.currentUser;
+        userId = FirebaseAuth.instance.currentUser!.uid;
 
         addDetails(
           _firstNameController.text.trim(),
           _lastNameController.text.trim(),
           _emailController.text.trim(),
-          int.parse(_numberController.text.trim()),
+          0 + int.parse(_numberController.text),
           roleSelected,
-          userId!.uid,
+          userId,
         );
+        allUsers.clear();
+        getUserData();
+
+        final userData = await getUserData();
+
+        // If user data is not found, show an error message
+        if (userData == 'User Not Found.') {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('User Not Found'),
+                content: Text('The provided user data was not found.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+          return;
+        }
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  (Platform.isIOS)
+                      ? const CupertinoActivityIndicator(
+                          radius: 20,
+                          color: Color(0xff32B5BD),
+                        )
+                      : const CircularProgressIndicator(
+                          color: Color(0xff32B5BD),
+                        ),
+                ],
+              ),
+            );
+          },
+        );
+
+        await Future.delayed(Duration(seconds: 3), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+          );
+        });
       }
     } catch (e) {
       print(e.toString());
@@ -160,6 +218,31 @@ class _BodyState extends State<Body> {
         'User ID': id,
       },
     );
+  }
+
+  late final String userId;
+
+  Future getUserData() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('User ID', isEqualTo: userId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final userData = querySnapshot.docs.first.data();
+      final userLogin = UserData(
+        userId: userData['User ID'],
+        firstName: userData['First Name'],
+        lastName: userData['Last Name'],
+        number: userData['Mobile Number'],
+        email: userData['Email Address'],
+        role: userData['Role'],
+      );
+      allUsers.add(userLogin);
+      return userData;
+    } else {
+      return 'User Not Found.';
+    }
   }
 
   @override
@@ -273,6 +356,7 @@ class _BodyState extends State<Body> {
                 title: 'Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                isPasswordVisible: true,
                 errorTextField: registerPasswordError,
               ),
               registerPasswordError
@@ -294,6 +378,7 @@ class _BodyState extends State<Body> {
                 title: 'Confirm Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                isPasswordVisible: true,
                 errorTextField: registerPasswordError,
               ),
               registerPasswordError
@@ -311,6 +396,7 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                isMobileNumber: true,
                 keyboardType: TextInputType.number,
                 controller: _numberController,
                 title: 'Mobile Number',

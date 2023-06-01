@@ -37,41 +37,62 @@ class _ProfilePersonalInformationState
       isPersonalInfoReadOnly = true;
     });
     FieldsCheck();
-    try {
-      final String userId = FirebaseAuth.instance.currentUser!.uid;
+    if (FieldsCheck()) {
+      try {
+        final String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('User ID', isEqualTo: userId)
-          .get();
-      final docId = querySnapshot.docs.first.id;
-      print(docId);
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('User ID', isEqualTo: userId)
+            .get();
+        final docId = querySnapshot.docs.first.id;
+        print(docId);
 
-      await FirebaseFirestore.instance.collection('users').doc(docId).update(
-        {
-          'First Name': _firstNameControlller.text.trim(),
-          'Last Name': _lastNameControlller.text.trim(),
-          'Email Address': _emailControlller.text.trim(),
-          'Mobile Number': _numberControlller.text.trim(),
-        },
+        await FirebaseFirestore.instance.collection('users').doc(docId).update(
+          {
+            'First Name': _firstNameControlller.text.trim(),
+            'Last Name': _lastNameControlller.text.trim(),
+            'Email Address': _emailControlller.text.trim(),
+            'Mobile Number': int.parse('0' + _numberControlller.text.trim()),
+          },
+        );
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blueGrey,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'One or more fields has a problem. Try again',
+              ),
+            )),
       );
-    } catch (e) {
-      print(e.toString());
     }
   }
 
   bool FieldsCheck() {
-    if (_firstNameControlller.text.trim() != allUsers[0].first_name ||
-        _firstNameControlller.text.trim().isNotEmpty ||
-        _lastNameControlller.text.trim() != allUsers[0].last_name ||
-        _lastNameControlller.text.trim().isNotEmpty ||
-        _emailControlller.text.trim() != allUsers[0].email ||
-        _emailControlller.text.trim().isNotEmpty ||
-        _numberControlller.text.trim() != allUsers[0].last_name ||
+    if (_firstNameControlller.text.trim() != allUsers[0].first_name &&
+        _firstNameControlller.text.trim().isNotEmpty &&
+        _lastNameControlller.text.trim() != allUsers[0].last_name &&
+        _lastNameControlller.text.trim().isNotEmpty &&
+        _emailControlller.text.trim() != allUsers[0].email &&
+        _emailControlller.text.trim().isNotEmpty &&
+        _numberControlller.text.trim() != allUsers[0].last_name &&
         _numberControlller.text.trim().isNotEmpty) {
       print('First Name can be updated');
       return true;
     } else {
+      _firstNameControlller.clear();
+      _lastNameControlller.clear();
+      _emailControlller.clear();
+      _numberControlller.clear();
+      print("There's an error in one of the fields");
       return false;
     }
   }
@@ -121,7 +142,7 @@ class _ProfilePersonalInformationState
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

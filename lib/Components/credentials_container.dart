@@ -10,6 +10,7 @@ class CredentialsContainer extends StatefulWidget {
   final String hintText;
   bool isPassword;
   bool isPasswordVisible;
+  bool isMobileNumber;
   TextInputType keyboardType;
 
   CredentialsContainer({
@@ -20,6 +21,7 @@ class CredentialsContainer extends StatefulWidget {
     this.keyboardType = TextInputType.name,
     this.iconText = '@',
     this.errorTextField = false,
+    this.isMobileNumber = false,
     required this.hintText,
     required this.controller,
   }) : super(key: key);
@@ -95,6 +97,8 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
               ),
               padding: EdgeInsets.only(left: 16 * screenWidth),
               child: TextField(
+                maxLength: widget.isMobileNumber ? 10 : null,
+                textAlign: TextAlign.left,
                 textAlignVertical: TextAlignVertical.center,
                 keyboardType: widget.keyboardType,
                 controller: widget.controller,
@@ -107,6 +111,7 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
                 clipBehavior: Clip.antiAlias,
                 cursorColor: black.withOpacity(0.6),
                 decoration: InputDecoration(
+                    counterText: '',
                     suffixIcon: widget.isPasswordVisible
                         ? Padding(
                             padding: EdgeInsets.only(right: screenWidth * 4.0),

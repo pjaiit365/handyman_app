@@ -247,6 +247,7 @@ class ProfileItemAddFile extends StatefulWidget {
   bool isWidthMax;
   bool isChargeRate;
   bool isMomoOptions;
+  bool isReadOnly;
   ProfileItemAddFile({
     Key? key,
     required this.title,
@@ -256,6 +257,7 @@ class ProfileItemAddFile extends StatefulWidget {
     this.isWidthMax = true,
     this.isChargeRate = false,
     this.isMomoOptions = false,
+    this.isReadOnly = true,
   }) : super(key: key);
 
   @override
@@ -318,13 +320,27 @@ class _ProfileItemAddFileState extends State<ProfileItemAddFile> {
               value: serviceCategoryList,
             );
           }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              dropdownvalue = newValue!;
-              widget.selectedOptions.add(dropdownvalue);
-              print(widget.selectedOptions);
-            });
-          },
+          onChanged: widget.isReadOnly
+              ? null
+              : (String? newValue) {
+                  if (!widget.selectedOptions.contains(newValue)) {
+                    setState(() {
+                      dropdownvalue = newValue!;
+                      widget.selectedOptions.add(dropdownvalue);
+                      if (dropdownvalue == 'MTN Mobile Money') {
+                        selectedMomoOptionsIcons
+                            .add('assets/icons/mtn_momo.png');
+                      } else if (dropdownvalue == 'Vodafone Cash') {
+                        selectedMomoOptionsIcons
+                            .add('assets/icons/vodafone_cash.png');
+                      } else if (dropdownvalue == 'Airtel/Tigo Money') {
+                        selectedMomoOptionsIcons
+                            .add('assets/icons/airtel_tigo.png');
+                      } else {}
+                      print(widget.selectedOptions);
+                    });
+                  }
+                },
           value: widget.isChargeRate ? dropdownvalue : null,
         ),
         widget.selectedOptions.isEmpty
@@ -340,11 +356,13 @@ class _ProfileItemAddFileState extends State<ProfileItemAddFile> {
                     isMomoOptions: widget.isMomoOptions,
                     index: index,
                     child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          widget.selectedOptions.removeAt(index);
-                        });
-                      },
+                      onTap: widget.isReadOnly
+                          ? null
+                          : () {
+                              setState(() {
+                                widget.selectedOptions.removeAt(index);
+                              });
+                            },
                       child: Image.asset('assets/icons/dash.png'),
                     ),
                   );

@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-import '../models/users.dart';
+import '../Models/users.dart';
 
 class GetUserFirstName extends StatefulWidget {
   const GetUserFirstName({
@@ -36,9 +35,9 @@ class _GetUserFirstNameState extends State<GetUserFirstName> {
       final userData = querySnapshot.docs.first.data();
       final firstName = userData['First Name'];
       final user = UserData(
-        user_id: userData['User ID'],
-        first_name: userData['First Name'],
-        last_name: userData['Last Name'],
+        userId: userData['User ID'],
+        firstName: userData['First Name'],
+        lastName: userData['Last Name'],
         number: userData['Mobile Number'],
         email: userData['Email Address'],
         role: userData['Role'],

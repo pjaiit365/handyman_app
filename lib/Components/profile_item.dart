@@ -18,6 +18,7 @@ class ProfileItem extends StatelessWidget {
   bool isReadOnly;
   bool isHintText;
   num width;
+  int maxLength;
   ProfileItem({
     Key? key,
     required this.title,
@@ -30,6 +31,7 @@ class ProfileItem extends StatelessWidget {
     this.isReadOnly = true,
     this.isInputObscured = false,
     this.isHintText = true,
+    this.maxLength = 1000,
     this.imageAssetLocation = 'assets/icons/credit_card.png',
     this.width = 0,
     TextEditingController? controller,
@@ -78,7 +80,7 @@ class ProfileItem extends StatelessWidget {
                   readOnly: isReadOnly,
                   obscureText: isInputObscured ? true : false,
                   obscuringCharacter: "*",
-                  maxLength: isInputObscured ? 4 : null,
+                  maxLength: isInputObscured ? 4 : maxLength,
                   keyboardType: keyboardType,
                   cursorHeight: 18 * screenHeight,
                   enableSuggestions: true,
