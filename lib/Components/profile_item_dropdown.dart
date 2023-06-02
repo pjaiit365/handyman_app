@@ -379,6 +379,10 @@ class _ProfileItemAddFileState extends State<ProfileItemAddFile> {
 }
 
 class ProfileItemAddAddress extends StatefulWidget {
+  final VoidCallback screen;
+  final TextEditingController streetNameController;
+  final TextEditingController townController;
+  final TextEditingController houseNumController;
   final String title;
   final String hintText;
 
@@ -386,26 +390,20 @@ class ProfileItemAddAddress extends StatefulWidget {
     Key? key,
     required this.title,
     required this.hintText,
+    required this.streetNameController,
+    required this.townController,
+    required this.houseNumController,
+    required this.screen,
   }) : super(key: key);
   @override
   State<ProfileItemAddAddress> createState() => _ProfileItemAddAddressState();
 }
 
 class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
-  final streetNameController = TextEditingController();
-  final townController = TextEditingController();
-  final houseNumController = TextEditingController();
-
-  @override
-  void dispose() {
-    streetNameController.dispose();
-    townController.dispose();
-    houseNumController.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     void _AddressDialogBox() {
+      setState(() {});
       showDialog(
         context: context,
         builder: (context) {
@@ -439,13 +437,13 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                       ),
                       SizedBox(height: 10 * screenHeight),
                       ProfileAddressItem(
-                          textEditingController: streetNameController,
+                          textEditingController: widget.streetNameController,
                           title: 'Street name',
                           hintText: 'Enter street name...',
                           keyboardType: TextInputType.streetAddress),
                       SizedBox(height: 20 * screenHeight),
                       ProfileAddressItem(
-                          textEditingController: townController,
+                          textEditingController: widget.townController,
                           title: 'Town',
                           hintText: 'Enter town name...',
                           keyboardType: TextInputType.name),
@@ -457,7 +455,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                           RegionSelect(),
                           Spacer(),
                           ProfileAddressItem(
-                              textEditingController: houseNumController,
+                              textEditingController: widget.houseNumController,
                               isWidthMax: false,
                               width: 118,
                               title: 'House Number',
@@ -470,22 +468,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    addressStreetName.add(streetNameController.text);
-                    addressTownName.add(townController.text);
-                    addressHouseNum.add(houseNumController.text);
-                    addressRegionName.add(regionValue);
-                  });
-                  Navigator.pop(context);
-                  print(addressStreetName);
-                  print(addressHouseNum);
-                  print(addressTownName);
-                  print(addressRegionName);
-                  streetNameController.clear();
-                  townController.clear();
-                  houseNumController.clear();
-                },
+                onTap: widget.screen,
                 child: Container(
                   height: 49 * screenHeight,
                   width: 312 * screenWidth,
@@ -527,7 +510,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
           ),
         ),
         GestureDetector(
-          onTap: _AddressDialogBox,
+          onTap: isLocationReadOnly ? () {} : _AddressDialogBox,
           child: Container(
             height: 49 * screenHeight,
             width: 310 * screenWidth,

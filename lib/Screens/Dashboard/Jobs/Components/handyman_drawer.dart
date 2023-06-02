@@ -65,9 +65,7 @@ class HandymanDrawer extends StatelessWidget {
                         SizedBox(
                           width: 190 * screenWidth,
                           child: Text(
-                            allUsers[0].first_name +
-                                ' ' +
-                                allUsers[0].last_name,
+                            allUsers[0].firstName + ' ' + allUsers[0].lastName,
                             style: TextStyle(
                               color: black,
                               fontSize: 17,

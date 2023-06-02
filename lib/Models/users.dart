@@ -5,11 +5,11 @@ class UserData {
   final int number;
   final String email;
   final String role;
-  List? momoType;
+  List<String>? momoType;
   int? cardNumber;
-  int? expiryDate;
+  String? expiryDate;
   int? cvv;
-  int? payPalAddress;
+  String? payPalAddress;
 
   UserData({
     this.momoType,

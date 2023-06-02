@@ -36,7 +36,6 @@ class _ProfilePersonalInformationState
     setState(() {
       isPersonalInfoReadOnly = true;
     });
-    FieldsCheck();
     if (FieldsCheck()) {
       try {
         final String userId = FirebaseAuth.instance.currentUser!.uid;
@@ -56,6 +55,19 @@ class _ProfilePersonalInformationState
             'Mobile Number': int.parse('0' + _numberControlller.text.trim()),
           },
         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.black45,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Center(
+                child: Text(
+                  'Personal profile successfully updated.',
+                ),
+              )),
+        );
       } catch (e) {
         print(e.toString());
       }
@@ -63,7 +75,7 @@ class _ProfilePersonalInformationState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             duration: Duration(seconds: 2),
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Colors.black45,
             behavior: SnackBarBehavior.floating,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -163,7 +175,7 @@ class _ProfilePersonalInformationState
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
                 title: 'First Name',
-                hintText: allUsers[0].first_name,
+                hintText: allUsers[0].firstName,
                 keyboardType: TextInputType.name,
               ),
               SizedBox(height: 20 * screenHeight),
@@ -172,7 +184,7 @@ class _ProfilePersonalInformationState
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
                 title: 'Last Name',
-                hintText: allUsers[0].last_name,
+                hintText: allUsers[0].lastName,
                 keyboardType: TextInputType.name,
               ),
               SizedBox(height: 20 * screenHeight),

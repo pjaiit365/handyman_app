@@ -64,7 +64,7 @@ class _BodyState extends State<Body> {
             SizedBox(height: 25 * screenHeight),
             ProfilePersonalInformation(),
             SizedBox(height: 25 * screenHeight),
-            ProfilePaymentInformation(),
+            // ProfilePaymentInformation(),
             SizedBox(height: 25 * screenHeight),
             ProfileLocationInformation(),
             SizedBox(height: 15 * screenHeight),

@@ -491,3 +491,4 @@ int activeIndex = 0;
 
 bool isPersonalInfoReadOnly = true;
 bool isPaymentInfoReadOnly = true;
+bool isLocationReadOnly = true;

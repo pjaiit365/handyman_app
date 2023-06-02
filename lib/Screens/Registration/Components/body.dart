@@ -64,6 +64,16 @@ class _BodyState extends State<Body> {
           roleSelected,
           userId,
         );
+
+        addProfileDetails(
+          userId,
+          '',
+          null,
+          null,
+          null,
+          null,
+        );
+
         allUsers.clear();
         getUserData();
 
@@ -218,6 +228,21 @@ class _BodyState extends State<Body> {
         'User ID': id,
       },
     );
+  }
+
+  Future addProfileDetails(String id, String? momoType, int? cardNumber,
+      String? expiryDate, int? cvv, String? payPal) async {
+    //creating a collection in firestore database called 'Profile'
+    await FirebaseFirestore.instance.collection('profile').add({
+      'User ID': id,
+      'Mobile Money Type': selectedMomoOptions,
+      'Credit Card Information': {
+        'Card Number': cardNumber,
+        'Expiry Date': expiryDate,
+        'CVV': cvv,
+      },
+      'PayPal': payPal,
+    });
   }
 
   late final String userId;

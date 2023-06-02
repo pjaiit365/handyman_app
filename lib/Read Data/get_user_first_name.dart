@@ -14,6 +14,7 @@ class GetUserFirstName extends StatefulWidget {
 }
 
 List allUsers = [];
+List allProfile = [];
 
 class _GetUserFirstNameState extends State<GetUserFirstName> {
   late final String userId;
@@ -22,6 +23,7 @@ class _GetUserFirstNameState extends State<GetUserFirstName> {
   void initState() {
     super.initState();
     allUsers.clear();
+    allProfile.clear();
     userId = FirebaseAuth.instance.currentUser!.uid;
   }
 
@@ -78,91 +80,4 @@ class _GetUserFirstNameState extends State<GetUserFirstName> {
     );
   }
 }
-//   if (snapshot.connectionState == ConnectionState.done) {
-//     Map<String, dynamic> data =
-//         snapshot.data!.data() as Map<String, dynamic>;
 //
-//     // for (int i = 0; i < docIds.length; i++) {
-//     //   final usersVar = UserData(
-//     //     user_id: data['User ID'],
-//     //     first_name: data['First Name'],
-//     //     last_name: data['Last Name'],
-//     //     number: data['Mobile Number'],
-//     //     email: data['Email Address'],
-//     //     role: data['Role'],
-//     //   );
-//     //   allUsers.add(usersVar);
-//     //   print(allUsers);
-//
-//     //   for (int i = 0; i < allUsers.length; i++) {
-//     //     if (userId == allUsers[i].user_id) {
-//     //       userName = allUsers[i].first_name;
-//     //       print(userName);
-//     //     }
-//     //     print(userName);
-//     //   }
-//     // }
-//     // print(docIds);
-//     // print(allUsers[0].first_name);
-//
-//     // for (int i = 0; i < docIds.length; i++) {
-//     //   if (users.doc(docIds[i]).get() == userId) {
-//     //     print(docIds[i]);
-//     //   }
-//     // }
-//
-//     // for (var eachUser in) {
-//     //   final usersVar = UserData(
-//     //       user_id: data['User ID'],
-//     //       first_name: data['First Name'],
-//     //       last_name: data['Last Name'],
-//     //       number: data['Mobile Number'],
-//     //       email: data['Email Address'],
-//     //       role: data['Role']);
-//     // }
-//
-//     // try {
-//     //   if (response.statusCode == 200) {
-//     //     var jsonData = jsonDecode(response.body);
-//     //     for (var eachPlayer in jsonData['data']) {
-//     //       final players = PlayerData(
-//     //         team_id: eachPlayer['team']['id'],
-//     //         player_id: eachPlayer['id'],
-//     //         firstName: eachPlayer['first_name'],
-//     //         lastName: eachPlayer['last_name'],
-//     //         position: eachPlayer['position'],
-//     //       );
-//     //
-//     //       allPlayer.add(players);
-//     //     }
-//     //
-//     //     // print(allPlayer.length);
-//     //
-//     //     for (int i = 0; i < allPlayer.length; i++) {
-//     //       if (allPlayer[i].team_id == (chosenTeamIndex + 1)) {
-//     //         player.add(allPlayer[i]);
-//     //         print('${i + 1} players in list');
-//     //         print(player[i].team_id);
-//     //       }
-//     //     }
-//     //     print(player.length);
-//     //   } else {
-//     //     Center(
-//     //       child: Text('API Error. API system not responding, try again later.'),
-//     //     );
-//     //   }
-//     // } on Error catch (e) {
-//     //   print('Error: $e');
-//     // }
-//
-//     return Text(
-//       'Hi ${data['First Name']},',
-//       style: TextStyle(
-//           fontFamily: 'Habibi', fontSize: 30, color: Colors.black),
-//     );
-//   }
-//   return Text(
-//     'loading...',
-//     style: TextStyle(
-//         fontFamily: 'Habibi', fontSize: 30, color: Colors.black),
-//   );
