@@ -40,8 +40,17 @@ class _AddedFileContainerState extends State<AddedFileContainer> {
           widget.isMomoOptions
               ? SizedBox(height: 0, width: 0)
               : Image.asset('assets/icons/pdf.png'),
-          widget.isMomoOptions
-              ? Image.asset(selectedMomoOptionsIcons[widget.index])
+          widget.isMomoOptions &&
+                  selectedMomoOptions[widget.index] == momoListOptions[0]
+              ? Image.asset(selectedMomoOptionsIcons[0])
+              : SizedBox(height: 0, width: 0),
+          widget.isMomoOptions &&
+                  selectedMomoOptions[widget.index] == momoListOptions[1]
+              ? Image.asset(selectedMomoOptionsIcons[1])
+              : SizedBox(height: 0, width: 0),
+          widget.isMomoOptions &&
+                  selectedMomoOptions[widget.index] == momoListOptions[2]
+              ? Image.asset(selectedMomoOptionsIcons[2])
               : SizedBox(height: 0, width: 0),
           widget.isMomoOptions
               ? SizedBox(height: 0, width: 0)

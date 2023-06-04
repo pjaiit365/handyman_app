@@ -127,7 +127,11 @@ final userRoleList = [
   'Professional Handyman',
 ];
 List<String> selectedMomoOptions = [];
-List<String> selectedMomoOptionsIcons = [];
+List<String> selectedMomoOptionsIcons = [
+  'assets/icons/mtn_momo.png',
+  'assets/icons/vodafone_cash.png',
+  'assets/icons/airtel_tigo.png',
+];
 
 final chargePerList = ['N/A', 'Hour', '6 hours', '12 hours', 'Day'];
 final regionsList = [
@@ -492,3 +496,8 @@ int activeIndex = 0;
 bool isPersonalInfoReadOnly = true;
 bool isPaymentInfoReadOnly = true;
 bool isLocationReadOnly = true;
+
+String? cardNumberHintText = '';
+String? expiryDateHintText = '';
+String? cvvHintText = '';
+String? payPalHintText = '';

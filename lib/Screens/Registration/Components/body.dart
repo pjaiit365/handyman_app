@@ -66,12 +66,16 @@ class _BodyState extends State<Body> {
         );
 
         addProfileDetails(
-          userId,
-          '',
-          null,
-          null,
-          null,
-          null,
+          userId, //userId
+          '', //momoType
+          null, //card number
+          null, //expiry date
+          null, //cvv
+          null, //paypal
+          '', //street name
+          '', //town
+          '', //region
+          '', //house number
         );
 
         allUsers.clear();
@@ -230,8 +234,17 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Future addProfileDetails(String id, String? momoType, int? cardNumber,
-      String? expiryDate, int? cvv, String? payPal) async {
+  Future addProfileDetails(
+      String id,
+      String? momoType,
+      int? cardNumber,
+      String? expiryDate,
+      int? cvv,
+      String? payPal,
+      String? streetName,
+      String? town,
+      String? region,
+      String? houseNum) async {
     //creating a collection in firestore database called 'Profile'
     await FirebaseFirestore.instance.collection('profile').add({
       'User ID': id,
@@ -242,6 +255,12 @@ class _BodyState extends State<Body> {
         'CVV': cvv,
       },
       'PayPal': payPal,
+      'Address Information': {
+        'Street Name': streetName,
+        'Town': town,
+        'Region': region,
+        'House Number': houseNum,
+      }
     });
   }
 

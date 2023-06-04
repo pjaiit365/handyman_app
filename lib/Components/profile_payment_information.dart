@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
-import 'package:handyman_app/Models/profile.dart';
-import 'package:handyman_app/Models/users.dart';
 import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 
 import '../constants.dart';
@@ -111,49 +109,6 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
     }
   }
 
-  Future getProfileData() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('profile')
-        .where('User ID', isEqualTo: userId)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final profileData = querySnapshot.docs.first.data();
-      final user = ProfileData(
-        cardNumber: profileData['Credit Card Information'] != null
-            ? profileData['Credit Card Information']['Card Number']
-            : null,
-        expiryDate: profileData['Credit Card Information'] != null
-            ? profileData['Credit Card Information']['Expiry Date']
-            : null,
-        cvv: profileData['Credit Card Information'] != null
-            ? profileData['Credit Card Information']['CVV']
-            : null,
-        momoType: profileData['Mobile Money Type'] != null
-            ? (profileData['Mobile Money Type'] as List<dynamic>).cast<String>()
-            : null,
-        payPalAddress:
-            profileData['PayPal'] != null ? profileData['PayPal'] : null,
-      );
-
-      allProfile.clear();
-      allProfile.add(user);
-      print(allProfile[0].cvv);
-      print(allProfile[0].expiryDate);
-      print(allProfile[0].cardNumber);
-      print(allProfile[0].payPalAddress);
-      print(allProfile[0].momoType);
-
-      if (allProfile[0].momoType != null) {
-        selectedMomoOptions = allProfile[0].momoType;
-      }
-    } else {
-      return 'User Not Found';
-    }
-  }
-
   bool CheckFields() {
     if (_cardNumberController.text.trim().isNotEmpty &&
         _cvvController.text.trim().isNotEmpty &&
@@ -166,15 +121,7 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
   }
 
   @override
-  void initState() {
-    getProfileData();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    getProfileData();
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,6 +180,7 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              //range index error is from here
               ProfileItemAddFile(
                 isReadOnly: isPaymentInfoReadOnly,
                 isMomoOptions: true,
@@ -243,14 +191,16 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
-                // isHintText: allProfile[0].cardNumber == null ? true : false,
+                isHintText: cardNumberHintText == null ? true : false,
                 maxLength: 16,
                 isReadOnly: isPaymentInfoReadOnly,
                 controller: _cardNumberController,
                 imageAssetLocation: 'assets/icons/credit_card.png',
                 isCreditCard: true,
                 title: 'Credit Card',
-                hintText: '**** **** **** ****',
+                hintText: cardNumberHintText == null
+                    ? 'Enter card number...'
+                    : '**** **** **** ****',
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 11 * screenHeight),
@@ -259,26 +209,26 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ProfileItem(
-                    // isHintText: allProfile[0].expiryDate == null ? true : false,
+                    isHintText: expiryDateHintText == null ? true : false,
                     maxLength: 4,
                     isReadOnly: isPaymentInfoReadOnly,
                     controller: _expiryDateController,
                     isTitlePresent: false,
                     title: '',
-                    hintText: 'MM/YY',
+                    hintText: expiryDateHintText == null ? 'MM/YY' : '**/**',
                     keyboardType: TextInputType.datetime,
                     isWidthMax: false,
                     width: 174,
                   ),
                   SizedBox(width: 20 * screenWidth),
                   ProfileItem(
-                    // isHintText: allProfile[0].cvv == null ? true : false,
+                    isHintText: cvvHintText == null ? true : false,
                     isReadOnly: isPaymentInfoReadOnly,
                     controller: _cvvController,
                     isInputObscured: true,
                     isTitlePresent: false,
                     title: '',
-                    hintText: 'CVV/CVC',
+                    hintText: cvvHintText == null ? 'CVV/CVC' : '****',
                     keyboardType: TextInputType.number,
                     isWidthMax: false,
                     width: 116,
@@ -287,11 +237,13 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
-                // isHintText: allProfile[0].payPalAddress == null ? true : false,
+                isHintText: payPalHintText == null ? true : false,
                 isReadOnly: isPaymentInfoReadOnly,
                 controller: _payPalController,
                 title: 'PayPal',
-                hintText: 'Enter PayPal address...',
+                hintText: payPalHintText == null
+                    ? 'Enter PayPal address...'
+                    : payPalHintText.toString(),
                 keyboardType: TextInputType.emailAddress,
                 isCreditCard: true,
                 imageAssetLocation: 'assets/icons/pay_pal.png',

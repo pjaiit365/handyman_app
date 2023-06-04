@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
 import 'package:handyman_app/Components/saved_addresses.dart';
@@ -27,6 +29,111 @@ class _ProfileLocationInformationState
     houseNumController.dispose();
   }
 
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+
+  Future saveLocation() async {
+    setState(() {
+      isLocationReadOnly = true;
+    });
+    if (AddressPresent()) {
+      try {
+        updateLocation();
+      } catch (e) {
+        print(
+          e.toString(),
+        );
+      }
+    } else {
+      try {
+        updateLocation();
+      } catch (e) {
+        print(
+          e.toString(),
+        );
+      }
+    }
+  }
+
+  Future updateLocation() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('profile')
+        .where('User ID', isEqualTo: userId)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      final docId = querySnapshot.docs.first.id;
+
+      await FirebaseFirestore.instance.collection('profile').doc(docId).update({
+        'Address Information': {
+          'Street Name': addressStreetName,
+          'Town': addressTownName,
+          'Region': addressRegionName,
+          'House Number': addressHouseNum,
+        }
+      });
+    } else {
+      throw 'User Not Found';
+    }
+  }
+
+  bool AddressPresent() {
+    if (addressStreetName.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'Location Information has been added successfully.',
+              ),
+            )),
+      );
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'No addresses present. All addresses will be removed from cloud storage.',
+                textAlign: TextAlign.center,
+              ),
+            )),
+      );
+      return false;
+    }
+  }
+
+  bool InputAddressFieldsCheck() {
+    if (streetNameController.text.trim().isNotEmpty &&
+        townController.text.trim().isNotEmpty &&
+        regionValue != 'N/A' &&
+        houseNumController.text.trim().isNotEmpty) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'One or more fields has a problem. Try again',
+              ),
+            )),
+      );
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,7 +147,7 @@ class _ProfileLocationInformationState
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Personal Information',
+                'Location',
                 style: TextStyle(
                   color: black,
                   fontSize: 17,
@@ -89,13 +196,53 @@ class _ProfileLocationInformationState
             children: <Widget>[
               ProfileItemAddAddress(
                 screen: () {
-                  setState(() {
-                    addressStreetName.add(streetNameController.text);
-                    addressTownName.add(townController.text);
-                    addressHouseNum.add(houseNumController.text);
-                    addressRegionName.add(regionValue);
-                  });
-                  setState(() {});
+                  //if address entered in pop up is present in previous addresses, display Snackbar and ignore address
+                  if (InputAddressFieldsCheck()) {
+                    if (addressTownName.contains(townController.text.trim()) &&
+                        addressStreetName
+                            .contains(streetNameController.text.trim()) &&
+                        addressHouseNum
+                            .contains(houseNumController.text.trim())) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.black45,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            content: Center(
+                              child: Text(
+                                'Address entered is already present. Try a different address.',
+                                style: TextStyle(height: 1.3),
+                                textAlign: TextAlign.center,
+                              ),
+                            )),
+                      );
+                    }
+                    //if address entered in pop up is NOT present in previous addresses, then add adrress
+                    else {
+                      setState(() {
+                        addressStreetName.add(streetNameController.text);
+                        addressTownName.add(townController.text);
+                        addressHouseNum.add(houseNumController.text);
+                        addressRegionName.add(regionValue);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.black45,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            content: Center(
+                              child: Text(
+                                'Address has been added successfully.',
+                                textAlign: TextAlign.center,
+                              ),
+                            )),
+                      );
+                    }
+                  }
                   Navigator.pop(context);
                   print(addressStreetName);
                   print(addressHouseNum);
@@ -159,12 +306,15 @@ class _ProfileLocationInformationState
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      setState(() {
-                                        addressRegionName.removeAt(index);
-                                        addressTownName.removeAt(index);
-                                        addressStreetName.removeAt(index);
-                                        addressHouseNum.removeAt(index);
-                                      });
+                                      {
+                                        if (isLocationReadOnly == false)
+                                          setState(() {
+                                            addressRegionName.removeAt(index);
+                                            addressTownName.removeAt(index);
+                                            addressStreetName.removeAt(index);
+                                            addressHouseNum.removeAt(index);
+                                          });
+                                      }
                                     },
                                     child: Container(
                                       height: 31 * screenHeight,
@@ -213,7 +363,7 @@ class _ProfileLocationInformationState
                       child: Padding(
                         padding: EdgeInsets.only(top: screenHeight * 20.0),
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: saveLocation,
                           child: Container(
                             height: 53 * screenHeight,
                             width: 310 * screenWidth,
