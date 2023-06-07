@@ -197,6 +197,8 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
                 controller: _cardNumberController,
                 imageAssetLocation: 'assets/icons/credit_card.png',
                 isCreditCard: true,
+                isWidthMax: false,
+                width: 310,
                 title: 'Credit Card',
                 hintText: cardNumberHintText == null
                     ? 'Enter card number...'

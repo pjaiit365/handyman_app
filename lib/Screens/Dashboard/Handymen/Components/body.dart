@@ -18,6 +18,14 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  int selectedTabIndex = 0;
+
+  void onTabSelected(int index) {
+    setState(() {
+      selectedTabIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -73,14 +81,17 @@ class _BodyState extends State<Body> {
             SizedBox(
               height: 48 * screenHeight,
               child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 10 * screenWidth),
-
+                padding: EdgeInsets.only(
+                    left: 10 * screenWidth, right: 0 * screenWidth),
                 itemCount: dashBoardTabList.length,
                 shrinkWrap: true,
-                // physics: NeverScrollableScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => DashboardTab(
+                  onTabSelected: onTabSelected,
                   text: dashBoardTabList[index],
+                  index: index,
+                  selectedTabIndex: selectedTabIndex,
                 ),
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(width: screenWidth * 15);

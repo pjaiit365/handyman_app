@@ -17,7 +17,11 @@ class Body extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 15 * screenHeight),
-        MyJobsTabs(),
+        MyJobsTabs(
+          isJobCompletedClicked: isJobCompletedClicked,
+          isJobOffersClicked: isJobOffersClicked,
+          isJobUpcomingClicked: isJobUpcomingClicked,
+        ),
         SizedBox(height: 25 * screenHeight),
         if (isJobUpcomingClicked == true)
           ListView.separated(

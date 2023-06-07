@@ -1,13 +1,139 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/profile_item.dart';
-import 'package:handyman_app/Components/profile_item_dropdown.dart';
+import 'package:handyman_app/Services/storage_service.dart';
 
 import '../constants.dart';
+import 'add_file_item.dart';
 
-class ProfileWorkExpInformation extends StatelessWidget {
+class ProfileWorkExpInformation extends StatefulWidget {
   const ProfileWorkExpInformation({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<ProfileWorkExpInformation> createState() =>
+      _ProfileWorkExpInformationState();
+}
+
+class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
+  Storage storage = Storage();
+
+  Future updateWorkCertInfo() async {
+    setState(() {
+      isWorkExpReadOnly = true;
+    });
+
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('profile')
+          .where('User ID', isEqualTo: loggedInUserId)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('profile')
+            .doc(docId)
+            .update({
+          'Work Experience & Certification': {
+            'Certification': selectedCertList,
+            'Experience': selectedExperienceList,
+            'Rating': ratingHintText,
+            'Number of Jobs': int.parse(jobTotalHintText!),
+          },
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'Work Experience & Certification has been updated successfully',
+                style: TextStyle(height: 1.3),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'Work Experience & Certification could not update. Try again later.',
+                style: TextStyle(height: 1.3),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future addFileCertification() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'txt', 'doc', 'docx'],
+      allowMultiple: false,
+    );
+    if (result != null) {
+      final fileName = result.files.single.name;
+      final filePath = result.files.single.path!;
+
+      final file = File(filePath);
+      if (file.existsSync()) {
+        storage
+            .uploadFile(filePath, fileName, 'certification')
+            .then((value) => print('File Uploaded Successfully'));
+      } else {
+        print('File does not exist');
+      }
+    }
+  }
+
+  Future addFileExperience() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'txt', 'doc', 'docx'],
+      allowMultiple: false,
+    );
+    if (result != null) {
+      final fileName = result.files.single.name;
+      final filePath = result.files.single.path!;
+
+      String directory = 'experience';
+
+      storage
+          .uploadFile(filePath, fileName, directory)
+          .then((value) => print('File Uploaded Successfully'));
+    }
+  }
+
+  Future experienceListFile() async {
+    await storage.listAllFiles('experience', experienceFileNames);
+    print(experienceFileNames);
+  }
+
+  Future certListFile() async {
+    await storage.listAllFiles('certification', certificationFileNames);
+    print(experienceFileNames);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +143,47 @@ class ProfileWorkExpInformation extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: screenWidth * 5.0),
-          child: Text(
-            'Work Experience & Certifications',
-            style: TextStyle(
-              color: black,
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Work Experience & Certification',
+                style: TextStyle(
+                  color: black,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isWorkExpReadOnly = !isWorkExpReadOnly;
+                  });
+                },
+                child: Container(
+                  height: 37 * screenHeight,
+                  width: 37 * screenWidth,
+                  decoration: BoxDecoration(
+                    color: white,
+                    border: Border.all(
+                        color: isWorkExpReadOnly ? sectionColor : primary,
+                        width: 1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      isWorkExpReadOnly ? Icons.edit : Icons.clear,
+                      color: primary,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(height: 9 * screenHeight),
+        SizedBox(height: 13 * screenHeight),
         Container(
           constraints: BoxConstraints(minHeight: 320),
           width: 359 * screenWidth,
@@ -38,18 +195,25 @@ class ProfileWorkExpInformation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProfileItemAddFile(
-                selectedOptions: selectedServiceCatList,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[],
+              ),
+              AddFileItem(
+                isReadOnly: isWorkExpReadOnly,
+                selectedOptions: selectedCertList,
+                screen: addFileCertification,
                 title: 'Certification',
-                hintText: 'Add certification here...',
-                listName: serviceCategoryList,
+                hintText: 'Add all certifications here...',
               ),
               SizedBox(height: 20 * screenHeight),
-              ProfileItemAddFile(
-                selectedOptions: selectedServiceProvList,
+              AddFileItem(
+                isReadOnly: isWorkExpReadOnly,
+                selectedOptions: selectedExperienceList,
                 title: 'Experience',
                 hintText: 'Add any previous work here...',
-                listName: servicesProvidedList,
+                screen: addFileExperience,
               ),
               SizedBox(height: 20 * screenHeight),
               Row(
@@ -57,8 +221,9 @@ class ProfileWorkExpInformation extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ProfileItem(
+                    isReadOnly: isWorkExpReadOnly,
                     isOverallRating: true,
-                    title: 'Charge',
+                    title: 'Rating',
                     hintText: '',
                     keyboardType: TextInputType.number,
                     isWidthMax: false,
@@ -66,8 +231,9 @@ class ProfileWorkExpInformation extends StatelessWidget {
                   ),
                   SizedBox(width: 20 * screenWidth),
                   ProfileItem(
+                    isHintText: false,
                     title: 'Number of Jobs',
-                    hintText: '...',
+                    hintText: jobTotalHintText.toString(),
                     keyboardType: TextInputType.number,
                     isWidthMax: false,
                     width: 139,
@@ -75,6 +241,34 @@ class ProfileWorkExpInformation extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10 * screenHeight),
+              isWorkExpReadOnly
+                  ? SizedBox()
+                  : Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: screenHeight * 20.0),
+                        child: GestureDetector(
+                          onTap: updateWorkCertInfo,
+                          child: Container(
+                            height: 53 * screenHeight,
+                            width: 310 * screenWidth,
+                            decoration: BoxDecoration(
+                              color: primary,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Save',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),

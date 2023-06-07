@@ -47,9 +47,12 @@ class _JobsDashboardScreenState extends State<JobsDashboardScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                image: AssetImage('assets/images/profile_pic.jpeg'),
+                image: NetworkImage(imageUrl),
               ),
             ),
+            child: imageUrl == ''
+                ? Center(child: Icon(Icons.person, color: grey))
+                : null,
           )
         ],
       ),

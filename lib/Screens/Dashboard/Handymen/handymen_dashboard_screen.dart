@@ -51,11 +51,15 @@ class _HandymanDashboardScreenState extends State<HandymanDashboardScreen> {
               height: screenHeight * 40,
               width: screenWidth * 40,
               decoration: BoxDecoration(
+                border: Border.all(color: sectionColor, width: 1),
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage('assets/images/profile_pic.jpeg'),
+                  image: NetworkImage(imageUrl),
                 ),
               ),
+              child: imageUrl == ''
+                  ? Center(child: Icon(Icons.person, color: grey))
+                  : null,
             )
           ],
         ),

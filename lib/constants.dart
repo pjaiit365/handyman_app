@@ -99,13 +99,14 @@ final serviceCategoryList = [
   'Gardeners'
 ];
 List selectedServiceProvList = [];
+List selectedCertList = [];
+List selectedExperienceList = [];
 
 final servicesProvidedList = [
   'Furniture Painting',
   'Building Painting',
   'Room Painting',
 ];
-List selectedChargeRateList = [];
 
 final expertiseList = [
   'N/A',
@@ -162,6 +163,7 @@ final creditCardList = [
 ];
 
 String dropdownvalue = 'N/A';
+String dropdown = 'N/A';
 String roleValue = 'Regular Customer';
 List selectedServiceCatList = [];
 
@@ -173,11 +175,16 @@ List addressStreetName = [];
 List addressTownName = [];
 List addressRegionName = [];
 List addressHouseNum = [];
+List categoryList = [];
+List categoryServicesList = [];
+List certificationList = [];
+List experienceList = [];
 
 bool isJobAboutClicked = true;
 bool isJobPortfolioClicked = false;
 
-late String cardSelected = 'N/A';
+String chargeRateSelected = 'N/A';
+String expertiseSelected = 'N/A';
 late String roleSelected = 'Regular Customer';
 
 bool isJobUpcomingClicked = true;
@@ -496,8 +503,21 @@ int activeIndex = 0;
 bool isPersonalInfoReadOnly = true;
 bool isPaymentInfoReadOnly = true;
 bool isLocationReadOnly = true;
+bool isServiceInfoReadOnly = true;
+bool isWorkExpReadOnly = true;
 
 String? cardNumberHintText = '';
 String? expiryDateHintText = '';
 String? cvvHintText = '';
 String? payPalHintText = '';
+String? chargeHintText = '';
+String? chargeRateHintText = 'N/A';
+String? expertiseHintText = 'N/A';
+String? ratingHintText = '';
+String? jobTotalHintText = '0';
+
+String loggedInUserId = '';
+String imageUrl = '';
+
+List experienceFileNames = [];
+List certificationFileNames = [];

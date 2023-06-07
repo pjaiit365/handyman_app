@@ -317,20 +317,20 @@ class _ProfileLocationInformationState
                                       }
                                     },
                                     child: Container(
-                                      height: 31 * screenHeight,
-                                      width: 30 * screenWidth,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(9),
-                                          color: white,
-                                          border: Border.all(
-                                            color: appointmentTimeColor,
-                                            width: 1,
-                                          )),
-                                      child: Image.asset(
-                                        'assets/icons/dash.png',
-                                      ),
-                                    ),
+                                        height: 25 * screenHeight,
+                                        width: 25 * screenWidth,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            color: white,
+                                            border: Border.all(
+                                              color: appointmentTimeColor,
+                                              width: 1,
+                                            )),
+                                        child: Icon(
+                                          Icons.remove,
+                                          color: primary,
+                                        )),
                                   ),
                                 ],
                               ),
@@ -346,6 +346,7 @@ class _ProfileLocationInformationState
                                 style: TextStyle(
                                   color: black,
                                   fontSize: 16,
+                                  height: 1.3,
                                 ),
                               ),
                               SizedBox(height: 10 * screenHeight),

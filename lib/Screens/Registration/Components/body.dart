@@ -55,6 +55,7 @@ class _BodyState extends State<Body> {
         );
 
         userId = FirebaseAuth.instance.currentUser!.uid;
+        loggedInUserId = userId;
 
         addDetails(
           _firstNameController.text.trim(),
@@ -135,7 +136,9 @@ class _BodyState extends State<Body> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreen(),
+              builder: (context) => roleValue == 'Regular Customer'
+                  ? HomeScreen()
+                  : RegistrationContinuationScreen(),
             ),
           );
         });
@@ -260,7 +263,7 @@ class _BodyState extends State<Body> {
         'Town': town,
         'Region': region,
         'House Number': houseNum,
-      }
+      },
     });
   }
 

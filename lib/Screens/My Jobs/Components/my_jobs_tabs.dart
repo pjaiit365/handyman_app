@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 
 class MyJobsTabs extends StatefulWidget {
-  const MyJobsTabs({
+  bool isJobUpcomingClicked;
+  bool isJobOffersClicked;
+  bool isJobCompletedClicked;
+  MyJobsTabs({
     Key? key,
+    this.isJobUpcomingClicked = true,
+    this.isJobOffersClicked = true,
+    this.isJobCompletedClicked = false,
   }) : super(key: key);
 
   @override
@@ -30,21 +36,22 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  isJobUpcomingClicked = !isJobUpcomingClicked;
+                  widget.isJobUpcomingClicked = !widget.isJobUpcomingClicked;
                 });
-                if (isJobUpcomingClicked == true) {
-                  isJobCompletedClicked = false;
-                  isJobOffersClicked = false;
+                if (widget.isJobUpcomingClicked == true) {
+                  widget.isJobCompletedClicked = false;
+                  widget.isJobOffersClicked = false;
                 }
-                if (isJobCompletedClicked == false &&
-                    isJobOffersClicked == false) isJobUpcomingClicked = true;
+                if (widget.isJobCompletedClicked == false &&
+                    widget.isJobOffersClicked == false)
+                  widget.isJobUpcomingClicked = true;
               },
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
                   'Upcoming',
-                  style: isJobUpcomingClicked
+                  style: widget.isJobUpcomingClicked
                       ? TextStyle(
                           color: primary,
                           fontSize: 18,
@@ -66,21 +73,22 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  isJobOffersClicked = !isJobOffersClicked;
+                  widget.isJobOffersClicked = !widget.isJobOffersClicked;
                 });
-                if (isJobOffersClicked == true) {
-                  isJobCompletedClicked = false;
-                  isJobUpcomingClicked = false;
+                if (widget.isJobOffersClicked == true) {
+                  widget.isJobCompletedClicked = false;
+                  widget.isJobUpcomingClicked = false;
                 }
-                if (isJobCompletedClicked == false &&
-                    isJobUpcomingClicked == false) isJobOffersClicked = true;
+                if (widget.isJobCompletedClicked == false &&
+                    widget.isJobUpcomingClicked == false)
+                  widget.isJobOffersClicked = true;
               },
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
                   'Offers',
-                  style: isJobOffersClicked
+                  style: widget.isJobOffersClicked
                       ? TextStyle(
                           color: primary,
                           fontSize: 18,
@@ -102,21 +110,22 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  isJobCompletedClicked = !isJobCompletedClicked;
+                  widget.isJobCompletedClicked = !widget.isJobCompletedClicked;
                 });
-                if (isJobCompletedClicked == true) {
-                  isJobUpcomingClicked = false;
-                  isJobOffersClicked = false;
+                if (widget.isJobCompletedClicked == true) {
+                  widget.isJobUpcomingClicked = false;
+                  widget.isJobOffersClicked = false;
                 }
-                if (isJobUpcomingClicked == false &&
-                    isJobOffersClicked == false) isJobCompletedClicked = true;
+                if (widget.isJobUpcomingClicked == false &&
+                    widget.isJobOffersClicked == false)
+                  widget.isJobCompletedClicked = true;
               },
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
                   'Completed',
-                  style: isJobCompletedClicked
+                  style: widget.isJobCompletedClicked
                       ? TextStyle(
                           color: primary,
                           fontSize: 18,

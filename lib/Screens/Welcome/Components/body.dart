@@ -18,7 +18,6 @@ class Body extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
-                top: 50 * screenHeight,
                 left: screenWidth * 37.0,
                 right: 23 * screenWidth,
               ),

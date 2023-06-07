@@ -12,6 +12,10 @@ class WelcomeScreen extends StatelessWidget {
     height = size.height;
     width = size.width;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: white,
+        elevation: 0.0,
+      ),
       body: Body(),
       backgroundColor: white,
     );

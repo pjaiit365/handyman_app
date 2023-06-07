@@ -23,10 +23,13 @@ class DrawerHeaderCreated extends StatelessWidget {
             color: white,
             shape: BoxShape.circle,
             image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage('assets/images/profile_pic.jpeg'),
+              fit: BoxFit.cover,
+              image: NetworkImage(imageUrl),
             ),
           ),
+          child: imageUrl == ''
+              ? Center(child: Icon(Icons.person, color: grey))
+              : null,
         ),
         SizedBox(width: 15 * screenWidth),
         Text(

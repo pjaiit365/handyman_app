@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
@@ -8,6 +9,7 @@ import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Customer/profile_customer.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
+import 'package:handyman_app/Services/storage_service.dart';
 import 'package:handyman_app/constants.dart';
 
 import '../../../Components/home_buttons.dart';
@@ -24,10 +26,28 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  late String downloadUrl;
+  Future getProfilePic() async {
+    final listReference =
+        await FirebaseStorage.instance.ref('$loggedInUserId/profile').list();
+    if (listReference.items.isNotEmpty) {
+      downloadUrl = await Storage().downloadUrl('profile_pic');
+      setState(() {
+        imageUrl = downloadUrl;
+        print(imageUrl);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getProfilePic();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15),

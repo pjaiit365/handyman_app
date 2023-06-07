@@ -42,6 +42,7 @@ class _BodyState extends State<Body> {
 
       //obtaining current user's UID from firebase
       userId = FirebaseAuth.instance.currentUser!.uid;
+      loggedInUserId = userId;
       //getting current user's data into in-app variable for easy access
       getUserData();
 
@@ -110,10 +111,62 @@ class _BodyState extends State<Body> {
         loginTextFieldError = false;
       });
     } on FirebaseAuthException catch (e) {
+      //display alert dialog box with loading indicator
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                (Platform.isIOS)
+                    ? const CupertinoActivityIndicator(
+                        radius: 20,
+                        color: Color(0xff32B5BD),
+                      )
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
+              ],
+            ),
+          );
+        },
+      );
+
       setState(() {
         loginTextFieldError = true;
       });
+
       print(e.message.toString());
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                e.code.toString().toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              e.message.toString() + '\nTry again later.',
+              style: TextStyle(
+                height: 1.3,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 

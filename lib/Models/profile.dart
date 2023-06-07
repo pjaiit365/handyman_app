@@ -8,8 +8,21 @@ class ProfileData {
   final List<String>? town;
   final List<String>? region;
   final List<String>? houseNumber;
+  final List<String>? serviceCategory;
+  final List<String>? catergoryServices;
+  final List<String>? certification;
+  final List<String>? experience;
+  final int? charge;
+  final String? chargeRate;
+  final String? expertise;
+  final String? rating;
+  final int? jobTotal;
 
   ProfileData({
+    this.chargeRate,
+    this.expertise,
+    this.rating,
+    this.jobTotal,
     this.momoType,
     this.cardNumber,
     this.expiryDate,
@@ -19,5 +32,10 @@ class ProfileData {
     this.town,
     this.region,
     this.houseNumber,
+    this.serviceCategory,
+    this.catergoryServices,
+    this.certification,
+    this.experience,
+    this.charge,
   });
 }

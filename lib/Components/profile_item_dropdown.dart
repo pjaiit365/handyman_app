@@ -12,6 +12,7 @@ class ProfileItemDropDown extends StatefulWidget {
   List selectedOptions;
   bool isWidthMax;
   bool isChargeRate;
+  bool isReadOnly;
   ProfileItemDropDown({
     Key? key,
     required this.title,
@@ -20,6 +21,7 @@ class ProfileItemDropDown extends StatefulWidget {
     required this.selectedOptions,
     this.isWidthMax = true,
     this.isChargeRate = false,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
@@ -66,7 +68,7 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
             ),
           ),
           iconStyleData: IconStyleData(
-            icon: Image.asset('assets/icons/down_arrow.png'),
+            icon: Center(child: Icon(Icons.keyboard_arrow_down_rounded)),
             iconDisabledColor: black,
             iconEnabledColor: primary,
           ),
@@ -82,13 +84,34 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
               value: serviceCategoryList,
             );
           }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              dropdownvalue = newValue!;
-              widget.selectedOptions.add(dropdownvalue);
-              print(widget.selectedOptions);
-            });
-          },
+          onChanged: widget.isReadOnly
+              ? null
+              : (String? newValue) {
+                  if (!widget.selectedOptions.contains(newValue)) {
+                    setState(() {
+                      dropdownvalue = newValue!;
+                      widget.selectedOptions.add(dropdownvalue);
+                      print(widget.selectedOptions);
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.black45,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        content: Center(
+                          child: Text(
+                            '$newValue has already been added',
+                            style: TextStyle(height: 1.3),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
           value: widget.isChargeRate ? dropdownvalue : null,
         ),
         widget.selectedOptions.isEmpty
@@ -111,7 +134,7 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: screenHeight * 12.0),
+                            EdgeInsets.symmetric(vertical: screenHeight * 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,11 +149,18 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
                             Spacer(),
                             GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    widget.selectedOptions.removeAt(index);
-                                  });
+                                  widget.isReadOnly
+                                      ? null
+                                      : setState(() {
+                                          widget.selectedOptions
+                                              .removeAt(index);
+                                        });
                                 },
-                                child: Image.asset('assets/icons/dash.png')),
+                                child: Icon(
+                                  Icons.remove,
+                                  color: primary,
+                                  size: 35,
+                                )),
                           ],
                         ),
                       );
@@ -156,12 +186,16 @@ class ChargePerItem extends StatefulWidget {
   String hintText;
   num width;
   List<String> listName;
+  bool isReadOnly;
+  bool isChargeRate;
   ChargePerItem({
     Key? key,
     required this.title,
     this.width = 117,
     required this.listName,
     this.hintText = 'N/A',
+    this.isReadOnly = false,
+    this.isChargeRate = false,
   }) : super(key: key);
 
   @override
@@ -208,14 +242,14 @@ class _ChargePerItemState extends State<ChargePerItem> {
             ),
           ),
           iconStyleData: IconStyleData(
-            icon: Image.asset('assets/icons/down_arrow.png'),
+            icon: Icon(Icons.keyboard_arrow_down_rounded),
             iconDisabledColor: black,
             iconEnabledColor: primary,
           ),
           isExpanded: true,
           hint: Center(
             child: Text(
-              'N/A',
+              widget.hintText,
               style: TextStyle(
                   fontSize: 16, color: black, fontWeight: FontWeight.w200),
             ),
@@ -226,13 +260,17 @@ class _ChargePerItemState extends State<ChargePerItem> {
               value: serviceCategoryList,
             );
           }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              dropdownvalue = newValue!;
-              cardSelected = dropdownvalue;
-            });
-          },
-          value: dropdownvalue,
+          onChanged: widget.isReadOnly
+              ? null
+              : (String? newValue) {
+                  setState(() {
+                    dropdownvalue = newValue!;
+                    widget.isChargeRate
+                        ? chargeRateHintText = dropdownvalue
+                        : expertiseHintText = dropdownvalue;
+                  });
+                },
+          value: widget.isChargeRate ? chargeRateHintText : expertiseHintText,
         ),
       ],
     );
@@ -304,7 +342,7 @@ class _ProfileItemAddFileState extends State<ProfileItemAddFile> {
             ),
           ),
           iconStyleData: IconStyleData(
-            icon: Image.asset('assets/icons/plus.png', color: black),
+            icon: Icon(Icons.add),
             iconDisabledColor: black,
             iconEnabledColor: primary,
           ),
@@ -363,7 +401,7 @@ class _ProfileItemAddFileState extends State<ProfileItemAddFile> {
                                 widget.selectedOptions.removeAt(index);
                               });
                             },
-                      child: Image.asset('assets/icons/dash.png'),
+                      child: Icon(Icons.remove, color: primary, size: 30),
                     ),
                   );
                 },
@@ -471,7 +509,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                 onTap: widget.screen,
                 child: Container(
                   height: 49 * screenHeight,
-                  width: 312 * screenWidth,
+                  width: 310 * screenWidth,
                   decoration: BoxDecoration(
                       color: primary,
                       borderRadius: BorderRadius.circular(5),
@@ -533,7 +571,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                   ),
                 ),
                 Spacer(),
-                Image.asset('assets/icons/plus.png', color: black),
+                Icon(Icons.add),
                 //TODO:  create and decorate alert dialog box, add address fields, save address, add details to empty variables, display number of addresses
               ],
             ),
@@ -596,9 +634,8 @@ class _RegionSelectState extends State<RegionSelect> {
             ),
           ),
           iconStyleData: IconStyleData(
-            icon: Image.asset('assets/icons/down_arrow.png'),
-            iconDisabledColor: black,
-            iconEnabledColor: primary,
+            icon: Icon(Icons.keyboard_arrow_down_rounded),
+            iconEnabledColor: black,
           ),
           isExpanded: true,
           hint: Center(
@@ -625,6 +662,179 @@ class _RegionSelectState extends State<RegionSelect> {
             });
           },
           value: dropdownvalue,
+        ),
+      ],
+    );
+  }
+}
+
+class ChargeRateSelect extends StatefulWidget {
+  const ChargeRateSelect({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<ChargeRateSelect> createState() => _ChargeRateSelectState();
+}
+
+class _ChargeRateSelectState extends State<ChargeRateSelect> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: screenWidth * 11.0),
+          child: Text(
+            'Charge per',
+            style: TextStyle(
+              color: black,
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(height: 6 * screenHeight),
+        DropdownButton2(
+          buttonStyleData: ButtonStyleData(
+            elevation: 0,
+            height: 49 * screenHeight,
+            width: 117 * screenWidth,
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 15 * screenWidth, vertical: 12 * screenHeight),
+          ),
+          underline: Text(''),
+          dropdownStyleData: DropdownStyleData(
+            width: 140 * screenWidth,
+            padding: EdgeInsets.symmetric(
+                horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          iconStyleData: IconStyleData(
+            icon: Icon(Icons.keyboard_arrow_down_rounded),
+            iconDisabledColor: black,
+            iconEnabledColor: primary,
+          ),
+          isExpanded: true,
+          hint: Center(
+            child: Text(
+              'Choose one',
+              style: TextStyle(
+                  fontSize: 16, color: black, fontWeight: FontWeight.w200),
+            ),
+          ),
+          items: chargePerList.map((String serviceCategoryList) {
+            return DropdownMenuItem(
+              child: Text(
+                serviceCategoryList,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
+              value: serviceCategoryList,
+            );
+          }).toList(),
+          onChanged: isServiceInfoReadOnly
+              ? null
+              : (String? newValue) {
+                  setState(() {
+                    dropdownvalue = newValue!;
+                    chargeRateHintText = dropdownvalue;
+                  });
+                },
+          value: dropdownvalue,
+        ),
+      ],
+    );
+  }
+}
+
+class ExpertiseSelect extends StatefulWidget {
+  const ExpertiseSelect({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<ExpertiseSelect> createState() => _ExpertiseSelectState();
+}
+
+class _ExpertiseSelectState extends State<ExpertiseSelect> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: screenWidth * 11.0),
+          child: Text(
+            'Level of Expertise',
+            style: TextStyle(
+              color: black,
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(height: 6 * screenHeight),
+        DropdownButton2(
+          buttonStyleData: ButtonStyleData(
+            elevation: 0,
+            height: 49 * screenHeight,
+            width: 310 * screenWidth,
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 15 * screenWidth, vertical: 12 * screenHeight),
+          ),
+          underline: Text(''),
+          dropdownStyleData: DropdownStyleData(
+            padding: EdgeInsets.symmetric(
+                horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          iconStyleData: IconStyleData(
+            icon: Icon(Icons.keyboard_arrow_down_rounded),
+            iconDisabledColor: black,
+            iconEnabledColor: primary,
+          ),
+          isExpanded: true,
+          hint: Center(
+            child: Text(
+              'Choose one',
+              style: TextStyle(
+                  fontSize: 16, color: black, fontWeight: FontWeight.w200),
+            ),
+          ),
+          items: expertiseList.map((String serviceCategoryList) {
+            return DropdownMenuItem(
+              child: Text(
+                serviceCategoryList,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
+              value: serviceCategoryList,
+            );
+          }).toList(),
+          onChanged: isServiceInfoReadOnly
+              ? null
+              : (String? newValue) {
+                  setState(() {
+                    dropdown = newValue!;
+                    expertiseHintText = dropdown;
+                  });
+                },
+          value: dropdown,
         ),
       ],
     );
