@@ -30,12 +30,14 @@ class Storage {
     return downloadUrl;
   }
 
-  Future uploadFile(String fileName, String filePath, String directory) async {
+  Future<void> uploadFile(
+      String filePath, String fileName, String directory) async {
     File file = File(filePath);
 
     try {
       await FirebaseStorage.instance
           .ref('$loggedInUserId/$directory')
+          .child(fileName)
           .putFile(file);
     } catch (e) {
       print(e.toString());
@@ -51,7 +53,7 @@ class Storage {
       print(fileName);
       fileNames.add(fileName);
     }
-    return results;
+    return fileNames;
   }
 
   Future fileDownloadUrl(String downloadUrl, String directory) async {
@@ -59,5 +61,16 @@ class Storage {
         .ref('$loggedInUserId/$directory')
         .getDownloadURL();
     return downloadUrl;
+  }
+
+  Future deleteFile(String directory, String fileName) async {
+    try {
+      await FirebaseStorage.instance
+          .ref('$loggedInUserId/$directory')
+          .child(fileName)
+          .delete();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

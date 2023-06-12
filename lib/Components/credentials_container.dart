@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
 class CredentialsContainer extends StatefulWidget {
+  final List<TextInputFormatter> inputFormatter;
   bool errorTextField;
   final TextEditingController controller;
   final String title;
@@ -24,6 +26,7 @@ class CredentialsContainer extends StatefulWidget {
     this.isMobileNumber = false,
     required this.hintText,
     required this.controller,
+    required this.inputFormatter,
   }) : super(key: key);
 
   @override
@@ -97,6 +100,7 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
               ),
               padding: EdgeInsets.only(left: 16 * screenWidth),
               child: TextField(
+                inputFormatters: widget.inputFormatter,
                 maxLength: widget.isMobileNumber ? 10 : null,
                 textAlign: TextAlign.left,
                 textAlignVertical: TextAlignVertical.center,

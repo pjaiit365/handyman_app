@@ -102,6 +102,11 @@ List selectedServiceProvList = [];
 List selectedCertList = [];
 List selectedExperienceList = [];
 
+List uploadCertList = [];
+List uploadExperienceList = [];
+List uploadReferenceList = [];
+List uploadPortfolioList = [];
+
 final servicesProvidedList = [
   'Furniture Painting',
   'Building Painting',
@@ -163,7 +168,7 @@ final creditCardList = [
 ];
 
 String dropdownvalue = 'N/A';
-String dropdown = 'N/A';
+String addressValue = 'Home';
 String roleValue = 'Regular Customer';
 List selectedServiceCatList = [];
 
@@ -513,11 +518,44 @@ String? payPalHintText = '';
 String? chargeHintText = '';
 String? chargeRateHintText = 'N/A';
 String? expertiseHintText = 'N/A';
+String seenByHintText = 'All';
 String? ratingHintText = '';
-String? jobTotalHintText = '0';
+String? jobTotalHintText = 0.toString();
 
 String loggedInUserId = '';
 String imageUrl = '';
 
 List experienceFileNames = [];
 List certificationFileNames = [];
+
+List<String> addressOptions = [
+  'Home',
+  'Hotel',
+  'Office',
+  'Hostel',
+];
+
+String apppointmentTown = '';
+String apppointmentStreet = '';
+String apppointmentRegion = '';
+String apppointmentHouseNum = '';
+
+String uploadTown = '';
+String uploadStreet = '';
+String uploadRegion = '';
+String uploadHouseNum = '';
+
+List<String> addedNote = [];
+
+String fileNameStore = '';
+
+String serviceCatHintText = 'Painting';
+String serviceProvHintText = 'Furniture Painting';
+String chargePHint = 'N/A';
+String expertHint = 'N/A';
+List<String> seenByList = [
+  'All',
+  'Specific Category',
+];
+
+bool jobUploadReadOnly = false;

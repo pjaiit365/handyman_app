@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
 
@@ -51,19 +52,16 @@ class _ProfileServiceInformationState extends State<ProfileServiceInformation> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.black45,
-            behavior: SnackBarBehavior.floating,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            content: Center(
-              child: Text(
-                'Service Information updated successfully.',
-                style: TextStyle(height: 1.3),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.black45,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Center(
+                child: Text(
+                  'Personal profile successfully updated.',
+                ),
+              )),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -172,6 +170,10 @@ class _ProfileServiceInformationState extends State<ProfileServiceInformation> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   ProfileItem(
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3)
+                    ],
                     isHintText: chargeHintText == '0' ? true : false,
                     isReadOnly: isServiceInfoReadOnly,
                     controller: chargeController,

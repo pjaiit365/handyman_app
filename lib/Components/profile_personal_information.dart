@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../Read Data/get_user_first_name.dart';
 import '../constants.dart';
 
@@ -89,13 +91,13 @@ class _ProfilePersonalInformationState
   }
 
   bool FieldsCheck() {
-    if (_firstNameControlller.text.trim() != allUsers[0].first_name &&
+    if (_firstNameControlller.text.trim() != allUsers[0].firstName &&
         _firstNameControlller.text.trim().isNotEmpty &&
-        _lastNameControlller.text.trim() != allUsers[0].last_name &&
+        _lastNameControlller.text.trim() != allUsers[0].lastName &&
         _lastNameControlller.text.trim().isNotEmpty &&
         _emailControlller.text.trim() != allUsers[0].email &&
         _emailControlller.text.trim().isNotEmpty &&
-        _numberControlller.text.trim() != allUsers[0].last_name &&
+        _numberControlller.text.trim() != allUsers[0].number &&
         _numberControlller.text.trim().isNotEmpty) {
       print('First Name can be updated');
       return true;
@@ -111,6 +113,13 @@ class _ProfilePersonalInformationState
 
   @override
   Widget build(BuildContext context) {
+    var numberMask = MaskTextInputFormatter(
+        mask: '+### (#) ###-###-###',
+        filter: {
+          "#": RegExp(r'[0-9]'),
+        },
+        type: MaskAutoCompletionType.lazy);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,6 +180,11 @@ class _ProfilePersonalInformationState
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 controller: _firstNameControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
@@ -180,6 +194,11 @@ class _ProfilePersonalInformationState
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 controller: _lastNameControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
@@ -189,6 +208,12 @@ class _ProfilePersonalInformationState
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 controller: _emailControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
@@ -198,11 +223,16 @@ class _ProfilePersonalInformationState
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(13),
+                  numberMask,
+                ],
                 controller: _numberControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
                 title: 'Mobile Number',
-                hintText: '0' + allUsers[0].number.toString(),
+                hintText: '+233 (0) ' + allUsers[0].number.toString(),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 10 * screenHeight),

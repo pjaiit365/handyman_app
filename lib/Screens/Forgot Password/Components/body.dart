@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/credentials_button.dart';
 import 'package:handyman_app/Components/credentials_container.dart';
 import 'package:handyman_app/Screens/Forgot%20Password/Sub%20Screens/Check%20Mail/check_mail_screen.dart';
@@ -90,6 +91,11 @@ class _BodyState extends State<Body> {
             ),
             SizedBox(height: 49 * screenHeight),
             CredentialsContainer(
+              inputFormatter: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                LengthLimitingTextInputFormatter(30) // Deny specific characters
+              ],
               errorTextField: forgotPasswordEmailError,
               controller: _emailController,
               title: 'Email Address',

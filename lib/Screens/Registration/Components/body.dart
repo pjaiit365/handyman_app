@@ -5,9 +5,11 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Registration/Sub%20Screen/Registration%20Continuation/registration_continuation_screen.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
@@ -294,6 +296,13 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    // var numberMask = MaskTextInputFormatter(
+    //     mask: '+233 (#) ###-###-###',
+    //     filter: {
+    //       "#": RegExp(r'[0-9]'),
+    //     },
+    //     type: MaskAutoCompletionType.eager);
+
     return SafeArea(
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -333,6 +342,11 @@ class _BodyState extends State<Body> {
                 ),
               ),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 errorTextField: registerFirstNameError,
                 controller: _firstNameController,
                 title: 'First Name',
@@ -355,6 +369,11 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 errorTextField: registerLastNameError,
                 controller: _lastNameController,
                 title: 'Last Name',
@@ -377,6 +396,12 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 title: 'Email Address',
@@ -399,6 +424,10 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(
+                      40) // Deny specific characters
+                ],
                 controller: _passwordController,
                 title: 'Password',
                 hintText: 'Enter password',
@@ -421,6 +450,10 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(
+                      40) // Deny specific characters
+                ],
                 controller: _confirmPasswordController,
                 title: 'Confirm Password',
                 hintText: 'Enter password',
@@ -443,7 +476,11 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
-                isMobileNumber: true,
+                inputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                  // numberMask,
+                ],
                 keyboardType: TextInputType.number,
                 controller: _numberController,
                 title: 'Mobile Number',

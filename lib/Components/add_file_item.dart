@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Services/storage_service.dart';
 
 import '../constants.dart';
 import 'added_file_container.dart';
@@ -8,21 +9,23 @@ class AddFileItem extends StatefulWidget {
   final String title;
   final String hintText;
   final VoidCallback screen;
+  String directory;
   bool isReadOnly;
-  AddFileItem({
-    super.key,
-    required this.title,
-    this.isReadOnly = true,
-    required this.hintText,
-    required this.screen,
-    required this.selectedOptions,
-  });
+  AddFileItem(
+      {super.key,
+      required this.title,
+      this.isReadOnly = true,
+      required this.hintText,
+      required this.screen,
+      required this.selectedOptions,
+      this.directory = 'Certification'});
 
   @override
   State<AddFileItem> createState() => _AddFileItemState();
 }
 
 class _AddFileItemState extends State<AddFileItem> {
+  Storage storage = Storage();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -75,6 +78,7 @@ class _AddFileItemState extends State<AddFileItem> {
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return AddedFileContainer(
+                    fileName: widget.selectedOptions[index],
                     index: index,
                     child: GestureDetector(
                       onTap: widget.isReadOnly
@@ -82,9 +86,15 @@ class _AddFileItemState extends State<AddFileItem> {
                           : () {
                               setState(() {
                                 widget.selectedOptions.removeAt(index);
+                                storage.deleteFile(widget.directory,
+                                    widget.selectedOptions[index]);
                               });
                             },
-                      child: Image.asset('assets/icons/dash.png'),
+                      child: Icon(
+                        Icons.remove,
+                        color: primary,
+                        size: 25,
+                      ),
                     ),
                   );
                 },

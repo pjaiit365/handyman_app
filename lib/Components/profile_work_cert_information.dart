@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Services/storage_service.dart';
 
@@ -28,6 +29,8 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
       isWorkExpReadOnly = true;
     });
 
+    int job = int.parse(jobTotalHintText!);
+    print(job.toString());
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('profile')
@@ -47,6 +50,8 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
           },
         });
 
+        print(selectedCertList);
+        print(selectedExperienceList);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
@@ -88,22 +93,23 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
 
   Future addFileCertification() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'txt', 'doc', 'docx'],
       allowMultiple: false,
+      allowedExtensions: ['pdf', 'txt', 'doc', 'docx'],
+      type: FileType.custom,
     );
     if (result != null) {
       final fileName = result.files.single.name;
       final filePath = result.files.single.path!;
 
-      final file = File(filePath);
-      if (file.existsSync()) {
-        storage
-            .uploadFile(filePath, fileName, 'certification')
-            .then((value) => print('File Uploaded Successfully'));
-      } else {
-        print('File does not exist');
-      }
+      storage.uploadFile(filePath, fileName, 'certification').then((value) {
+        print('File Uploaded Successfully');
+      });
+
+      fileNameStore = fileName;
+      certListFiles();
+      print(selectedCertList);
+    } else {
+      print('File not found.');
     }
   }
 
@@ -117,22 +123,24 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
       final fileName = result.files.single.name;
       final filePath = result.files.single.path!;
 
-      String directory = 'experience';
-
-      storage
-          .uploadFile(filePath, fileName, directory)
-          .then((value) => print('File Uploaded Successfully'));
+      storage.uploadFile(filePath, fileName, 'experience').then((value) {
+        print('File Uploaded Successfully');
+      });
+      experienceListFiles();
+      print(selectedExperienceList);
+    } else {
+      print('File not found.');
     }
   }
 
-  Future experienceListFile() async {
-    await storage.listAllFiles('experience', experienceFileNames);
-    print(experienceFileNames);
+  Future experienceListFiles() async {
+    await storage.listAllFiles('experience', selectedExperienceList);
+
+    print(selectedExperienceList);
   }
 
-  Future certListFile() async {
-    await storage.listAllFiles('certification', certificationFileNames);
-    print(experienceFileNames);
+  Future certListFiles() async {
+    await storage.listAllFiles('certification', selectedCertList);
   }
 
   @override
@@ -195,25 +203,28 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[],
-              ),
               AddFileItem(
+                directory: 'Certification',
                 isReadOnly: isWorkExpReadOnly,
                 selectedOptions: selectedCertList,
-                screen: addFileCertification,
+                screen: () {
+                  setState(() {
+                    addFileCertification();
+                  });
+                },
                 title: 'Certification',
                 hintText: 'Add all certifications here...',
               ),
               SizedBox(height: 20 * screenHeight),
               AddFileItem(
+                directory: 'Experience',
                 isReadOnly: isWorkExpReadOnly,
                 selectedOptions: selectedExperienceList,
                 title: 'Experience',
                 hintText: 'Add any previous work here...',
-                screen: addFileExperience,
+                screen: () {
+                  addFileExperience();
+                },
               ),
               SizedBox(height: 20 * screenHeight),
               Row(
@@ -221,6 +232,10 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ProfileItem(
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4)
+                    ],
                     isReadOnly: isWorkExpReadOnly,
                     isOverallRating: true,
                     title: 'Rating',
@@ -231,6 +246,10 @@ class _ProfileWorkExpInformationState extends State<ProfileWorkExpInformation> {
                   ),
                   SizedBox(width: 20 * screenWidth),
                   ProfileItem(
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(5)
+                    ],
                     isHintText: false,
                     title: 'Number of Jobs',
                     hintText: jobTotalHintText.toString(),

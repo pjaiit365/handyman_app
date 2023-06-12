@@ -2,17 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/Favourites/Customer/customer_favourite_screen.dart';
+import 'package:handyman_app/Screens/Job%20Upload/Customer/customer_job_upload_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
-
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
 import '../../../../constants.dart';
 import '../../../Home/home_screen.dart';
 import '../../../Notifications/notification_screen.dart';
 import '../../../Profile/Profile - Customer/profile_customer.dart';
-import '../handymen_dashboard_screen.dart';
 
 class CustomerDrawer extends StatelessWidget {
   const CustomerDrawer({
@@ -36,8 +35,8 @@ class CustomerDrawer extends StatelessWidget {
       child: Drawer(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-          topRight: Radius.circular(10),
-          bottomRight: Radius.circular(10),
+          topRight: Radius.circular(5),
+          bottomRight: Radius.circular(5),
         )),
         elevation: 0,
         width: 287 * screenWidth,
@@ -67,7 +66,6 @@ class CustomerDrawer extends StatelessWidget {
                           width: 190 * screenWidth,
                           child: Text(
                             allUsers[0].firstName + ' ' + allUsers[0].lastName,
-                            // 'Harry Garret',
                             style: TextStyle(
                               color: black,
                               fontSize: 17,
@@ -122,6 +120,12 @@ class CustomerDrawer extends StatelessWidget {
                     icon: Icons.person,
                     screen: ProfileCustomer(),
                   ),
+                  SizedBox(height: 20 * screenHeight),
+                  DrawerTile(
+                    title: 'Bookings',
+                    icon: Icons.bookmark,
+                    screen: NotificationScreen(),
+                  ),
                   SizedBox(height: 27 * screenHeight),
                   Center(
                     child: Container(
@@ -132,14 +136,14 @@ class CustomerDrawer extends StatelessWidget {
                   ),
                   SizedBox(height: 27 * screenHeight),
                   DrawerTile(
-                    title: 'Notification',
-                    icon: Icons.notifications,
-                    screen: NotificationScreen(),
+                    title: 'Job Upload',
+                    icon: Icons.cloud_upload,
+                    screen: CustomerJobUploadScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(
-                    title: 'Bookings',
-                    icon: Icons.bookmark,
+                    title: 'Notification',
+                    icon: Icons.notifications,
                     screen: NotificationScreen(),
                   ),
                   SizedBox(height: 20 * screenHeight),

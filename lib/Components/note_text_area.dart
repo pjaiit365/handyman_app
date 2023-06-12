@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
 class NoteTextArea extends StatelessWidget {
-  const NoteTextArea({
+  final TextEditingController controller;
+  bool isNoteEditable;
+  NoteTextArea({
     Key? key,
+    required this.controller,
+    this.isNoteEditable = true,
   }) : super(key: key);
 
   @override
@@ -29,6 +34,11 @@ class NoteTextArea extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextField(
+              enabled: isNoteEditable,
+              controller: controller,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(150),
+              ],
               cursorHeight: 22,
               autofocus: false,
               autocorrect: true,
@@ -50,10 +60,10 @@ class NoteTextArea extends StatelessWidget {
                 ),
               ),
               style: TextStyle(
-                overflow: TextOverflow.visible,
-                color: black,
-                fontSize: 17,
-              ),
+                  overflow: TextOverflow.visible,
+                  color: black,
+                  fontSize: 17,
+                  height: 1.4),
             ),
           ],
         ),

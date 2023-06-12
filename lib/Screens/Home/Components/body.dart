@@ -83,14 +83,6 @@ class _BodyState extends State<Body> {
             ),
             Padding(
               padding: EdgeInsets.only(bottom: screenHeight * 50.0),
-
-              //Dummy Button
-              // child: Center(
-              //   child: HomeScreenTabs(
-              //     title: 'JOBS',
-              //     screen: JobsDashboardScreen(),
-              //   ),
-              // ),
               child: allUsers[0].role == 'Regular Customer'
                   ? Center(
                       child: HomeScreenTabs(

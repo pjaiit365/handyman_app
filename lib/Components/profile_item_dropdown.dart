@@ -1,11 +1,14 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../constants.dart';
 import 'added_file_container.dart';
 
 class ProfileItemDropDown extends StatefulWidget {
+  bool isSelectOnlyOne;
   final String title;
   final String hintText;
   List<String> listName;
@@ -22,6 +25,7 @@ class ProfileItemDropDown extends StatefulWidget {
     this.isWidthMax = true,
     this.isChargeRate = false,
     this.isReadOnly = false,
+    this.isSelectOnlyOne = false,
   }) : super(key: key);
 
   @override
@@ -391,6 +395,7 @@ class _ProfileItemAddFileState extends State<ProfileItemAddFile> {
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return AddedFileContainer(
+                    fileName: '',
                     isMomoOptions: widget.isMomoOptions,
                     index: index,
                     child: GestureDetector(
@@ -423,6 +428,7 @@ class ProfileItemAddAddress extends StatefulWidget {
   final TextEditingController houseNumController;
   final String title;
   final String hintText;
+  final bool isReadOnly;
 
   ProfileItemAddAddress({
     Key? key,
@@ -432,6 +438,7 @@ class ProfileItemAddAddress extends StatefulWidget {
     required this.townController,
     required this.houseNumController,
     required this.screen,
+    required this.isReadOnly,
   }) : super(key: key);
   @override
   State<ProfileItemAddAddress> createState() => _ProfileItemAddAddressState();
@@ -475,12 +482,22 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                       ),
                       SizedBox(height: 10 * screenHeight),
                       ProfileAddressItem(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r"[a-zA-Z0-9\\s]")), // Only allow letters and spaces
+                            LengthLimitingTextInputFormatter(18),
+                          ],
                           textEditingController: widget.streetNameController,
                           title: 'Street name',
                           hintText: 'Enter street name...',
                           keyboardType: TextInputType.streetAddress),
                       SizedBox(height: 20 * screenHeight),
                       ProfileAddressItem(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r"[a-zA-Z\\s]")), // Only allow letters and spaces
+                            LengthLimitingTextInputFormatter(18),
+                          ],
                           textEditingController: widget.townController,
                           title: 'Town',
                           hintText: 'Enter town name...',
@@ -490,9 +507,14 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          RegionSelect(),
+                          RegionSelect(dropdownList: regionsList),
                           Spacer(),
                           ProfileAddressItem(
+                              inputFormatter: [
+                                FilteringTextInputFormatter.allow(RegExp(
+                                    r"[a-zA-Z0-9\\s]")), // Only allow letters and spaces
+                                LengthLimitingTextInputFormatter(10),
+                              ],
                               textEditingController: widget.houseNumController,
                               isWidthMax: false,
                               width: 118,
@@ -548,7 +570,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
           ),
         ),
         GestureDetector(
-          onTap: isLocationReadOnly ? () {} : _AddressDialogBox,
+          onTap: widget.isReadOnly ? () {} : _AddressDialogBox,
           child: Container(
             height: 49 * screenHeight,
             width: 310 * screenWidth,
@@ -572,7 +594,6 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                 ),
                 Spacer(),
                 Icon(Icons.add),
-                //TODO:  create and decorate alert dialog box, add address fields, save address, add details to empty variables, display number of addresses
               ],
             ),
           ),
@@ -584,8 +605,14 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
 }
 
 class RegionSelect extends StatefulWidget {
-  const RegionSelect({
+  bool isJobUpload;
+  num width;
+  final List<String> dropdownList;
+  RegionSelect({
     Key? key,
+    this.width = 151,
+    this.isJobUpload = false,
+    required this.dropdownList,
   }) : super(key: key);
 
   @override
@@ -599,22 +626,24 @@ class _RegionSelectState extends State<RegionSelect> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: screenWidth * 1.5),
-          child: Text(
-            'Region',
-            style: TextStyle(
-              color: primary,
-              fontSize: 16,
-            ),
-          ),
-        ),
+        widget.isJobUpload
+            ? SizedBox()
+            : Padding(
+                padding: EdgeInsets.only(left: screenWidth * 1.5),
+                child: Text(
+                  'Region',
+                  style: TextStyle(
+                    color: primary,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
         SizedBox(height: 7 * screenHeight),
         DropdownButton2(
           buttonStyleData: ButtonStyleData(
             elevation: 0,
             height: 49 * screenHeight,
-            width: 151 * screenWidth,
+            width: widget.width * screenWidth,
             decoration: BoxDecoration(
               color: white,
               borderRadius: BorderRadius.circular(7),
@@ -645,7 +674,7 @@ class _RegionSelectState extends State<RegionSelect> {
                   fontSize: 16, color: black, fontWeight: FontWeight.w200),
             ),
           ),
-          items: regionsList.map((String serviceCategoryList) {
+          items: widget.dropdownList.map((String serviceCategoryList) {
             return DropdownMenuItem(
               child: Text(
                 serviceCategoryList,
@@ -659,6 +688,7 @@ class _RegionSelectState extends State<RegionSelect> {
             setState(() {
               dropdownvalue = newValue!;
               regionValue = dropdownvalue;
+              apppointmentRegion = regionValue;
             });
           },
           value: dropdownvalue,
@@ -744,11 +774,10 @@ class _ChargeRateSelectState extends State<ChargeRateSelect> {
               ? null
               : (String? newValue) {
                   setState(() {
-                    dropdownvalue = newValue!;
-                    chargeRateHintText = dropdownvalue;
+                    chargeRateHintText = newValue!;
                   });
                 },
-          value: dropdownvalue,
+          value: chargeRateHintText.toString(),
         ),
       ],
     );
@@ -830,11 +859,186 @@ class _ExpertiseSelectState extends State<ExpertiseSelect> {
               ? null
               : (String? newValue) {
                   setState(() {
-                    dropdown = newValue!;
-                    expertiseHintText = dropdown;
+                    expertiseHintText = newValue!;
                   });
                 },
-          value: dropdown,
+          value: expertiseHintText.toString(),
+        ),
+      ],
+    );
+  }
+}
+
+//--------------------------------------------------------------
+
+class ServiceCategorySelect extends StatefulWidget {
+  String hintText;
+  final String title;
+  final List<String> dropdownList;
+  num width;
+  ServiceCategorySelect({
+    Key? key,
+    this.hintText = 'N/A',
+    this.width = 310,
+    required this.dropdownList,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  State<ServiceCategorySelect> createState() => _ServiceCategorySelect();
+}
+
+class _ServiceCategorySelect extends State<ServiceCategorySelect> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: screenWidth * 11.0),
+          child: Text(
+            widget.title,
+            style: TextStyle(
+              color: black,
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(height: 6 * screenHeight),
+        DropdownButton2(
+          buttonStyleData: ButtonStyleData(
+            elevation: 0,
+            height: 49 * screenHeight,
+            width: widget.width * screenWidth,
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 15 * screenWidth, vertical: 12 * screenHeight),
+          ),
+          underline: Text(''),
+          dropdownStyleData: DropdownStyleData(
+            padding: EdgeInsets.symmetric(
+                horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          iconStyleData: IconStyleData(
+            icon: Icon(Icons.keyboard_arrow_down_rounded),
+            iconDisabledColor: black,
+            iconEnabledColor: primary,
+          ),
+          isExpanded: true,
+          hint: Center(
+            child: Text(
+              'Select only one',
+              style: TextStyle(
+                  fontSize: 16, color: black, fontWeight: FontWeight.w200),
+            ),
+          ),
+          items: widget.dropdownList.map((String serviceCategoryList) {
+            return DropdownMenuItem(
+              child: Text(
+                serviceCategoryList,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
+              value: serviceCategoryList,
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.hintText = newValue!;
+            });
+          },
+          value: widget.hintText,
+        ),
+      ],
+    );
+  }
+}
+
+class SeenBySelect extends StatefulWidget {
+  const SeenBySelect({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<SeenBySelect> createState() => _SeenBySelectState();
+}
+
+class _SeenBySelectState extends State<SeenBySelect> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: screenWidth * 11.0),
+          child: Text(
+            'Seen By:',
+            style: TextStyle(
+              color: black,
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(height: 6 * screenHeight),
+        DropdownButton2(
+          buttonStyleData: ButtonStyleData(
+            elevation: 0,
+            height: 49 * screenHeight,
+            width: 290 * screenWidth,
+            decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(color: appointmentTimeColor, width: 1)),
+            padding: EdgeInsets.symmetric(
+                horizontal: 15 * screenWidth, vertical: 12 * screenHeight),
+          ),
+          underline: Text(''),
+          dropdownStyleData: DropdownStyleData(
+            padding: EdgeInsets.symmetric(
+                horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          iconStyleData: IconStyleData(
+            icon: Icon(Icons.keyboard_arrow_down_rounded),
+            iconDisabledColor: black,
+            iconEnabledColor: primary,
+          ),
+          isExpanded: true,
+          hint: Center(
+            child: Text(
+              'Choose one',
+              style: TextStyle(
+                  fontSize: 16, color: black, fontWeight: FontWeight.w200),
+            ),
+          ),
+          items: seenByList.map((String serviceCategoryList) {
+            return DropdownMenuItem(
+              child: Text(
+                serviceCategoryList,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
+              value: serviceCategoryList,
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              seenByHintText = newValue!;
+            });
+          },
+          value: seenByHintText.toString(),
         ),
       ],
     );

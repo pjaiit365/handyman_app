@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
-import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
-
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../constants.dart';
 
 class ProfilePaymentInformation extends StatefulWidget {
@@ -122,6 +122,15 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
 
   @override
   Widget build(BuildContext context) {
+    var cardNumberMask = MaskTextInputFormatter(
+        mask: '#### #### #### ####',
+        filter: {"#": RegExp(r'[0-9]')},
+        type: MaskAutoCompletionType.lazy);
+    var expiryDatemask = MaskTextInputFormatter(
+        mask: '##/##',
+        filter: {"#": RegExp(r'[0-9]')},
+        type: MaskAutoCompletionType.lazy);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,8 +200,13 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(16),
+                  cardNumberMask,
+                ],
                 isHintText: cardNumberHintText == null ? true : false,
-                maxLength: 16,
+                // maxLength: 16,
                 isReadOnly: isPaymentInfoReadOnly,
                 controller: _cardNumberController,
                 imageAssetLocation: 'assets/icons/credit_card.png',
@@ -211,8 +225,12 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ProfileItem(
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(5),
+                      expiryDatemask,
+                    ],
                     isHintText: expiryDateHintText == null ? true : false,
-                    maxLength: 4,
                     isReadOnly: isPaymentInfoReadOnly,
                     controller: _expiryDateController,
                     isTitlePresent: false,
@@ -224,6 +242,10 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
                   ),
                   SizedBox(width: 20 * screenWidth),
                   ProfileItem(
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4)
+                    ],
                     isHintText: cvvHintText == null ? true : false,
                     isReadOnly: isPaymentInfoReadOnly,
                     controller: _cvvController,
@@ -239,6 +261,12 @@ class _ProfilePaymentInformationState extends State<ProfilePaymentInformation> {
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 isHintText: payPalHintText == null ? true : false,
                 isReadOnly: isPaymentInfoReadOnly,
                 controller: _payPalController,

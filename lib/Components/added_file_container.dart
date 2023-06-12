@@ -6,10 +6,12 @@ class AddedFileContainer extends StatefulWidget {
   bool isMomoOptions;
   final int index;
   final Widget child;
+  final String fileName;
   AddedFileContainer(
       {Key? key,
       required this.index,
       required this.child,
+      required this.fileName,
       this.isMomoOptions = false})
       : super(key: key);
 
@@ -54,17 +56,19 @@ class _AddedFileContainerState extends State<AddedFileContainer> {
               : SizedBox(height: 0, width: 0),
           widget.isMomoOptions
               ? SizedBox(height: 0, width: 0)
-              : SizedBox(
-                  width: 192 * screenWidth,
-                  //TODO: When Cloud Storage is implemented, grab file name and file and place it here on click
-                  child: Text(
-                    'NWA Plumbing Association kiln',
-                    style: TextStyle(
-                      color: black,
-                      fontSize: 16,
+              : Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 10.0),
+                  child: SizedBox(
+                    width: 192 * screenWidth,
+                    child: Text(
+                      widget.fileName,
+                      style: TextStyle(
+                        color: black,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
                   ),
                 ),
           widget.isMomoOptions ? SizedBox(width: 15 * screenWidth) : SizedBox(),

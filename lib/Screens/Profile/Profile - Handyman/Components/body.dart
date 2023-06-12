@@ -78,16 +78,14 @@ class _BodyState extends State<Body> {
                   ? List<String>.from(profileData['Work Experience & Certification']['Certification'])
                   : [],
           experience: profileData['Work Experience & Certification']['Experience'] != '' ? List<String>.from(profileData['Work Experience & Certification']['Experience']) : [],
-          rating: profileData['Service Information']['Rating'],
-          jobTotal: profileData['Service Information']['Number of Jobs']);
+          rating: profileData['Work Experience & Certification']['Rating'],
+          jobTotal: profileData['Work Experience & Certification']['Number of Jobs']);
 
       setState(() {
         allProfile.clear();
         allProfile.add(user);
 
         selectedMomoOptions = allProfile[0].momoType;
-        print(selectedMomoOptions.length);
-        print(selectedMomoOptions);
         cardNumberHintText = allProfile[0].cardNumber.toString();
         expiryDateHintText = allProfile[0].expiryDate;
         cvvHintText = allProfile[0].cvv.toString();
@@ -95,9 +93,8 @@ class _BodyState extends State<Body> {
         chargeHintText = allProfile[0].charge.toString();
         chargeRateHintText = allProfile[0].chargeRate.toString();
         expertiseHintText = allProfile[0].expertise.toString();
-        ratingHintText = allProfile[0].rating;
+        ratingHintText = allProfile[0].rating.toString();
         jobTotalHintText = allProfile[0].jobTotal.toString();
-        print(jobTotalHintText);
 
         addressStreetName = allProfile[0].streetName as List<dynamic>;
         addressHouseNum = allProfile[0].houseNumber as List;
@@ -105,8 +102,11 @@ class _BodyState extends State<Body> {
         addressTownName = allProfile[0].town as List;
         selectedServiceCatList = allProfile[0].serviceCategory as List;
         selectedServiceProvList = allProfile[0].catergoryServices as List;
-        certificationList = allProfile[0].certification as List;
-        experienceList = allProfile[0].experience as List;
+        selectedCertList = allProfile[0].certification as List;
+        selectedExperienceList = allProfile[0].experience as List;
+
+        storage.listAllFiles('Certification', selectedCertList);
+        storage.listAllFiles('Experience', selectedExperienceList);
       });
     } else {
       setState(() {
@@ -155,125 +155,125 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    // if (allProfile.length == 0) {
-    //   return Center(
-    //     child: SingleChildScrollView(
-    //       child: Padding(
-    //         padding: EdgeInsets.symmetric(
-    //             horizontal: 15 * screenWidth, vertical: 10 * screenHeight),
-    //         child: Shimmer(
-    //           color: white,
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.start,
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: <Widget>[
-    //               Center(
-    //                 child: Stack(
-    //                   clipBehavior: Clip.none,
-    //                   alignment: Alignment.center,
-    //                   children: [
-    //                     Container(
-    //                       height: 185.75 * screenHeight,
-    //                       width: 177 * screenWidth,
-    //                       decoration: BoxDecoration(
-    //                         color: chatGrey,
-    //                         borderRadius: BorderRadius.circular(18),
-    //                       ),
-    //                     ),
-    //                     Positioned(
-    //                       bottom: -13,
-    //                       right: -17,
-    //                       child: Container(
-    //                         height: 35 * screenHeight,
-    //                         width: 35 * screenWidth,
-    //                         decoration: BoxDecoration(
-    //                           shape: BoxShape.circle,
-    //                           color: chatGrey,
-    //                           border: Border.all(color: white, width: 3),
-    //                         ),
-    //                         child: Icon(
-    //                           Icons.camera_alt_rounded,
-    //                           color: grey,
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ),
-    //               SizedBox(height: 25 * screenHeight),
-    //               Column(
-    //                 mainAxisAlignment: MainAxisAlignment.start,
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: <Widget>[
-    //                   Padding(
-    //                     padding: EdgeInsets.only(
-    //                         left: screenWidth * 5.0, right: 10 * screenWidth),
-    //                     child: Row(
-    //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                       crossAxisAlignment: CrossAxisAlignment.center,
-    //                       children: <Widget>[
-    //                         Text(
-    //                           'Personal Information',
-    //                           style: TextStyle(
-    //                             color: black,
-    //                             fontSize: 17,
-    //                             fontWeight: FontWeight.w600,
-    //                           ),
-    //                         ),
-    //                         Container(
-    //                           height: 37 * screenHeight,
-    //                           width: 37 * screenWidth,
-    //                           decoration: BoxDecoration(
-    //                             color: white,
-    //                             border: Border.all(color: chatGrey, width: 1),
-    //                             shape: BoxShape.circle,
-    //                           ),
-    //                           child: Center(
-    //                             child: Icon(
-    //                               Icons.edit,
-    //                               color: grey,
-    //                               size: 20,
-    //                             ),
-    //                           ),
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                   SizedBox(height: 13 * screenHeight),
-    //                   Container(
-    //                     width: 359 * screenWidth,
-    //                     height: 390 * screenHeight,
-    //                     decoration: BoxDecoration(
-    //                         color: chatGrey,
-    //                         borderRadius: BorderRadius.circular(13)),
-    //                     padding: EdgeInsets.symmetric(
-    //                         horizontal: 20 * screenWidth,
-    //                         vertical: 35 * screenHeight),
-    //                     child: ListView.separated(
-    //                         itemBuilder: (context, index) {
-    //                           return Container(
-    //                             height: 49 * screenHeight,
-    //                             width: 310,
-    //                             decoration: BoxDecoration(
-    //                               color: white,
-    //                               borderRadius: BorderRadius.circular(7),
-    //                             ),
-    //                           );
-    //                         },
-    //                         separatorBuilder: (context, index) {
-    //                           return SizedBox(height: 20 * screenHeight);
-    //                         },
-    //                         itemCount: 5),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
+    if (allProfile.length == 0) {
+      return Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 15 * screenWidth, vertical: 10 * screenHeight),
+            child: Shimmer(
+              color: white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Center(
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          height: 185.75 * screenHeight,
+                          width: 177 * screenWidth,
+                          decoration: BoxDecoration(
+                            color: chatGrey,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -13,
+                          right: -17,
+                          child: Container(
+                            height: 35 * screenHeight,
+                            width: 35 * screenWidth,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: chatGrey,
+                              border: Border.all(color: white, width: 3),
+                            ),
+                            child: Icon(
+                              Icons.camera_alt_rounded,
+                              color: grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 25 * screenHeight),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: screenWidth * 5.0, right: 10 * screenWidth),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Personal Information',
+                              style: TextStyle(
+                                color: black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Container(
+                              height: 37 * screenHeight,
+                              width: 37 * screenWidth,
+                              decoration: BoxDecoration(
+                                color: white,
+                                border: Border.all(color: chatGrey, width: 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.edit,
+                                  color: grey,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 13 * screenHeight),
+                      Container(
+                        width: 359 * screenWidth,
+                        height: 390 * screenHeight,
+                        decoration: BoxDecoration(
+                            color: chatGrey,
+                            borderRadius: BorderRadius.circular(13)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20 * screenWidth,
+                            vertical: 35 * screenHeight),
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return Container(
+                                height: 49 * screenHeight,
+                                width: 310,
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: 20 * screenHeight);
+                            },
+                            itemCount: 5),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return SingleChildScrollView(
       child: Padding(
@@ -293,7 +293,7 @@ class _BodyState extends State<Body> {
                       [
                         storage.downloadUrl('profile_pic'),
                         Future.delayed(
-                          Duration(seconds: 30),
+                          Duration(seconds: 5),
                         ),
                       ],
                     ),

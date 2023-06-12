@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Forgot%20Password/forgot_password_screen.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Registration/registration_screen.dart';
@@ -242,6 +243,12 @@ class _BodyState extends State<Body> {
                 ),
               ),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 errorTextField: loginTextFieldError,
                 controller: _emailController,
                 title: 'Email Address',
@@ -252,6 +259,10 @@ class _BodyState extends State<Body> {
               ),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(
+                      40) // Deny specific characters
+                ],
                 errorTextField: loginTextFieldError,
                 controller: _passwordController,
                 title: 'Password',

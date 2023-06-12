@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/credentials_button.dart';
 import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/Components/history_item.dart';
 import 'package:handyman_app/Screens/Settings/Components/settings_divider.dart';
 import 'package:handyman_app/constants.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../../../../Components/profile_item.dart';
 import 'card_container.dart';
@@ -21,6 +23,15 @@ class Body extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) {
+          var cardNumberMask = MaskTextInputFormatter(
+              mask: '#### #### #### ####',
+              filter: {"#": RegExp(r'[0-9]')},
+              type: MaskAutoCompletionType.lazy);
+          var expiryDatemask = MaskTextInputFormatter(
+              mask: '##/##',
+              filter: {"#": RegExp(r'[0-9]')},
+              type: MaskAutoCompletionType.lazy);
+
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,18 +62,33 @@ class Body extends StatelessWidget {
                       ),
                       SizedBox(height: 10 * screenHeight),
                       ProfileAddressItem(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(16),
+                            cardNumberMask,
+                          ],
                           textEditingController: cardNumberController,
                           title: 'Card number',
                           hintText: 'Enter card number...',
                           keyboardType: TextInputType.number),
                       SizedBox(height: 20 * screenHeight),
                       ProfileAddressItem(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(4),
+                            expiryDatemask,
+                          ],
                           textEditingController: expiryDateController,
                           title: 'Expiry Date',
                           hintText: 'MM/YY',
                           keyboardType: TextInputType.datetime),
                       SizedBox(height: 20 * screenHeight),
                       ProfileAddressItem(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                "[a-zA-Z\\s]")), // Only allow letters and spaces
+                            LengthLimitingTextInputFormatter(30),
+                          ],
                           textEditingController: cardNameController,
                           title: 'Card Name',
                           hintText: 'Enter card name...',

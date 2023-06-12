@@ -28,13 +28,13 @@ class _BodyState extends State<Body> {
           'Service Category': '',
           'Services Provided': '',
           'Charge': 0,
-          'Charge Rate': null,
-          'Level of Expertise': null,
+          'Charge Rate': 'N/A',
+          'Level of Expertise': 'N/A',
         },
         'Work Experience & Certification': {
           'Certification': '',
           'Experience': '',
-          'Rating': null,
+          'Rating': 0.0,
           'Number of Jobs': 0,
         },
       });

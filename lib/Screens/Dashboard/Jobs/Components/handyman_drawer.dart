@@ -10,6 +10,7 @@ import '../../../../Components/drawer_tile.dart';
 import '../../../../constants.dart';
 import '../../../Favourites/Handyman/handyman_favourites_screen.dart';
 import '../../../Home/home_screen.dart';
+import '../../../Job Upload/Handyman/handyman_job_upload_screen.dart';
 import '../../../Login/login_screen.dart';
 import '../../../Notifications/notification_screen.dart';
 
@@ -35,8 +36,8 @@ class HandymanDrawer extends StatelessWidget {
       child: Drawer(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-          topRight: Radius.circular(10),
-          bottomRight: Radius.circular(10),
+          topRight: Radius.circular(5),
+          bottomRight: Radius.circular(5),
         )),
         elevation: 0,
         width: 287 * screenWidth,
@@ -135,6 +136,12 @@ class HandymanDrawer extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 27 * screenHeight),
+                  DrawerTile(
+                    title: 'Job Upload',
+                    icon: Icons.cloud_upload,
+                    screen: HandymanJobUploadScreen(),
+                  ),
+                  SizedBox(height: 20 * screenHeight),
                   DrawerTile(
                     title: 'Notification',
                     icon: Icons.notifications,

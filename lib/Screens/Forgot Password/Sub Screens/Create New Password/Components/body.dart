@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/credentials_button.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 
@@ -70,6 +71,9 @@ class _BodyState extends State<Body> {
             ),
             SizedBox(height: 21 * screenHeight),
             CredentialsContainer(
+              inputFormatter: [
+                LengthLimitingTextInputFormatter(40) // Deny specific characters
+              ],
               controller: _passwordController,
               isPassword: true,
               title: 'Password',
@@ -87,6 +91,9 @@ class _BodyState extends State<Body> {
             ),
             SizedBox(height: 20 * screenHeight),
             CredentialsContainer(
+              inputFormatter: [
+                LengthLimitingTextInputFormatter(40) // Deny specific characters
+              ],
               controller: _confirmPasswordController,
               isPassword: true,
               title: 'Confirm Password',

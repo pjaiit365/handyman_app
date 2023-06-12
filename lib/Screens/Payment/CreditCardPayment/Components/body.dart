@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../Components/profile_item.dart';
 import '../../../../Components/profile_item_dropdown.dart';
@@ -96,6 +97,10 @@ class _BodyState extends State<Body> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       ProfileItem(
+                        inputFormatter: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(16)
+                        ],
                         imageAssetLocation: 'assets/icons/credit_card.png',
                         isCreditCard: true,
                         title: 'Card Number',
@@ -108,14 +113,22 @@ class _BodyState extends State<Body> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           ProfileItem(
+                            inputFormatter: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(4)
+                            ],
                             title: 'Expiry Date',
-                            hintText: 'DD/MM/YYYY',
+                            hintText: 'MM/YY',
                             keyboardType: TextInputType.datetime,
                             isWidthMax: false,
                             width: 174,
                           ),
                           SizedBox(width: 20 * screenWidth),
                           ProfileItem(
+                            inputFormatter: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(4)
+                            ],
                             isInputObscured: true,
                             title: 'CVV/CVC',
                             hintText: 'CVV/CVC',

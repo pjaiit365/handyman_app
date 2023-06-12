@@ -4,11 +4,18 @@ import '../constants.dart';
 import 'appointment_tab_row.dart';
 import 'note_text_area.dart';
 
-class ScheduleNote extends StatelessWidget {
+class ScheduleNote extends StatefulWidget {
   const ScheduleNote({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<ScheduleNote> createState() => _ScheduleNoteState();
+}
+
+class _ScheduleNoteState extends State<ScheduleNote> {
+  bool isNoteEditable = true;
+  final notesController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -30,24 +37,34 @@ class ScheduleNote extends StatelessWidget {
           children: <Widget>[
             AppointmentTabRow(tabTitle: 'Notes', isCustomVisible: false),
             SizedBox(height: 16 * screenHeight),
-            NoteTextArea(),
+            NoteTextArea(
+              isNoteEditable: isNoteEditable,
+              controller: notesController,
+            ),
             SizedBox(height: 21 * screenHeight),
             Padding(
               padding: EdgeInsets.only(left: screenWidth * 11.0),
-              child: Container(
-                height: 47 * screenHeight,
-                width: 324 * screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  color: primary,
-                ),
-                child: Center(
-                  child: Text(
-                    'Add Note',
-                    style: TextStyle(
-                      color: white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isNoteEditable = !isNoteEditable;
+                  });
+                },
+                child: Container(
+                  height: 47 * screenHeight,
+                  width: 324 * screenWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    color: primary,
+                  ),
+                  child: Center(
+                    child: Text(
+                      isNoteEditable ? 'Add Note' : 'Edit Note',
+                      style: TextStyle(
+                        color: white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),

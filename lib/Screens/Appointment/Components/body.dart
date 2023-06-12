@@ -122,7 +122,7 @@ class _BodyState extends State<Body> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               AppointmentButton(
                 text: 'Schedule',
                 containerColor: primary,

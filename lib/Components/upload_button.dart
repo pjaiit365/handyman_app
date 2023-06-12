@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Successful/booking_successful_screen.dart';
 
 import '../constants.dart';
 
-class PinnedButton extends StatelessWidget {
+class UploadButton extends StatelessWidget {
   IconData icon;
-  Widget screen;
+  VoidCallback screen;
   String buttonText;
   bool isIconPresent;
-  PinnedButton({
-    this.icon = Icons.check_circle_rounded,
-    Key? key,
-    this.buttonText = 'Proceed',
-    this.isIconPresent = false,
-    this.screen = const BookingSuccessfulScreen(),
-  }) : super(key: key);
+  UploadButton(
+      {Key? key,
+      this.icon = Icons.check_circle_rounded,
+      this.buttonText = 'Proceed',
+      this.isIconPresent = false,
+      required this.screen})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => screen,
-              ));
-        },
+        onTap: screen,
         child: Container(
           height: 56 * screenHeight,
           width: 390 * screenWidth,

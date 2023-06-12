@@ -195,6 +195,7 @@ class _ProfileLocationInformationState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ProfileItemAddAddress(
+                isReadOnly: isLocationReadOnly,
                 screen: () {
                   //if address entered in pop up is present in previous addresses, display Snackbar and ignore address
                   if (InputAddressFieldsCheck()) {

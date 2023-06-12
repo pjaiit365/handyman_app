@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/pinned_button.dart';
-import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobInProgress/job_in_progress_screen.dart';
 
 import '../../../../../Components/job_details_and_status.dart';

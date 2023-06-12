@@ -15,7 +15,7 @@ class ProfileData {
   final int? charge;
   final String? chargeRate;
   final String? expertise;
-  final String? rating;
+  final double? rating;
   final int? jobTotal;
 
   ProfileData({
