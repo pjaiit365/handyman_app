@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
+import 'package:handyman_app/Screens/Home/Components/body.dart';
 
+import '../Models/category.dart';
 import '../constants.dart';
 
 class JobUploadServiceInfo extends StatefulWidget {
@@ -15,6 +18,34 @@ class JobUploadServiceInfo extends StatefulWidget {
 }
 
 class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
+  Future getCategoryData(String categoryName) async {
+    final document = await FirebaseFirestore.instance
+        .collection('Category')
+        .where('Category Name', isEqualTo: categoryName)
+        .get();
+
+    if (document.docs.isNotEmpty) {
+      final category = document.docs.single.data();
+      final $categoryName = CategoryData(
+          categoryName: category['Category Name'],
+          servicesProvided: List<String>.from(category['Services Provided']));
+
+      setState(() {
+        servicesProvided = $categoryName.servicesProvided;
+        serviceProvHintText = servicesProvided[0];
+        servicesProvided.sort();
+      });
+    } else {
+      print('Item not found.');
+    }
+  }
+
+  @override
+  void initState() {
+    getCategoryData(serviceCatHintText);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,14 +80,28 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
             children: <Widget>[
               ServiceCategorySelect(
                 title: 'Services Category',
-                dropdownList: serviceCategoryList,
+                dropdownList: allCategoriesName.toSet().toList(),
                 hintText: serviceCatHintText,
+                onChanged: (newValue) {
+                  setState(() {
+                    getCategoryData(newValue);
+                    serviceProvHintText = servicesProvided[0];
+                    serviceCatHintText = newValue;
+
+                    print(servicesProvided);
+                  });
+                },
               ),
               SizedBox(height: 20 * screenHeight),
               ServiceCategorySelect(
                 title: 'Services Provided',
-                dropdownList: servicesProvidedList,
+                dropdownList: servicesProvided.toList(),
                 hintText: serviceProvHintText,
+                onChanged: (newValue) {
+                  setState(() {
+                    serviceProvHintText = newValue;
+                  });
+                },
               ),
               SizedBox(height: 20 * screenHeight),
               Row(
@@ -111,6 +156,11 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
                       width: 117,
                       dropdownList: chargePerList,
                       hintText: chargePHint,
+                      onChanged: (newValue) {
+                        setState(() {
+                          chargePHint = newValue;
+                        });
+                      },
                     ),
                   ),
                   SizedBox(width: 2),
@@ -121,6 +171,11 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
                 title: 'Level of Expertise',
                 dropdownList: expertiseList,
                 hintText: expertHint,
+                onChanged: (newValue) {
+                  setState(() {
+                    expertHint = newValue;
+                  });
+                },
               ),
               SizedBox(height: 10 * screenHeight),
             ],

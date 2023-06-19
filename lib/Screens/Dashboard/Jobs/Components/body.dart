@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:handyman_app/Components/job_category_item.dart';
 import 'package:handyman_app/Components/search_bar_item.dart';
+import 'package:handyman_app/Models/handyman_category_data.dart';
+import 'package:handyman_app/Screens/Home/Components/body.dart';
 
 import '../../../../Components/category_item.dart';
 import '../../../../Components/dashboard_tab.dart';
@@ -12,6 +15,50 @@ class Body extends StatefulWidget {
 
   @override
   State<Body> createState() => _BodyState();
+}
+
+Future selectedHandymanCategoryData(String categoryName) async {
+  jobStatusOptions.clear();
+  jobDashboardJobType.clear();
+  jobDashboardName.clear();
+  jobDashboardPrice.clear();
+  jobDashboardChargeRate.clear();
+
+  final documents = await FirebaseFirestore.instance
+      .collection('Customer Job Upload')
+      .where('Service Information.Service Category', isEqualTo: categoryName)
+      .get();
+
+  if (documents.docs.isNotEmpty) {
+    documents.docs.forEach((document) {
+      final documentData = document.data();
+      final categoryData = HandymanCategoryData(
+          jobID: documentData['Job ID'],
+          seenBy: documentData['Seen By'],
+          fullName: documentData['Name'],
+          jobService: documentData['Service Information']['Service Provided'],
+          charge: documentData['Service Information']['Charge'],
+          chargeRate: documentData['Service Information']['Charge Rate'],
+          jobCategory: documentData['Service Information']['Service Category'],
+          jobStatus: documentData['Job Details']['Job Status']);
+
+      jobDashboardJobType.add(categoryData.jobService);
+      jobDashboardName.add(categoryData.fullName);
+      jobDashboardPrice.add(categoryData.charge.toString());
+      jobStatusOptions.add(categoryData.jobStatus);
+      if (categoryData.chargeRate == 'Hour') {
+        jobDashboardChargeRate.add('Hr');
+      } else if (categoryData.chargeRate == '6 Hours') {
+        jobDashboardChargeRate.add('6 Hrs');
+      } else if (categoryData.chargeRate == '12 Hours') {
+        jobDashboardChargeRate.add('12 Hrs');
+      } else {
+        jobDashboardChargeRate.add('Day');
+      }
+    });
+  } else {
+    print('No Jobs Found.');
+  }
 }
 
 class _BodyState extends State<Body> {
@@ -59,7 +106,7 @@ class _BodyState extends State<Body> {
               height: 48 * screenHeight,
               child: ListView.separated(
                 padding: EdgeInsets.only(left: 10 * screenWidth),
-                itemCount: dashBoardTabList.length,
+                itemCount: dashBoardTabList.toSet().toList().length,
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
@@ -75,24 +122,50 @@ class _BodyState extends State<Body> {
               ),
             ),
             SizedBox(height: screenHeight * 25),
-            ListView.separated(
-              physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: jobDashboardPrice.length,
-              itemBuilder: (context, index) {
-                return JobCategoryItem(
-                  index: index,
-                  status: statusOptions[index],
-                  name: jobDashboardName[index],
-                  imageLocation: jobDashboardImage[index],
-                  jobType: jobDashboardJobType[index],
-                  price: jobDashboardPrice[index],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(height: screenHeight * 20);
-              },
-            ),
+            FutureBuilder(
+                future: dashBoardTabList[selectedTabIndex] == 'All'
+                    ? getHandymanCategoryData()
+                    : selectedHandymanCategoryData(
+                        dashBoardTabList[selectedTabIndex]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return jobDashboardPrice.isEmpty
+                        ? Padding(
+                            padding: EdgeInsets.only(top: screenHeight * 20.0),
+                            child: Center(
+                              child: Text(
+                                  'No handymen available for this category.',
+                                  style: TextStyle(
+                                    color: primary,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                            ),
+                          )
+                        : ListView.separated(
+                            physics: BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount:
+                                jobDashboardPrice.toSet().toList().length,
+                            itemBuilder: (context, index) {
+                              return JobCategoryItem(
+                                index: index,
+                                status: jobStatusOptions[index],
+                                name: jobDashboardName[index],
+                                imageLocation: jobDashboardImage[index],
+                                jobType: jobDashboardJobType[index],
+                                price: jobDashboardPrice[index],
+                                chargeRate: jobDashboardChargeRate[index],
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: screenHeight * 20);
+                            },
+                          );
+                  }
+                  return SizedBox();
+                  // return CircularProgressIndicator();
+                }),
           ],
         ),
       ),

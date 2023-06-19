@@ -11,6 +11,7 @@ class CategoryItem extends StatelessWidget {
   final String rating;
   final String price;
   final String imageLocation;
+  final String chargeRate;
   CategoryItem({
     Key? key,
     this.isFavouriteSelected = false,
@@ -20,6 +21,7 @@ class CategoryItem extends StatelessWidget {
     required this.rating,
     required this.price,
     required this.imageLocation,
+    required this.chargeRate,
   }) : super(key: key);
 
   @override
@@ -147,7 +149,7 @@ class CategoryItem extends StatelessWidget {
                           ),
                           Spacer(),
                           Text(
-                            '\$' + price,
+                            '\$' + price + '/' + chargeRate,
                             style: TextStyle(
                                 fontSize: 19,
                                 color: primary,

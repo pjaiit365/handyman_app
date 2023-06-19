@@ -10,6 +10,7 @@ class JobCategoryItem extends StatelessWidget {
   final String name;
   final String price;
   final String imageLocation;
+  final String chargeRate;
   final int index;
 
   JobCategoryItem({
@@ -21,6 +22,7 @@ class JobCategoryItem extends StatelessWidget {
     required this.price,
     required this.imageLocation,
     required this.index,
+    required this.chargeRate,
   }) : super(key: key);
 
   @override
@@ -164,7 +166,7 @@ class JobCategoryItem extends StatelessWidget {
                                 ),
                           Spacer(),
                           Text(
-                            '\$' + price,
+                            '\$' + price + '/' + chargeRate,
                             style: TextStyle(
                                 fontSize: 19,
                                 color: primary,

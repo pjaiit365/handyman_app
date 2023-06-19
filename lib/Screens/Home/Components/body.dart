@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Models/category.dart';
+import 'package:handyman_app/Models/customer_category_data.dart';
+import 'package:handyman_app/Models/handyman_category_data.dart';
 import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
@@ -25,6 +27,145 @@ class Body extends StatefulWidget {
   State<Body> createState() => _BodyState();
 }
 
+List<String> servicesProvided = [];
+
+List<String> allCategoriesName = [];
+List<dynamic> allCustomerCategoryData = [];
+List<dynamic> allHandymanCategoryData = [];
+
+Future getAllCategories() async {
+  final documents =
+      await FirebaseFirestore.instance.collection('Category').get();
+
+  documents.docs.forEach((document) {
+    final data = document.get('Category Name');
+    if (!allCategoriesName.contains(data)) {
+      allCategoriesName.add(data);
+    }
+  });
+  allCategoriesName.sort();
+  dashBoardTabList = dashBoardTabList + allCategoriesName;
+}
+
+Future getCategoryData(String categoryName) async {
+  final document = await FirebaseFirestore.instance
+      .collection('Category')
+      .where('Category Name', isEqualTo: categoryName)
+      .get();
+
+  if (document.docs.isNotEmpty) {
+    final category = document.docs.single.data();
+    final $categoryName = CategoryData(
+        categoryName: category['Category Name'],
+        servicesProvided: List<String>.from(category['Services Provided']));
+
+    servicesProvided = $categoryName.servicesProvided;
+    serviceProvHintText = servicesProvided[0];
+    servicesProvided.sort();
+  } else {
+    print('Item not found.');
+  }
+}
+
+Future getCustomerCategoryData() async {
+  allCustomerCategoryData.clear();
+  handymanDashboardJobType.clear();
+  handymanDashboardName.clear();
+  handymanDashboardPrice.clear();
+  handymanDashboardRating.clear();
+  handymanDashboardChargeRate.clear();
+
+  final documents =
+      await FirebaseFirestore.instance.collection('Handyman Job Upload').get();
+
+  if (documents.docs.isNotEmpty) {
+    documents.docs.forEach((document) {
+      final documentData = document.data();
+      final categoryData = CustomerCategoryData(
+        jobID: documentData['Job ID'],
+        seenBy: documentData['Seen By'],
+        fullName: documentData['Name'],
+        jobService: documentData['Service Information']['Service Provided'],
+        rating: documentData['Work Experience & Certification']['Rating'],
+        charge: documentData['Service Information']['Charge'],
+        chargeRate: documentData['Service Information']['Charge Rate'],
+        jobCategory: documentData['Service Information']['Service Category'],
+      );
+      if (!allCustomerCategoryData
+          .any((item) => item.jobID == categoryData.jobID)) {
+        allCustomerCategoryData.add(categoryData);
+
+        handymanDashboardJobType.add(categoryData.jobService);
+        handymanDashboardName.add(categoryData.fullName);
+        handymanDashboardPrice.add(categoryData.charge.toString());
+        handymanDashboardRating.add(categoryData.rating);
+        if (categoryData.chargeRate == 'Hour') {
+          handymanDashboardChargeRate.add('Hr');
+        } else if (categoryData.chargeRate == '6 Hours') {
+          handymanDashboardChargeRate.add('6 Hrs');
+        } else if (categoryData.chargeRate == '12 Hours') {
+          handymanDashboardChargeRate.add('12 Hrs');
+        } else {
+          handymanDashboardChargeRate.add('Day');
+        }
+      }
+    });
+    print(allCustomerCategoryData.length);
+    print(allCustomerCategoryData);
+  } else {
+    print('No Jobs Found.');
+  }
+}
+
+Future getHandymanCategoryData() async {
+  allHandymanCategoryData.clear();
+  jobStatusOptions.clear();
+  jobDashboardJobType.clear();
+  jobDashboardName.clear();
+  jobDashboardPrice.clear();
+  jobDashboardChargeRate.clear();
+
+  final documents =
+      await FirebaseFirestore.instance.collection('Customer Job Upload').get();
+
+  if (documents.docs.isNotEmpty) {
+    documents.docs.forEach((document) {
+      final documentData = document.data();
+      final categoryData = HandymanCategoryData(
+          jobID: documentData['Job ID'],
+          seenBy: documentData['Seen By'],
+          fullName: documentData['Name'],
+          jobService: documentData['Service Information']['Service Provided'],
+          charge: documentData['Service Information']['Charge'],
+          chargeRate: documentData['Service Information']['Charge Rate'],
+          jobCategory: documentData['Service Information']['Service Category'],
+          jobStatus: documentData['Job Details']['Job Status']);
+      if (!allHandymanCategoryData
+          .any((item) => item.jobID == categoryData.jobID)) {
+        allHandymanCategoryData.add(categoryData);
+
+        jobDashboardJobType.add(categoryData.jobService);
+        jobDashboardName.add(categoryData.fullName);
+        jobDashboardPrice.add(categoryData.charge.toString());
+        jobStatusOptions.add(categoryData.jobStatus);
+        if (categoryData.chargeRate == 'Hour') {
+          jobDashboardChargeRate.add('Hr');
+        } else if (categoryData.chargeRate == '6 Hours') {
+          jobDashboardChargeRate.add('6 Hrs');
+        } else if (categoryData.chargeRate == '12 Hours') {
+          jobDashboardChargeRate.add('12 Hrs');
+        } else {
+          jobDashboardChargeRate.add('Day');
+        }
+      }
+    });
+    print(allHandymanCategoryData.length);
+    print(allHandymanCategoryData);
+  } else {
+    print('No Jobs Found.');
+  }
+}
+
 class _BodyState extends State<Body> {
   late String downloadUrl;
   Future getProfilePic() async {
@@ -41,7 +182,12 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
+    getAllCategories();
+    getCategoryData(allCategoriesName[0]);
+    getCustomerCategoryData();
+    getHandymanCategoryData();
     getProfilePic();
+
     super.initState();
   }
 

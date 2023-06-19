@@ -1,7 +1,8 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/job_upload_location_info.dart';
 import 'package:handyman_app/Components/job_upload_service_info.dart';
 import 'package:handyman_app/Components/job_upload_work_cert_info.dart';
@@ -12,7 +13,6 @@ import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_scree
 import 'package:handyman_app/constants.dart';
 
 import '../../../../Components/job_upload_optionals_info.dart';
-import 'package:handyman_app/Components/pinned_button.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -29,57 +29,100 @@ class _BodyState extends State<Body> {
     chargeController.dispose();
   }
 
-  //TODO: Add the upload of files, work on why charge per and expertise upload
-
+  late final String jobID;
+  //TODO: Add the upload of files
   Future uploadJob() async {
-    try {
-      final document = await FirebaseFirestore.instance
-          .collection('Customer Job Upload')
-          .add({
-        'Customer ID': loggedInUserId,
-      });
+    if (FieldsCheck()) {
+      try {
+        final document = await FirebaseFirestore.instance
+            .collection('Customer Job Upload')
+            .add({
+          'Customer ID': loggedInUserId,
+        });
+        final jobID = document.id;
 
-      final jobID = document.id;
+        addDetails(
+          jobID,
+          loggedInUserId,
+          allUsers[0].firstName + ' ' + allUsers[0].lastName,
+          //Customer's Name
+          seenByHintText,
+          // Who to see the job upload
+          serviceCatHintText,
+          // Category of job
+          serviceProvHintText,
+          // which service in the category to upload
+          int.parse(chargeController.text.trim()),
+          // Charge
+          chargePHint,
+          // Charge Rate
+          expertHint,
+          // Level of expertise
+          uploadCertList,
+          // Cert List
+          uploadExperienceList,
+          // Experience List
+          ratingHintText as String,
+          // Overall Rating
+          int.parse(jobTotalHintText.toString()),
+          //Job's completed
+          uploadHouseNum,
+          //house number
+          uploadStreet,
+          // street
+          uploadTown,
+          // town
+          uploadRegion,
+          // region
+          isPortfolioTicked,
+          // whether handyman should add portfolio
+          isReferencesTicked, // whether handyman should add past work references
+          jobStatus,
+          peopleApplied,
+          deadline,
+        );
+        //TODO: UPDATE DIALOG TO SHOW JOB UPLOADED SUCCESSFULLY SCREEN
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              insetPadding: EdgeInsets.symmetric(horizontal: 10 * screenWidth),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image(image: AssetImage('assets/images/success.gif')),
+                  SizedBox(height: 15 * screenHeight),
+                  Text(
+                    'Job Uploaded Successfully!',
+                    style: TextStyle(
+                      color: black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        );
 
-      addDetails(
-        jobID,
-        loggedInUserId,
-        allUsers[0].firstName + ' ' + allUsers[0].lastName,
-        //Customer's Name
-        seenByHintText,
-        // Who to see the job upload
-        serviceCatHintText,
-        // Category of job
-        serviceProvHintText,
-        // which service in the category to upload
-        int.parse(chargeController.text.trim()),
-        // Charge
-        chargePHint,
-        // Charge Rate
-        expertHint,
-        // Level of expertise
-        uploadCertList,
-        // Cert List
-        uploadExperienceList,
-        // Experience List
-        ratingHintText as String,
-        // Overall Rating
-        int.parse(jobTotalHintText.toString()),
-        //Job's completed
-        uploadHouseNum,
-        //house number
-        uploadStreet,
-        // street
-        uploadTown,
-        // town
-        uploadRegion,
-        // region
-        isPortfolioTicked,
-        // whether handyman should add portfolio
-        isReferencesTicked, // whether handyman should add past work references
-      );
-    } catch (e) {
-      print(e.toString());
+        await Future.delayed(Duration(seconds: 3), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HandymanDashboardScreen(),
+            ),
+          );
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print('Some fields are empty. Try again.');
     }
   }
 
@@ -103,6 +146,9 @@ class _BodyState extends State<Body> {
     String region,
     bool isPortfolioPresent,
     bool isReferencePresent,
+    bool jobStatus,
+    int peopleApplied,
+    String deadline,
   ) async {
     await FirebaseFirestore.instance
         .collection('Customer Job Upload')
@@ -134,11 +180,60 @@ class _BodyState extends State<Body> {
       'Optional': {
         'Portfolio Present': isPortfolioPresent,
         'References Present': isReferencePresent,
+      },
+      'Job Details': {
+        'Job Status': jobStatus,
+        'People Applied': peopleApplied,
+        'Deadline': deadline,
       }
     });
   }
 
-  late final String jobID;
+  bool FieldsCheck() {
+    if (chargeController.text.trim().isNotEmpty &&
+        chargePHint != 'N/A' &&
+        expertHint != 'N/A' &&
+        uploadRegion != '' &&
+        uploadTown != '' &&
+        uploadStreet != '' &&
+        uploadHouseNum != '') {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'One or more required fields is empty. Check them again.',
+                style: TextStyle(height: 1.3),
+                textAlign: TextAlign.center,
+              ),
+            )),
+      );
+      return false;
+    }
+  }
+
+  @override
+  void initState() {
+    if (chargePHint != 'N/A' || uploadTown != '') {
+      seenByHintText = 'All';
+      serviceCatHintText = 'Painting';
+      serviceProvHintText = 'Furniture Painting';
+      chargePHint = 'N/A';
+      expertHint = 'N/A';
+      uploadHouseNum = '';
+      uploadStreet = '';
+      uploadTown = '';
+      uploadRegion = '';
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -172,6 +267,7 @@ class _BodyState extends State<Body> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          SizedBox(height: 13 * screenHeight),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -193,6 +289,18 @@ class _BodyState extends State<Body> {
                             ],
                           ),
                         ],
+                      ),
+                    ),
+                    SizedBox(height: 30 * screenHeight),
+                    Padding(
+                      padding: EdgeInsets.only(left: screenWidth * 5.0),
+                      child: Text(
+                        'Deadline',
+                        style: TextStyle(
+                          color: black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     SizedBox(height: 30 * screenHeight),

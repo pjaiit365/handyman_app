@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
+import 'package:handyman_app/Screens/Home/Components/body.dart';
 
+import '../Models/category.dart';
 import '../constants.dart';
 
 class ProfileServiceInformation extends StatefulWidget {
@@ -87,6 +89,12 @@ class _ProfileServiceInformationState extends State<ProfileServiceInformation> {
   }
 
   @override
+  void initState() {
+    // getCategoryServices(selectedServiceCatList);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -154,7 +162,7 @@ class _ProfileServiceInformationState extends State<ProfileServiceInformation> {
                 selectedOptions: selectedServiceCatList,
                 title: 'Service Category',
                 hintText: 'Choose all that apply...',
-                listName: serviceCategoryList,
+                listName: allCategoriesName.toSet().toList(),
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItemDropDown(
@@ -162,7 +170,7 @@ class _ProfileServiceInformationState extends State<ProfileServiceInformation> {
                 selectedOptions: selectedServiceProvList,
                 title: 'Services Provided',
                 hintText: 'Choose all that apply...',
-                listName: servicesProvidedList,
+                listName: allSelectedServiceProvided.toSet().toList(),
               ),
               SizedBox(height: 20 * screenHeight),
               Row(

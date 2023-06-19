@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Home/Components/body.dart';
 
 late double width;
 late double height;
@@ -55,7 +56,17 @@ List<bool> isCommentLiked = [true, false, true];
 
 List<double> ratingsWidth = [140, 100, 35, 12, 0];
 
-List statusOptions = [false, true, true, false, false, false, true, true, true];
+List jobStatusOptions = [
+  false,
+  true,
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true
+];
 
 late int starsGiven;
 bool isGridViewSelected = true;
@@ -85,11 +96,7 @@ List<String> addressTypesDD = [
 ];
 
 List<String> dashBoardTabList = [
-  'Painter',
-  'Electrician',
-  'Carpenter',
-  'Gardener',
-  'Gardener on the rollll',
+  'All',
 ];
 
 final serviceCategoryList = [
@@ -107,6 +114,7 @@ List uploadExperienceList = [];
 List uploadReferenceList = [];
 List uploadPortfolioList = [];
 
+//to be deleted
 final servicesProvidedList = [
   'Furniture Painting',
   'Building Painting',
@@ -354,79 +362,65 @@ List<String> handymanFavouritesJobTypeList = [];
 late int handymanSelectedIndex;
 late int jobSelectedIndex;
 
-List<String> handymanDashboardJobType = [
-  'Furniture Painting',
-  'Building Renovations',
-  'Playground Painting',
-  'Painting',
-  'Willow Painting',
-];
+List<String> handymanDashboardJobType = [];
 
+//TODO: UPDATE DATABASE TO ACQUIRE USER'S PROFILE PIC DOWNLOAD URL THAT'LL BE USED FOR THE ITEM
 List<String> handymanDashboardImage = [
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
 ];
 
-List<String> handymanDashboardName = [
-  'Harry Garret',
-  'Kevin De Bruyne',
-  'PJ Agrolics',
-  'Ekow Armah',
-  'Harry Garret',
-];
+List<String> handymanDashboardName = [];
 
-List<String> handymanDashboardPrice = [
-  '15/hr',
-  '35/hr',
-  '75/hr',
-  '15/hr',
-  '100/hr',
-];
+List<String> handymanDashboardPrice = [];
 
-List<String> handymanDashboardRating = [
-  '4.9',
-  '2.5',
-  '4.7',
-  '4.3',
-  '3.4',
-];
+List<String> handymanDashboardChargeRate = [];
+
+List<String> handymanDashboardRating = [];
 
 //------------------------------------------------
 
-List<String> jobDashboardJobType = [
-  'Furniture Painting asd asds asd asd',
-  'Building Renovations',
-  'Playground Painting',
-  'Painting',
-  'Willow Painting',
-];
+List<String> jobDashboardJobType = [];
 
+//TODO: UPDATE DATABASE TO ACQUIRE USER'S PROFILE PIC DOWNLOAD URL THAT'LL BE USED FOR THE ITEM
 List<String> jobDashboardImage = [
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
   'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
 ];
 
-List<String> jobDashboardName = [
-  'Harry Garret',
-  'Kevin De Bruyne',
-  'PJ Agrolics',
-  'Ekow Armah',
-  'Harry Garret',
-];
+List<String> jobDashboardName = [];
 
-List<String> jobDashboardPrice = [
-  '15/hr',
-  '35/hr',
-  '75/hr',
-  '15/hr',
-  '100/hr',
-];
+List<String> jobDashboardPrice = [];
+
+List<String> jobDashboardChargeRate = [];
 
 //------------------------------------------
 
@@ -527,6 +521,8 @@ String imageUrl = '';
 
 List experienceFileNames = [];
 List certificationFileNames = [];
+List portfolioList = [];
+List referencesList = [];
 
 List<String> addressOptions = [
   'Home',
@@ -545,17 +541,33 @@ String uploadStreet = '';
 String uploadRegion = '';
 String uploadHouseNum = '';
 
+String uploadHandymanTown = '';
+String uploadHandymanStreet = '';
+String uploadHandymanRegion = '';
+String uploadHandymanHouseNum = '';
+
 List<String> addedNote = [];
 
 String fileNameStore = '';
 
-String serviceCatHintText = 'Painting';
-String serviceProvHintText = 'Furniture Painting';
+String serviceCatHintText = allCategoriesName[0];
+String serviceProvHintText = servicesProvided[0];
 String chargePHint = 'N/A';
 String expertHint = 'N/A';
+
+String handymanServiceCatHintText = 'Painting';
+String handymanServiceProvHintText = 'Furniture Painting';
+String handymanChargePHint = 'N/A';
+String handymanExpertHint = 'N/A';
+
 List<String> seenByList = [
   'All',
   'Specific Category',
 ];
 
 bool jobUploadReadOnly = false;
+bool jobStatus = true;
+
+final int peopleApplied = 0;
+
+String deadline = '';

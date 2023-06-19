@@ -51,7 +51,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 handymanFavouritesPriceList
                     .add(jobDashboardPrice[jobSelectedIndex]);
                 handymanFavouritesStatusList
-                    .add(statusOptions[jobSelectedIndex]);
+                    .add(jobStatusOptions[jobSelectedIndex]);
                 handymanFavouritesJobTypeList
                     .add(jobDashboardJobType[jobSelectedIndex]);
               }

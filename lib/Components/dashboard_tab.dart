@@ -15,6 +15,7 @@ class DashboardTab extends StatelessWidget {
     required this.onTabSelected,
   }) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     final isTabSelected = index == selectedTabIndex;
     return GestureDetector(
@@ -32,11 +33,15 @@ class DashboardTab extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: isTabSelected ? white : black,
-              fontWeight: isTabSelected ? FontWeight.w700 : FontWeight.w500,
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 170 * screenWidth),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: isTabSelected ? white : black,
+                fontWeight: isTabSelected ? FontWeight.w700 : FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +33,43 @@ class ProfileItemDropDown extends StatefulWidget {
   State<ProfileItemDropDown> createState() => _ProfileItemDropDownState();
 }
 
+List<String> allSelectedServiceProvided = [];
+
 class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
+  Future getCategoryServices(List categoryName) async {
+    allSelectedServiceProvided.clear();
+
+    for (int i = 0; i < categoryName.length; i++) {
+      final documents = await FirebaseFirestore.instance
+          .collection('Category')
+          .where('Category Name', isEqualTo: categoryName[i])
+          .get();
+
+      if (documents.docs.isNotEmpty) {
+        documents.docs.forEach((document) {
+          List<String> data = List.from(document.get('Services Provided'));
+          if (!allSelectedServiceProvided.contains(data[0])) {
+            setState(() {
+              allSelectedServiceProvided.addAll(data);
+            });
+          }
+          setState(() {
+            allSelectedServiceProvided = allSelectedServiceProvided;
+          });
+        });
+        print(allSelectedServiceProvided);
+      } else {
+        print('Item not found.');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    getCategoryServices(selectedServiceCatList);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -65,6 +102,7 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
           ),
           underline: Text(''),
           dropdownStyleData: DropdownStyleData(
+            maxHeight: 260 * screenHeight,
             padding: EdgeInsets.symmetric(
                 horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
             decoration: BoxDecoration(
@@ -84,19 +122,25 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
           ),
           items: widget.listName.map((String serviceCategoryList) {
             return DropdownMenuItem(
-              child: Text(serviceCategoryList),
+              child: SizedBox(
+                  width: 270 * screenWidth,
+                  child: Text(
+                    serviceCategoryList,
+                    overflow: TextOverflow.ellipsis,
+                  )),
               value: serviceCategoryList,
             );
           }).toList(),
           onChanged: widget.isReadOnly
               ? null
-              : (String? newValue) {
+              : (String? newValue) async {
                   if (!widget.selectedOptions.contains(newValue)) {
                     setState(() {
                       dropdownvalue = newValue!;
                       widget.selectedOptions.add(dropdownvalue);
                       print(widget.selectedOptions);
                     });
+                    await getCategoryServices(widget.selectedOptions);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -143,23 +187,32 @@ class _ProfileItemDropDownState extends State<ProfileItemDropDown> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Text(
-                              widget.selectedOptions[index],
-                              style: TextStyle(
-                                color: black,
-                                fontSize: 16,
+                            SizedBox(
+                              width: 230 * screenWidth,
+                              child: Text(
+                                widget.selectedOptions[index],
+                                style: TextStyle(
+                                  color: black,
+                                  fontSize: 16,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             Spacer(),
                             GestureDetector(
-                                onTap: () {
-                                  widget.isReadOnly
-                                      ? null
-                                      : setState(() {
+                                onTap: widget.isReadOnly
+                                    ? null
+                                    : () {
+                                        setState(() {
                                           widget.selectedOptions
                                               .removeAt(index);
+                                          allSelectedServiceProvided = [];
+                                          getCategoryServices(
+                                              selectedServiceCatList);
+                                          print(selectedServiceCatList);
                                         });
-                                },
+                                        print(selectedServiceCatList);
+                                      },
                                 child: Icon(
                                   Icons.remove,
                                   color: primary,
@@ -484,7 +537,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                       ProfileAddressItem(
                           inputFormatter: [
                             FilteringTextInputFormatter.allow(RegExp(
-                                r"[a-zA-Z0-9\\s]")), // Only allow letters and spaces
+                                r'[a-zA-Z0-9\s]')), // Only allow letters and spaces
                             LengthLimitingTextInputFormatter(18),
                           ],
                           textEditingController: widget.streetNameController,
@@ -495,7 +548,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                       ProfileAddressItem(
                           inputFormatter: [
                             FilteringTextInputFormatter.allow(RegExp(
-                                r"[a-zA-Z\\s]")), // Only allow letters and spaces
+                                r'[a-zA-Z\\s]')), // Only allow letters and spaces
                             LengthLimitingTextInputFormatter(18),
                           ],
                           textEditingController: widget.townController,
@@ -512,7 +565,7 @@ class _ProfileItemAddAddressState extends State<ProfileItemAddAddress> {
                           ProfileAddressItem(
                               inputFormatter: [
                                 FilteringTextInputFormatter.allow(RegExp(
-                                    r"[a-zA-Z0-9\\s]")), // Only allow letters and spaces
+                                    r'[a-zA-Z0-9\s]')), // Only allow letters and spaces
                                 LengthLimitingTextInputFormatter(10),
                               ],
                               textEditingController: widget.houseNumController,
@@ -876,12 +929,14 @@ class ServiceCategorySelect extends StatefulWidget {
   final String title;
   final List<String> dropdownList;
   num width;
+  final ValueChanged<String> onChanged;
   ServiceCategorySelect({
     Key? key,
     this.hintText = 'N/A',
     this.width = 310,
     required this.dropdownList,
     required this.title,
+    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -952,7 +1007,7 @@ class _ServiceCategorySelect extends State<ServiceCategorySelect> {
           }).toList(),
           onChanged: (String? newValue) {
             setState(() {
-              widget.hintText = newValue!;
+              widget.onChanged(newValue!);
             });
           },
           value: widget.hintText,
@@ -974,73 +1029,55 @@ class SeenBySelect extends StatefulWidget {
 class _SeenBySelectState extends State<SeenBySelect> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: screenWidth * 11.0),
+    return DropdownButton2(
+      buttonStyleData: ButtonStyleData(
+        elevation: 0,
+        height: 49 * screenHeight,
+        width: 290 * screenWidth,
+        decoration: BoxDecoration(
+            color: white,
+            borderRadius: BorderRadius.circular(7),
+            border: Border.all(color: appointmentTimeColor, width: 1)),
+        padding: EdgeInsets.symmetric(
+            horizontal: 15 * screenWidth, vertical: 12 * screenHeight),
+      ),
+      underline: Text(''),
+      dropdownStyleData: DropdownStyleData(
+        padding: EdgeInsets.symmetric(
+            horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      iconStyleData: IconStyleData(
+        icon: Icon(Icons.keyboard_arrow_down_rounded),
+        iconDisabledColor: black,
+        iconEnabledColor: primary,
+      ),
+      isExpanded: true,
+      hint: Center(
+        child: Text(
+          'Choose one',
+          style: TextStyle(
+              fontSize: 16, color: black, fontWeight: FontWeight.w200),
+        ),
+      ),
+      items: seenByList.map((String serviceCategoryList) {
+        return DropdownMenuItem(
           child: Text(
-            'Seen By:',
-            style: TextStyle(
-              color: black,
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-            ),
+            serviceCategoryList,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
           ),
-        ),
-        SizedBox(height: 6 * screenHeight),
-        DropdownButton2(
-          buttonStyleData: ButtonStyleData(
-            elevation: 0,
-            height: 49 * screenHeight,
-            width: 290 * screenWidth,
-            decoration: BoxDecoration(
-                color: white,
-                borderRadius: BorderRadius.circular(7),
-                border: Border.all(color: appointmentTimeColor, width: 1)),
-            padding: EdgeInsets.symmetric(
-                horizontal: 15 * screenWidth, vertical: 12 * screenHeight),
-          ),
-          underline: Text(''),
-          dropdownStyleData: DropdownStyleData(
-            padding: EdgeInsets.symmetric(
-                horizontal: 10 * screenWidth, vertical: 10 * screenHeight),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          iconStyleData: IconStyleData(
-            icon: Icon(Icons.keyboard_arrow_down_rounded),
-            iconDisabledColor: black,
-            iconEnabledColor: primary,
-          ),
-          isExpanded: true,
-          hint: Center(
-            child: Text(
-              'Choose one',
-              style: TextStyle(
-                  fontSize: 16, color: black, fontWeight: FontWeight.w200),
-            ),
-          ),
-          items: seenByList.map((String serviceCategoryList) {
-            return DropdownMenuItem(
-              child: Text(
-                serviceCategoryList,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
-              ),
-              value: serviceCategoryList,
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              seenByHintText = newValue!;
-            });
-          },
-          value: seenByHintText.toString(),
-        ),
-      ],
+          value: serviceCategoryList,
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          seenByHintText = newValue!;
+        });
+      },
+      value: seenByHintText.toString(),
     );
   }
 }

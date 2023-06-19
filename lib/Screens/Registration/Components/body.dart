@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,8 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Registration/Sub%20Screen/Registration%20Continuation/registration_continuation_screen.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
 import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
@@ -296,13 +296,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    // var numberMask = MaskTextInputFormatter(
-    //     mask: '+233 (#) ###-###-###',
-    //     filter: {
-    //       "#": RegExp(r'[0-9]'),
-    //     },
-    //     type: MaskAutoCompletionType.eager);
-
     return SafeArea(
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
