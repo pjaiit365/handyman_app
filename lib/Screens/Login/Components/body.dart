@@ -138,7 +138,7 @@ class _BodyState extends State<Body> {
           );
         },
       ).timeout(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
       );
 
       setState(() {

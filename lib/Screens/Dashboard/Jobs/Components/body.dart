@@ -1,12 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:handyman_app/Components/job_category_item.dart';
 import 'package:handyman_app/Components/search_bar_item.dart';
 import 'package:handyman_app/Models/handyman_category_data.dart';
 import 'package:handyman_app/Screens/Home/Components/body.dart';
 
-import '../../../../Components/category_item.dart';
 import '../../../../Components/dashboard_tab.dart';
 import '../../../../constants.dart';
 
@@ -23,6 +23,8 @@ Future selectedHandymanCategoryData(String categoryName) async {
   jobDashboardName.clear();
   jobDashboardPrice.clear();
   jobDashboardChargeRate.clear();
+  jobDashboardID.clear();
+  jobDashboardImage.clear();
 
   final documents = await FirebaseFirestore.instance
       .collection('Customer Job Upload')
@@ -33,6 +35,7 @@ Future selectedHandymanCategoryData(String categoryName) async {
     documents.docs.forEach((document) {
       final documentData = document.data();
       final categoryData = HandymanCategoryData(
+          pic: documentData['User Pic'],
           jobID: documentData['Job ID'],
           seenBy: documentData['Seen By'],
           fullName: documentData['Name'],
@@ -42,15 +45,17 @@ Future selectedHandymanCategoryData(String categoryName) async {
           jobCategory: documentData['Service Information']['Service Category'],
           jobStatus: documentData['Job Details']['Job Status']);
 
+      jobDashboardImage.add(categoryData.pic);
+      jobDashboardID.add(categoryData.jobID);
       jobDashboardJobType.add(categoryData.jobService);
       jobDashboardName.add(categoryData.fullName);
       jobDashboardPrice.add(categoryData.charge.toString());
       jobStatusOptions.add(categoryData.jobStatus);
       if (categoryData.chargeRate == 'Hour') {
         jobDashboardChargeRate.add('Hr');
-      } else if (categoryData.chargeRate == '6 Hours') {
+      } else if (categoryData.chargeRate == '6 hours') {
         jobDashboardChargeRate.add('6 Hrs');
-      } else if (categoryData.chargeRate == '12 Hours') {
+      } else if (categoryData.chargeRate == '12 hours') {
         jobDashboardChargeRate.add('12 Hrs');
       } else {
         jobDashboardChargeRate.add('Day');
@@ -149,6 +154,7 @@ class _BodyState extends State<Body> {
                                 jobDashboardPrice.toSet().toList().length,
                             itemBuilder: (context, index) {
                               return JobCategoryItem(
+                                jobItemId: jobDashboardID[index],
                                 index: index,
                                 status: jobStatusOptions[index],
                                 name: jobDashboardName[index],
@@ -164,7 +170,7 @@ class _BodyState extends State<Body> {
                           );
                   }
                   return SizedBox();
-                  // return CircularProgressIndicator();
+                  // return Center(child:CircularProgressIndicator(),);
                 }),
           ],
         ),

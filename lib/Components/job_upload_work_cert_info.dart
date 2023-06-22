@@ -30,7 +30,9 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Work Experience & Certification',
+                widget.isHandyManUpload
+                    ? 'Work Experience & Certification'
+                    : 'Work Details & Rating',
                 style: TextStyle(
                   color: black,
                   fontSize: 17,
@@ -42,7 +44,7 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
         ),
         SizedBox(height: 13 * screenHeight),
         Container(
-          constraints: BoxConstraints(minHeight: 320),
+          constraints: BoxConstraints(minHeight: 120),
           width: 359 * screenWidth,
           decoration: BoxDecoration(
               color: sectionColor, borderRadius: BorderRadius.circular(13)),
@@ -52,25 +54,40 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              AddFileItem(
-                directory: 'Certification',
-                isReadOnly: jobUploadReadOnly,
-                selectedOptions: uploadCertList,
-                screen: () {
-                  setState(() {});
-                },
-                title: 'Certification',
-                hintText: 'Add all certifications here...',
-              ),
-              SizedBox(height: 20 * screenHeight),
-              AddFileItem(
-                directory: 'Experience',
-                isReadOnly: jobUploadReadOnly,
-                selectedOptions: uploadExperienceList,
-                title: 'Experience',
-                hintText: 'Add any previous work here...',
-                screen: () {},
-              ),
+              widget.isHandyManUpload
+                  ? AddFileItem(
+                      directory: 'Certification',
+                      isReadOnly: jobUploadReadOnly,
+                      selectedOptions: uploadCertList,
+                      screen: () {
+                        setState(() {});
+                      },
+                      title: 'Certification',
+                      hintText: 'Add all certifications here...',
+                    )
+                  : AddFileItem(
+                      directory: 'Portfolio',
+                      isReadOnly: jobUploadReadOnly,
+                      selectedOptions: uploadPortfolioList,
+                      screen: () {
+                        setState(() {});
+                      },
+                      title: 'Portfolio',
+                      hintText: 'Add all portfolio here...',
+                    ),
+              widget.isHandyManUpload
+                  ? SizedBox(height: 20 * screenHeight)
+                  : SizedBox(),
+              widget.isHandyManUpload
+                  ? AddFileItem(
+                      directory: 'Experience',
+                      isReadOnly: jobUploadReadOnly,
+                      selectedOptions: uploadExperienceList,
+                      title: 'Experience',
+                      hintText: 'Add any previous work here...',
+                      screen: () {},
+                    )
+                  : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -90,18 +107,20 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
                     width: 140,
                   ),
                   SizedBox(width: 20 * screenWidth),
-                  ProfileItem(
-                    inputFormatter: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(5)
-                    ],
-                    isHintText: false,
-                    title: 'Number of Jobs',
-                    hintText: jobTotalHintText.toString(),
-                    keyboardType: TextInputType.number,
-                    isWidthMax: false,
-                    width: 139,
-                  ),
+                  widget.isHandyManUpload
+                      ? ProfileItem(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(5)
+                          ],
+                          isHintText: false,
+                          title: 'Number of Jobs',
+                          hintText: jobTotalHintText.toString(),
+                          keyboardType: TextInputType.number,
+                          isWidthMax: false,
+                          width: 139,
+                        )
+                      : SizedBox(),
                 ],
               ),
               widget.isHandyManUpload

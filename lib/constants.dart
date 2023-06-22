@@ -363,29 +363,12 @@ late int handymanSelectedIndex;
 late int jobSelectedIndex;
 
 List<String> handymanDashboardJobType = [];
+String jobItemID = '';
 
-//TODO: UPDATE DATABASE TO ACQUIRE USER'S PROFILE PIC DOWNLOAD URL THAT'LL BE USED FOR THE ITEM
-List<String> handymanDashboardImage = [
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-];
+List<String> handymanDashboardImage = [];
 
 List<String> handymanDashboardName = [];
+List<String> handymanDashboardID = [];
 
 List<String> handymanDashboardPrice = [];
 
@@ -397,26 +380,10 @@ List<String> handymanDashboardRating = [];
 
 List<String> jobDashboardJobType = [];
 
-//TODO: UPDATE DATABASE TO ACQUIRE USER'S PROFILE PIC DOWNLOAD URL THAT'LL BE USED FOR THE ITEM
-List<String> jobDashboardImage = [
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-];
+List<String> jobDashboardImage = [];
 
 List<String> jobDashboardName = [];
+List<String> jobDashboardID = [];
 
 List<String> jobDashboardPrice = [];
 
@@ -571,3 +538,7 @@ bool jobStatus = true;
 final int peopleApplied = 0;
 
 String deadline = '';
+
+String deadlineDay = 'Day';
+String deadlineMonth = 'Month';
+String deadlineYear = 'Year';

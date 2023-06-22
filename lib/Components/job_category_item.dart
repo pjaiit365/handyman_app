@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Job%20Deatils/job_details_screen.dart';
 
+import '../Services/read_data.dart';
 import '../constants.dart';
 
 class JobCategoryItem extends StatelessWidget {
@@ -12,6 +13,7 @@ class JobCategoryItem extends StatelessWidget {
   final String imageLocation;
   final String chargeRate;
   final int index;
+  final String jobItemId;
 
   JobCategoryItem({
     Key? key,
@@ -23,6 +25,7 @@ class JobCategoryItem extends StatelessWidget {
     required this.imageLocation,
     required this.index,
     required this.chargeRate,
+    required this.jobItemId,
   }) : super(key: key);
 
   @override
@@ -30,13 +33,13 @@ class JobCategoryItem extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
+          jobSelectedIndex = index;
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => JobDetailsScreen(),
             ),
           );
-          jobSelectedIndex = index;
         },
         child: Container(
           height: 123 * screenHeight,
@@ -53,13 +56,20 @@ class JobCategoryItem extends StatelessWidget {
                 height: 123 * screenHeight,
                 width: 115 * screenWidth,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage(
-                        imageLocation,
-                      ),
-                    )),
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(imageLocation),
+                  ),
+                ),
+                child: imageLocation == ''
+                    ? Center(
+                        child: Icon(
+                        Icons.person,
+                        color: grey,
+                        size: 40,
+                      ))
+                    : null,
               ),
               VerticalDivider(thickness: 3.5, color: Colors.white),
               Padding(

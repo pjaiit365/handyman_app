@@ -1,4 +1,5 @@
 class CustomerCategoryData {
+  final String pic;
   final String jobID;
   final String jobCategory;
   final String fullName;
@@ -9,6 +10,7 @@ class CustomerCategoryData {
   final String seenBy;
 
   const CustomerCategoryData({
+    required this.pic,
     required this.jobID,
     required this.seenBy,
     required this.chargeRate,

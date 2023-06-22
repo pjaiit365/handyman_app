@@ -74,14 +74,19 @@ Future getCustomerCategoryData() async {
   handymanDashboardPrice.clear();
   handymanDashboardRating.clear();
   handymanDashboardChargeRate.clear();
+  handymanDashboardID.clear();
+  handymanDashboardImage.clear();
 
-  final documents =
-      await FirebaseFirestore.instance.collection('Handyman Job Upload').get();
+  final documents = await FirebaseFirestore.instance
+      .collection('Handyman Job Upload')
+      .where('Seen By', isEqualTo: 'All')
+      .get();
 
   if (documents.docs.isNotEmpty) {
     documents.docs.forEach((document) {
       final documentData = document.data();
       final categoryData = CustomerCategoryData(
+        pic: documentData['User Pic'],
         jobID: documentData['Job ID'],
         seenBy: documentData['Seen By'],
         fullName: documentData['Name'],
@@ -95,6 +100,8 @@ Future getCustomerCategoryData() async {
           .any((item) => item.jobID == categoryData.jobID)) {
         allCustomerCategoryData.add(categoryData);
 
+        handymanDashboardImage.add(categoryData.pic);
+        handymanDashboardID.add(categoryData.jobID);
         handymanDashboardJobType.add(categoryData.jobService);
         handymanDashboardName.add(categoryData.fullName);
         handymanDashboardPrice.add(categoryData.charge.toString());
@@ -112,6 +119,7 @@ Future getCustomerCategoryData() async {
     });
     print(allCustomerCategoryData.length);
     print(allCustomerCategoryData);
+    print(handymanDashboardImage);
   } else {
     print('No Jobs Found.');
   }
@@ -124,14 +132,19 @@ Future getHandymanCategoryData() async {
   jobDashboardName.clear();
   jobDashboardPrice.clear();
   jobDashboardChargeRate.clear();
+  jobDashboardID.clear();
+  jobDashboardImage.clear();
 
-  final documents =
-      await FirebaseFirestore.instance.collection('Customer Job Upload').get();
+  final documents = await FirebaseFirestore.instance
+      .collection('Customer Job Upload')
+      .where('Seen By', isEqualTo: 'All')
+      .get();
 
   if (documents.docs.isNotEmpty) {
     documents.docs.forEach((document) {
       final documentData = document.data();
       final categoryData = HandymanCategoryData(
+          pic: documentData['User Pic'],
           jobID: documentData['Job ID'],
           seenBy: documentData['Seen By'],
           fullName: documentData['Name'],
@@ -144,15 +157,17 @@ Future getHandymanCategoryData() async {
           .any((item) => item.jobID == categoryData.jobID)) {
         allHandymanCategoryData.add(categoryData);
 
+        jobDashboardImage.add(categoryData.pic);
+        jobDashboardID.add(categoryData.jobID);
         jobDashboardJobType.add(categoryData.jobService);
         jobDashboardName.add(categoryData.fullName);
         jobDashboardPrice.add(categoryData.charge.toString());
         jobStatusOptions.add(categoryData.jobStatus);
         if (categoryData.chargeRate == 'Hour') {
           jobDashboardChargeRate.add('Hr');
-        } else if (categoryData.chargeRate == '6 Hours') {
+        } else if (categoryData.chargeRate == '6 hours') {
           jobDashboardChargeRate.add('6 Hrs');
-        } else if (categoryData.chargeRate == '12 Hours') {
+        } else if (categoryData.chargeRate == '12 hours') {
           jobDashboardChargeRate.add('12 Hrs');
         } else {
           jobDashboardChargeRate.add('Day');

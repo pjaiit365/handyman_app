@@ -5,18 +5,40 @@ import '../constants.dart';
 import 'grid_media.dart';
 import 'media_view_type_tab.dart';
 
-class PortfolioTab extends StatelessWidget {
+class PortfolioTab extends StatefulWidget {
   const PortfolioTab({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<PortfolioTab> createState() => _PortfolioTabState();
+}
+
+class _PortfolioTabState extends State<PortfolioTab> {
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        MediaViewTypeTab(),
+        MediaViewTypeTab(
+          gridCallback: () {
+            setState(() {
+              isGridViewSelected = !isGridViewSelected;
+
+              if (isGridViewSelected == true) isSingleViewSelected = false;
+              if (isSingleViewSelected == false) isGridViewSelected = true;
+            });
+          },
+          singleCallback: () {
+            setState(() {
+              isSingleViewSelected = !isSingleViewSelected;
+
+              if (isSingleViewSelected == true) isGridViewSelected = false;
+              if (isGridViewSelected == false) isSingleViewSelected = true;
+            });
+          },
+        ),
         SizedBox(height: 29 * screenHeight),
         if (isGridViewSelected == true)
           Padding(
@@ -32,7 +54,7 @@ class PortfolioTab extends StatelessWidget {
               },
             ),
           ),
-        if (isSingleViewSelected)
+        if (isSingleViewSelected == true)
           ListView.separated(
             itemCount: 5,
             shrinkWrap: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
 
+import '../Services/read_data.dart';
 import '../constants.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -29,13 +30,14 @@ class CategoryItem extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
+          handymanSelectedIndex = index;
+
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => HandymanDetailsScreen(),
             ),
           );
-          handymanSelectedIndex = index;
         },
         child: Container(
           height: 123 * screenHeight,
@@ -51,16 +53,21 @@ class CategoryItem extends StatelessWidget {
               Container(
                 height: 123 * screenHeight,
                 width: 115 * screenWidth,
-                clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(
-                      imageLocation,
-                    ),
+                    image: NetworkImage(imageLocation),
                   ),
                 ),
+                child: imageLocation == ''
+                    ? Center(
+                        child: Icon(
+                        Icons.person,
+                        color: grey,
+                        size: 40,
+                      ))
+                    : null,
               ),
               VerticalDivider(thickness: 3.5, color: Colors.white),
               Padding(

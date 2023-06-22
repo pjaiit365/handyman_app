@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/job_upload_location_info.dart';
@@ -10,9 +12,12 @@ import 'package:handyman_app/Components/profile_item_dropdown.dart';
 import 'package:handyman_app/Components/upload_button.dart';
 import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
+import 'package:handyman_app/Services/storage_service.dart';
 import 'package:handyman_app/constants.dart';
 
+import '../../../../Components/deadline_item.dart';
 import '../../../../Components/job_upload_optionals_info.dart';
+import '../../../Home/Components/body.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -40,6 +45,8 @@ class _BodyState extends State<Body> {
           'Customer ID': loggedInUserId,
         });
         final jobID = document.id;
+
+        deadline = '$deadlineDay-$deadlineMonth-$deadlineYear';
 
         addDetails(
           jobID,
@@ -81,7 +88,8 @@ class _BodyState extends State<Body> {
           peopleApplied,
           deadline,
         );
-        //TODO: UPDATE DIALOG TO SHOW JOB UPLOADED SUCCESSFULLY SCREEN
+
+        //TODO: Change Dialog Image Color to suite app design
         showDialog(
           context: context,
           builder: (context) {
@@ -189,6 +197,46 @@ class _BodyState extends State<Body> {
     });
   }
 
+  Storage storage = Storage();
+
+  Future addCertification() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+      type: FileType.custom,
+    );
+
+    if (result != null) {
+      result.files.forEach((file) {
+        final fileNames = result!.names;
+        final filePath = result!.paths;
+        storage.jobUploadFiles(
+            fileNames as String, 'Certification', filePath as String, jobID);
+      });
+    } else {
+      throw ('No file picked');
+    }
+  }
+
+  Future addExperience() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+      type: FileType.custom,
+    );
+
+    if (result != null) {
+      result.files.forEach((file) {
+        final fileNames = result!.names;
+        final filePath = result!.paths;
+        storage.jobUploadFiles(
+            fileNames as String, 'Certification', filePath as String, jobID);
+      });
+    } else {
+      throw ('No file picked');
+    }
+  }
+
   bool FieldsCheck() {
     if (chargeController.text.trim().isNotEmpty &&
         chargePHint != 'N/A' &&
@@ -196,7 +244,8 @@ class _BodyState extends State<Body> {
         uploadRegion != '' &&
         uploadTown != '' &&
         uploadStreet != '' &&
-        uploadHouseNum != '') {
+        uploadHouseNum != '' &&
+        deadlineDay != 'Day') {
       return true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -220,16 +269,18 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    if (chargePHint != 'N/A' || uploadTown != '') {
+    if (chargePHint != 'N/A' || uploadTown != '' || deadlineDay != 'Day') {
       seenByHintText = 'All';
-      serviceCatHintText = 'Painting';
-      serviceProvHintText = 'Furniture Painting';
+      serviceCatHintText = allCategoriesName[0];
       chargePHint = 'N/A';
       expertHint = 'N/A';
       uploadHouseNum = '';
       uploadStreet = '';
       uploadTown = '';
       uploadRegion = '';
+      deadlineDay = 'Day';
+      deadlineMonth = 'Month';
+      deadlineYear = 'Year';
     }
     super.initState();
   }
@@ -291,16 +342,72 @@ class _BodyState extends State<Body> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 30 * screenHeight),
+                    SizedBox(height: 20 * screenHeight),
                     Padding(
                       padding: EdgeInsets.only(left: screenWidth * 5.0),
-                      child: Text(
-                        'Deadline',
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Deadline',
+                            style: TextStyle(
+                              color: black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 13 * screenHeight),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2024),
+                                  ).then((date) {
+                                    setState(() {
+                                      deadlineDay = date!.day.toString();
+                                      if (date!.month == 10 ||
+                                          date!.month == 11 ||
+                                          date!.month == 12) {
+                                        deadlineMonth = date!.month.toString();
+                                      } else {
+                                        deadlineMonth =
+                                            ('0' + date!.month.toString());
+                                      }
+                                      deadlineYear = date!.year.toString();
+                                    });
+
+                                    print(deadlineDay);
+                                    print(deadlineMonth);
+                                    print(deadlineYear);
+                                  });
+                                },
+                                child: Container(
+                                  height: 49 * screenHeight,
+                                  width: 51 * screenWidth,
+                                  decoration: BoxDecoration(
+                                    color: white,
+                                    borderRadius: BorderRadius.circular(7),
+                                    border: Border.all(
+                                        color: appointmentTimeColor, width: 1),
+                                  ),
+                                  child: Center(
+                                      child: Icon(Icons.edit_calendar_rounded,
+                                          color: primary)),
+                                ),
+                              ),
+                              DeadlineItem(text: deadlineDay),
+                              DeadlineItem(text: deadlineMonth),
+                              DeadlineItem(text: deadlineYear),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 30 * screenHeight),

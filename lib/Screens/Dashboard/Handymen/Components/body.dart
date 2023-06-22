@@ -29,6 +29,8 @@ Future selectedCategoryData(String categoryName) async {
   handymanDashboardPrice.clear();
   handymanDashboardRating.clear();
   handymanDashboardChargeRate.clear();
+  handymanDashboardID.clear();
+  handymanDashboardImage.clear();
 
   final documents = await FirebaseFirestore.instance
       .collection('Handyman Job Upload')
@@ -39,6 +41,7 @@ Future selectedCategoryData(String categoryName) async {
     documents.docs.forEach((document) {
       final documentData = document.data();
       final categoryData = CustomerCategoryData(
+        pic: documentData['User Pic'],
         jobID: documentData['Job ID'],
         seenBy: documentData['Seen By'],
         fullName: documentData['Name'],
@@ -49,6 +52,8 @@ Future selectedCategoryData(String categoryName) async {
         jobCategory: documentData['Service Information']['Service Category'],
       );
 
+      handymanDashboardImage.add(categoryData.pic);
+      handymanDashboardID.add(categoryData.jobID);
       handymanDashboardJobType.add(categoryData.jobService);
       handymanDashboardName.add(categoryData.fullName);
       handymanDashboardPrice.add(categoryData.charge.toString());

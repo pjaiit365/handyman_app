@@ -45,6 +45,7 @@ class _BodyState extends State<Body> {
         final jobID = document.id;
 
         addDetails(
+          imageUrl,
           jobID,
           loggedInUserId,
           allUsers[0].firstName + ' ' + allUsers[0].lastName,
@@ -128,6 +129,7 @@ class _BodyState extends State<Body> {
   }
 
   Future addDetails(
+    String pic,
     String jobId,
     String custId,
     String userName,
@@ -153,6 +155,7 @@ class _BodyState extends State<Body> {
         .collection('Handyman Job Upload')
         .doc(jobId)
         .update({
+      'User Pic': pic,
       'Job ID': jobId,
       'Customer ID': custId,
       'Name': userName,

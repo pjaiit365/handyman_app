@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Job%20Application/job_application_screen.dart';
 
+import '../../../Services/read_data.dart';
 import '../../../constants.dart';
 
 class JobSummary extends StatelessWidget {
@@ -33,16 +34,19 @@ class JobSummary extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(
-            child: Text(
-              'Furniture Painter Wanted',
-              style: TextStyle(
-                color: black,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
+            child: SizedBox(
+              width: 350 * screenWidth,
+              child: Text(
+                allJobItemList[0].jobService + ' Wanted',
+                style: TextStyle(
+                  color: black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.visible,
+                softWrap: true,
+                textAlign: TextAlign.center,
               ),
-              overflow: TextOverflow.visible,
-              softWrap: true,
-              textAlign: TextAlign.center,
             ),
           ),
           SizedBox(height: 23 * screenHeight),
@@ -68,17 +72,21 @@ class JobSummary extends StatelessWidget {
                   Icon(Icons.verified_rounded, color: green),
                 ],
               ),
-              SizedBox(width: 21.35 * screenWidth),
+              SizedBox(width: 10.35 * screenWidth),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'Harry Garret',
-                    style: TextStyle(
-                      color: black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                  SizedBox(
+                    width: 147 * screenWidth,
+                    child: Text(
+                      allJobItemList[0].fullName,
+                      style: TextStyle(
+                        color: black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   SizedBox(height: 15 * screenHeight),
@@ -100,20 +108,23 @@ class JobSummary extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: 22 * screenWidth),
+              Spacer(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    '\$ ' + '15' + '/' + 'hr',
+                    '\$' +
+                        allJobItemList[0].charge.toString() +
+                        '/' +
+                        allJobItemList[0].chargeRate,
                     style: TextStyle(
                       color: primary,
-                      fontSize: 27.64,
+                      fontSize: 21.64,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 15 * screenHeight),
+                  SizedBox(height: 23 * screenHeight),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(

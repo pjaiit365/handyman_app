@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 
 class JobDetailsTab extends StatefulWidget {
+  final VoidCallback aboutCallBack;
+  final VoidCallback portfolioCallBack;
   const JobDetailsTab({
     Key? key,
+    required this.aboutCallBack,
+    required this.portfolioCallBack,
   }) : super(key: key);
 
   @override
@@ -29,13 +33,7 @@ class _JobDetailsTabState extends State<JobDetailsTab> {
           children: <Widget>[
             SizedBox(width: 52 * screenWidth),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isJobAboutClicked = !isJobAboutClicked;
-                });
-                if (isJobAboutClicked == true) isJobPortfolioClicked = false;
-                if (isJobPortfolioClicked == false) isJobAboutClicked = true;
-              },
+              onTap: widget.aboutCallBack,
               child: Container(
                 width: 76 * screenWidth,
                 alignment: Alignment.center,
@@ -61,18 +59,12 @@ class _JobDetailsTabState extends State<JobDetailsTab> {
             ),
             SizedBox(width: 52 * screenWidth),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isJobPortfolioClicked = !isJobPortfolioClicked;
-                });
-                if (isJobPortfolioClicked == true) isJobAboutClicked = false;
-                if (isJobAboutClicked == false) isJobPortfolioClicked = true;
-              },
+              onTap: widget.portfolioCallBack,
               child: Container(
                 width: 76 * screenWidth,
                 alignment: Alignment.center,
                 child: Text(
-                  'Portflio',
+                  'Portfolio',
                   style: isJobPortfolioClicked
                       ? TextStyle(
                           color: primary,

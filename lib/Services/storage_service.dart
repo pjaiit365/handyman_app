@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:handyman_app/constants.dart';
 
+//TODO: ADD PORTFOLIO AND REFERENCES WHEN UPLOADING DATA
+//TODO: READ DATA FROM LOCAL VARIABLE TO BE USED IN GRID AND SINGLE VIEW
+
 class Storage {
   Future<void> uploadPic(String filePath, String fileName) async {
     File file = File(filePath);
@@ -69,6 +72,24 @@ class Storage {
           .ref('$loggedInUserId/$directory')
           .child(fileName)
           .delete();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future jobUploadFiles(
+      String fileName, String directory, String filePath, String jobID) async {
+    File file = File(filePath);
+
+    try {
+      if (file != null) {
+        await FirebaseStorage.instance
+            .ref('$loggedInUserId/$jobID/$directory')
+            .child(fileName)
+            .putFile(file);
+      } else {
+        throw ('File not uploaded.');
+      }
     } catch (e) {
       print(e.toString());
     }
