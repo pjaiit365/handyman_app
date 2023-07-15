@@ -925,6 +925,7 @@ class _ExpertiseSelectState extends State<ExpertiseSelect> {
 //--------------------------------------------------------------
 
 class ServiceCategorySelect extends StatefulWidget {
+  bool isReadOnly;
   String hintText;
   final String title;
   final List<String> dropdownList;
@@ -933,6 +934,7 @@ class ServiceCategorySelect extends StatefulWidget {
   ServiceCategorySelect({
     Key? key,
     this.hintText = 'N/A',
+    this.isReadOnly = false,
     this.width = 310,
     required this.dropdownList,
     required this.title,
@@ -1005,11 +1007,13 @@ class _ServiceCategorySelect extends State<ServiceCategorySelect> {
               value: serviceCategoryList,
             );
           }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              widget.onChanged(newValue!);
-            });
-          },
+          onChanged: widget.isReadOnly
+              ? null
+              : (String? newValue) {
+                  setState(() {
+                    widget.onChanged(newValue!);
+                  });
+                },
           value: widget.hintText,
         ),
       ],
@@ -1018,8 +1022,10 @@ class _ServiceCategorySelect extends State<ServiceCategorySelect> {
 }
 
 class SeenBySelect extends StatefulWidget {
-  const SeenBySelect({
+  bool isReadOnly;
+  SeenBySelect({
     Key? key,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
@@ -1072,11 +1078,13 @@ class _SeenBySelectState extends State<SeenBySelect> {
           value: serviceCategoryList,
         );
       }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          seenByHintText = newValue!;
-        });
-      },
+      onChanged: widget.isReadOnly
+          ? null
+          : (String? newValue) {
+              setState(() {
+                seenByHintText = newValue!;
+              });
+            },
       value: seenByHintText.toString(),
     );
   }

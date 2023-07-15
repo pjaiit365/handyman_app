@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
 import 'dart:io';
 
@@ -9,11 +9,13 @@ import 'package:handyman_app/Components/job_upload_work_cert_info.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
 import 'package:handyman_app/Components/upload_button.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
+import 'package:handyman_app/Screens/Home/Components/body.dart';
 import 'package:handyman_app/constants.dart';
 
 import '../../../../Components/job_upload_location_info.dart';
 import '../../../../Components/job_upload_service_info.dart';
 import '../../../../Read Data/get_user_first_name.dart';
+import '../../../../Services/storage_service.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -43,6 +45,10 @@ class _BodyState extends State<Body> {
         });
 
         final jobID = document.id;
+
+        addPortfolio(document.id);
+        addExperience(document.id);
+        addCertification(document.id);
 
         addDetails(
           imageUrl,
@@ -81,7 +87,7 @@ class _BodyState extends State<Body> {
           jobStatus,
           // current job status of job
           referencesList, // whether handyman should add past work references
-          portfolioList,
+          uploadPortfolioList,
         );
 //TODO: UPDATE DIALOG TO SHOW JOB UPLOADED SUCCESSFULLY SCREEN
         showDialog(
@@ -151,10 +157,30 @@ class _BodyState extends State<Body> {
     List reference,
     List portfolio,
   ) async {
+    DateTime dateTime = DateTime.now();
+    DateTime jobDeadline = DateTime.now().add(Duration(days: 10));
+
+    if (jobDeadline.day > 9) {
+      deadlineDay = jobDeadline.day.toString();
+    } else {
+      deadlineDay = '0${jobDeadline.day}';
+    }
+
+    if (jobDeadline.month == 10 ||
+        jobDeadline.month == 11 ||
+        jobDeadline.month == 12) {
+      deadlineMonth = jobDeadline.month.toString();
+    } else {
+      deadlineMonth = ('0${jobDeadline.month}');
+    }
+    deadlineYear = jobDeadline.year.toString();
+    deadline = '$deadlineDay-$deadlineMonth-$deadlineYear';
+
     await FirebaseFirestore.instance
         .collection('Handyman Job Upload')
         .doc(jobId)
         .update({
+      'Deadline': deadline,
       'User Pic': pic,
       'Job ID': jobId,
       'Customer ID': custId,
@@ -181,6 +207,10 @@ class _BodyState extends State<Body> {
         'Town': town,
         'Region': region,
       },
+      'Upload Date':
+          '${dateTime.day > 9 ? dateTime.day : '0${dateTime.day}'}-${dateTime.month > 9 ? dateTime.month : '0${dateTime.month}'}-${dateTime.year - 2000}',
+      'Upload Time':
+          '${dateTime.hour > 9 ? dateTime.hour : '0${dateTime.hour}'}:${dateTime.minute > 9 ? dateTime.minute : '0${dateTime.minute}'}',
     });
   }
 
@@ -213,18 +243,71 @@ class _BodyState extends State<Body> {
     }
   }
 
+  Storage storage = Storage();
+
+  Future addPortfolio(String jobId) async {
+    if (resultList != null) {
+      resultList?.files.forEach((file) async {
+        final fileNames = file!.name;
+        final filePath = file!.path;
+        await storage.jobUploadFiles(fileNames as String, 'Portfolio',
+            filePath as String, jobId, 'Handyman Job Upload');
+        print(uploadPortfolioList);
+      });
+    } else {
+      throw ('No file picked');
+    }
+  }
+
+  Future addCertification(String jobId) async {
+    if (resultCertList != null) {
+      resultCertList?.files.forEach((file) {
+        final fileNames = file!.name;
+        final filePath = file!.path;
+        storage.jobUploadFiles(fileNames, 'Certification', filePath as String,
+            jobId, 'Handyman Job Upload');
+      });
+    } else {
+      throw ('No file picked');
+    }
+  }
+
+  Future addExperience(String jobId) async {
+    if (resultExperienceList != null) {
+      resultExperienceList?.files.forEach((file) {
+        final fileNames = file!.name;
+        final filePath = file!.path;
+        storage.jobUploadFiles(fileNames, 'Experience', filePath as String,
+            jobId, 'Handyman Job Upload');
+      });
+    } else {
+      throw ('No file picked');
+    }
+  }
+
   @override
   void initState() {
-    if (chargePHint != 'N/A' || uploadTown != '') {
+    if (chargePHint != 'N/A' ||
+        uploadTown != '' ||
+        deadlineDay != 'Day' ||
+        uploadPortfolioList.isNotEmpty ||
+        uploadExperienceList.isNotEmpty ||
+        uploadCertList.isNotEmpty) {
       seenByHintText = 'All';
-      serviceCatHintText = 'Painting';
-      serviceProvHintText = 'Furniture Painting';
+      serviceCatHintText = allCategoriesName[0];
       chargePHint = 'N/A';
       expertHint = 'N/A';
       uploadHouseNum = '';
       uploadStreet = '';
       uploadTown = '';
       uploadRegion = '';
+      deadlineDay = 'Day';
+      deadlineMonth = 'Month';
+      deadlineYear = 'Year';
+      dropdownvalue = 'N/A';
+      uploadCertList.clear();
+      uploadExperienceList.clear();
+      uploadPortfolioList.clear();
     }
     super.initState();
   }
@@ -279,18 +362,25 @@ class _BodyState extends State<Body> {
                                     child:
                                         Icon(Icons.visibility, color: primary)),
                               ),
-                              SeenBySelect(),
+                              SeenBySelect(
+                                isReadOnly: jobUploadReadOnly,
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
                     SizedBox(height: 30 * screenHeight),
-                    JobUploadServiceInfo(chargeController: chargeController),
+                    JobUploadServiceInfo(
+                        isReadOnly: jobUploadReadOnly,
+                        chargeController: chargeController),
                     SizedBox(height: 30 * screenHeight),
-                    JobUploadWorkCertInfo(isHandyManUpload: true),
+                    JobUploadWorkCertInfo(
+                        isReadOnly: jobUploadReadOnly, isHandyManUpload: true),
                     SizedBox(height: 30 * screenHeight),
-                    JobUploadLocationInfo(),
+                    JobUploadLocationInfo(
+                      isReadOnly: jobUploadReadOnly,
+                    ),
                     SizedBox(height: 30 * screenHeight),
                   ],
                 ),
@@ -303,7 +393,7 @@ class _BodyState extends State<Body> {
         UploadButton(
           screen: uploadJob,
           isIconPresent: true,
-          icon: Icons.cloud_upload_rounded,
+          icon: Icons.save,
           buttonText: 'Upload',
         ),
       ],

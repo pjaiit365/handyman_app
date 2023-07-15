@@ -6,11 +6,13 @@ class AppointmentTabRow extends StatefulWidget {
   bool isCustomVisible;
   bool isRecallAddressVisisble;
   final String tabTitle;
+  VoidCallback? onCustomTap;
   AppointmentTabRow({
     Key? key,
     required this.tabTitle,
     this.isCustomVisible = true,
     this.isRecallAddressVisisble = false,
+    this.onCustomTap,
   }) : super(key: key);
 
   @override
@@ -38,7 +40,10 @@ class _AppointmentTabRowState extends State<AppointmentTabRow> {
               ),
             ),
             content: Container(
-              height: 357 * screenHeight,
+              constraints: BoxConstraints(
+                minHeight: 5 * screenHeight,
+              ),
+              // height: 357 * screenHeight,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: white, borderRadius: BorderRadius.circular(24)),
@@ -171,7 +176,7 @@ class _AppointmentTabRowState extends State<AppointmentTabRow> {
             ? Padding(
                 padding: EdgeInsets.only(right: screenWidth * 8.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: widget.onCustomTap,
                   child: Container(
                     height: 31 * screenHeight,
                     width: 80 * screenWidth,
@@ -200,7 +205,7 @@ class _AppointmentTabRowState extends State<AppointmentTabRow> {
                   ),
                 ),
               )
-            : SizedBox(height: 0, width: 0),
+            : SizedBox(),
         widget.isRecallAddressVisisble
             ? Padding(
                 padding: EdgeInsets.only(right: screenWidth * 8.0),
@@ -225,7 +230,7 @@ class _AppointmentTabRowState extends State<AppointmentTabRow> {
                   ),
                 ),
               )
-            : SizedBox(height: 0, width: 0),
+            : SizedBox(),
       ],
     );
   }

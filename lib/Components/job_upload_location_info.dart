@@ -5,8 +5,10 @@ import 'package:handyman_app/Components/profile_item_dropdown.dart';
 import '../constants.dart';
 
 class JobUploadLocationInfo extends StatefulWidget {
-  const JobUploadLocationInfo({
+  bool isReadOnly;
+  JobUploadLocationInfo({
     Key? key,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
@@ -81,7 +83,7 @@ class _JobUploadLocationInfoState extends State<JobUploadLocationInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ProfileItemAddAddress(
-                isReadOnly: jobUploadReadOnly,
+                isReadOnly: widget.isReadOnly,
                 screen: () {
                   Navigator.pop(context);
 
@@ -141,19 +143,21 @@ class _JobUploadLocationInfoState extends State<JobUploadLocationInfo> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    uploadRegion = '';
-                                    uploadHouseNum = '';
-                                    uploadStreet = '';
-                                    uploadTown = '';
-                                    streetNameController.clear();
-                                    townController.clear();
-                                    houseNumController.clear();
-                                    regionValue = 'N/A';
-                                    dropdownvalue = 'N/A';
-                                  });
-                                },
+                                onTap: widget.isReadOnly
+                                    ? () {}
+                                    : () {
+                                        setState(() {
+                                          uploadRegion = '';
+                                          uploadHouseNum = '';
+                                          uploadStreet = '';
+                                          uploadTown = '';
+                                          streetNameController.clear();
+                                          townController.clear();
+                                          houseNumController.clear();
+                                          regionValue = 'N/A';
+                                          dropdownvalue = 'N/A';
+                                        });
+                                      },
                                 child: Container(
                                     height: 25 * screenHeight,
                                     width: 25 * screenWidth,

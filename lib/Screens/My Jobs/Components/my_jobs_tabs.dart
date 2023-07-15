@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 
 class MyJobsTabs extends StatefulWidget {
-  bool isJobUpcomingClicked;
-  bool isJobOffersClicked;
-  bool isJobCompletedClicked;
-  MyJobsTabs({
+  final VoidCallback upcomingCallback;
+  final VoidCallback offersCallback;
+  final VoidCallback completedCallback;
+  const MyJobsTabs({
     Key? key,
-    this.isJobUpcomingClicked = true,
-    this.isJobOffersClicked = true,
-    this.isJobCompletedClicked = false,
+    required this.upcomingCallback,
+    required this.offersCallback,
+    required this.completedCallback,
   }) : super(key: key);
 
   @override
@@ -34,24 +34,13 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.isJobUpcomingClicked = !widget.isJobUpcomingClicked;
-                });
-                if (widget.isJobUpcomingClicked == true) {
-                  widget.isJobCompletedClicked = false;
-                  widget.isJobOffersClicked = false;
-                }
-                if (widget.isJobCompletedClicked == false &&
-                    widget.isJobOffersClicked == false)
-                  widget.isJobUpcomingClicked = true;
-              },
+              onTap: widget.upcomingCallback,
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
                   'Upcoming',
-                  style: widget.isJobUpcomingClicked
+                  style: isJobUpcomingClicked
                       ? TextStyle(
                           color: primary,
                           fontSize: 18,
@@ -71,24 +60,13 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
               color: white,
             ),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.isJobOffersClicked = !widget.isJobOffersClicked;
-                });
-                if (widget.isJobOffersClicked == true) {
-                  widget.isJobCompletedClicked = false;
-                  widget.isJobUpcomingClicked = false;
-                }
-                if (widget.isJobCompletedClicked == false &&
-                    widget.isJobUpcomingClicked == false)
-                  widget.isJobOffersClicked = true;
-              },
+              onTap: widget.offersCallback,
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
                   'Offers',
-                  style: widget.isJobOffersClicked
+                  style: isJobOffersClicked
                       ? TextStyle(
                           color: primary,
                           fontSize: 18,
@@ -108,24 +86,13 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
               color: white,
             ),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.isJobCompletedClicked = !widget.isJobCompletedClicked;
-                });
-                if (widget.isJobCompletedClicked == true) {
-                  widget.isJobUpcomingClicked = false;
-                  widget.isJobOffersClicked = false;
-                }
-                if (widget.isJobUpcomingClicked == false &&
-                    widget.isJobOffersClicked == false)
-                  widget.isJobCompletedClicked = true;
-              },
+              onTap: widget.completedCallback,
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
                   'Completed',
-                  style: widget.isJobCompletedClicked
+                  style: isJobCompletedClicked
                       ? TextStyle(
                           color: primary,
                           fontSize: 18,

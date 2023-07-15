@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: primary,
+        datePickerTheme: DatePickerThemeData(backgroundColor: primary),
+        // timePickerTheme: TimePickerThemeData(),
         appBarTheme: AppBarTheme(
           color: white,
           elevation: 0.0,

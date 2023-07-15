@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class SingleMedia extends StatelessWidget {
+  final String mediaUrl;
   const SingleMedia({
     Key? key,
+    required this.mediaUrl,
   }) : super(key: key);
 
   @override
@@ -17,7 +19,7 @@ class SingleMedia extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
             fit: BoxFit.fill,
-            image: AssetImage('assets/images/profile_pic.jpeg'),
+            image: NetworkImage(mediaUrl),
           ),
         ),
       ),

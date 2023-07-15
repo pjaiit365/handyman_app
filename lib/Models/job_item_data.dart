@@ -12,6 +12,8 @@ class JobItemData {
   int? peopleApplied;
   String? rating;
   List? portfolio;
+  bool? isReferencesPresent;
+  bool? isPortfolioPresent;
   JobItemData({
     required this.pic,
     this.peopleApplied,
@@ -22,6 +24,8 @@ class JobItemData {
     required this.fullName,
     required this.jobService,
     required this.charge,
+    this.isPortfolioPresent,
+    this.isReferencesPresent,
     this.jobStatus,
     this.deadline,
     this.portfolio,

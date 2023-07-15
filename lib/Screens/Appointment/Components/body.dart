@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/appointment_static_time.dart';
 import 'package:handyman_app/constants.dart';
 
-import '../../../Components/address_bars.dart';
 import '../../../Components/appointment_button.dart';
-import '../../../Components/appointment_date.dart';
-import '../../../Components/appointment_tab_row.dart';
 import '../../../Components/personnel_info_summary.dart';
-import '../../../Components/personnel_rating_summary.dart';
 import '../../../Components/schedule_address.dart';
 import '../../../Components/schedule_day_tab.dart';
 import '../../../Components/schedule_note.dart';
 import '../../../Components/schedule_time_tab.dart';
 import '../../../Components/summary_details.dart';
-import '../../../Components/summary_element.dart';
 import '../../Successful/booking_successful_screen.dart';
 
 class Body extends StatefulWidget {

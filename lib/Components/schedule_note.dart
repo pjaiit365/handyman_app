@@ -16,6 +16,19 @@ class ScheduleNote extends StatefulWidget {
 class _ScheduleNoteState extends State<ScheduleNote> {
   bool isNoteEditable = true;
   final notesController = TextEditingController();
+
+  @override
+  void dispose() {
+    notesController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    notesController.text = '';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -48,6 +61,9 @@ class _ScheduleNoteState extends State<ScheduleNote> {
                 onTap: () {
                   setState(() {
                     isNoteEditable = !isNoteEditable;
+                    if (isNoteEditable == false) {
+                      jobApplicationNote = notesController.text.trim();
+                    }
                   });
                 },
                 child: Container(

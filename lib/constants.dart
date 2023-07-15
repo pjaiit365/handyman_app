@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Home/Components/body.dart';
 
@@ -82,9 +83,7 @@ List<String> timeList = [
   '3:00 PM',
   '5:00 PM'
 ];
-bool isDateSelected = false;
 bool isAddressBarClicked = false;
-bool isTimeSelected = false;
 bool isDashboardTabSelected = false;
 bool isSummaryClicked = false;
 
@@ -179,6 +178,9 @@ String dropdownvalue = 'N/A';
 String addressValue = 'Home';
 String roleValue = 'Regular Customer';
 List selectedServiceCatList = [];
+String jobApplicationNote = '';
+
+bool referenceLinkError = false;
 
 int priceIndex = 0;
 
@@ -488,7 +490,6 @@ String imageUrl = '';
 
 List experienceFileNames = [];
 List certificationFileNames = [];
-List portfolioList = [];
 List referencesList = [];
 
 List<String> addressOptions = [
@@ -533,12 +534,47 @@ List<String> seenByList = [
 ];
 
 bool jobUploadReadOnly = false;
+bool isJobUploadEditReadOnly = true;
 bool jobStatus = true;
 
-final int peopleApplied = 0;
+const int peopleApplied = 0;
 
 String deadline = '';
 
 String deadlineDay = 'Day';
 String deadlineMonth = 'Month';
 String deadlineYear = 'Year';
+
+FilePickerResult? resultList;
+FilePickerResult? resultCertList;
+FilePickerResult? resultExperienceList;
+
+List<String> jobPortfolioUrls = [];
+List<String> uploadListName = [];
+List<String> uploadListTime = [];
+List<String> uploadListCategory = [];
+List<String> uploadListDate = [];
+List<String> uploadListJobStatus = [];
+List<String> uploadListImageUrl = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+
+late String selectedJobId;
+late String selectedJobType;
+
+String typeClicked = 'Customer';
+String currentJobClickedUserId = '';
+int selectedJobUploadIndex = 0;
+
+List<String> jobApplicationLinks = [];
+int jobApplicationMediaCount = 0;
+
+String jobApplicationTime = '';

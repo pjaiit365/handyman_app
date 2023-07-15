@@ -130,7 +130,7 @@ class JobSummary extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => JobApplicationScreen(),
+                          builder: (context) => const JobApplicationScreen(),
                         ),
                       );
                     },

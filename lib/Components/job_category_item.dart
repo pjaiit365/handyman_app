@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Job%20Deatils/job_details_screen.dart';
 
@@ -34,6 +35,8 @@ class JobCategoryItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           jobSelectedIndex = index;
+          typeClicked = 'Handyman';
+
           Navigator.push(
             context,
             MaterialPageRoute(

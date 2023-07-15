@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class JobUploadOptionalsInfo extends StatefulWidget {
-  const JobUploadOptionalsInfo({
+  bool isReadOnly;
+  JobUploadOptionalsInfo({
     super.key,
+    this.isReadOnly = false,
   });
 
   @override
@@ -51,11 +53,13 @@ class _JobUploadOptionalsInfoState extends State<JobUploadOptionalsInfo> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isPortfolioTicked = !isPortfolioTicked;
-                      });
-                    },
+                    onTap: widget.isReadOnly
+                        ? () {}
+                        : () {
+                            setState(() {
+                              isPortfolioTicked = !isPortfolioTicked;
+                            });
+                          },
                     child: Container(
                       height: 20 * screenHeight,
                       width: 20 * screenWidth,
@@ -105,11 +109,13 @@ class _JobUploadOptionalsInfoState extends State<JobUploadOptionalsInfo> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isReferencesTicked = !isReferencesTicked;
-                      });
-                    },
+                    onTap: widget.isReadOnly
+                        ? () {}
+                        : () {
+                            setState(() {
+                              isReferencesTicked = !isReferencesTicked;
+                            });
+                          },
                     child: Container(
                       height: 20 * screenHeight,
                       width: 20 * screenWidth,

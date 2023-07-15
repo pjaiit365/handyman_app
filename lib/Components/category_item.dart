@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
 
@@ -31,6 +33,7 @@ class CategoryItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           handymanSelectedIndex = index;
+          typeClicked = 'Customer';
 
           Navigator.push(
             context,

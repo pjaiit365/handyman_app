@@ -1,12 +1,9 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:handyman_app/Components/carousel_slider_item.dart';
 import 'package:handyman_app/Components/search_bar_item.dart';
 import 'package:handyman_app/constants.dart';
 
-import '../../../../Components/carousel_item.dart';
 import '../../../../Components/category_item.dart';
 import '../../../../Components/dashboard_tab.dart';
 import '../../../../Models/customer_category_data.dart';
@@ -79,7 +76,6 @@ class _BodyState extends State<Body> {
   void onTabSelected(int index) {
     setState(() {
       selectedTabIndex = index;
-      print(selectedTabIndex);
     });
   }
 

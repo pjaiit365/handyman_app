@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -47,8 +47,10 @@ class _BodyState extends State<Body> {
         final jobID = document.id;
 
         deadline = '$deadlineDay-$deadlineMonth-$deadlineYear';
+        addPortfolio(document.id);
 
         addDetails(
+          imageUrl,
           jobID,
           loggedInUserId,
           allUsers[0].firstName + ' ' + allUsers[0].lastName,
@@ -65,14 +67,10 @@ class _BodyState extends State<Body> {
           // Charge Rate
           expertHint,
           // Level of expertise
-          uploadCertList,
-          // Cert List
-          uploadExperienceList,
-          // Experience List
+          uploadPortfolioList,
+          // Portfolio List
           ratingHintText as String,
           // Overall Rating
-          int.parse(jobTotalHintText.toString()),
-          //Job's completed
           uploadHouseNum,
           //house number
           uploadStreet,
@@ -135,6 +133,7 @@ class _BodyState extends State<Body> {
   }
 
   Future addDetails(
+    String pic,
     String jobId,
     String custId,
     String userName,
@@ -144,10 +143,8 @@ class _BodyState extends State<Body> {
     int charge,
     String chargeRate,
     String expertise,
-    List certification,
-    List experience,
+    List portfolio,
     String rating,
-    int jobsDone,
     String houseNum,
     String street,
     String town,
@@ -158,10 +155,12 @@ class _BodyState extends State<Body> {
     int peopleApplied,
     String deadline,
   ) async {
+    DateTime dateTime = DateTime.now();
     await FirebaseFirestore.instance
         .collection('Customer Job Upload')
         .doc(jobId)
         .update({
+      'User Pic': pic,
       'Job ID': jobId,
       'Customer ID': custId,
       'Name': userName,
@@ -173,11 +172,9 @@ class _BodyState extends State<Body> {
         'Charge Rate': chargeRate,
         'Expertise': expertise,
       },
-      'Work Experience & Certification': {
-        'Certification': certification,
-        'Experience': experience,
+      'Work Detail & Rating': {
+        'Portfolio': portfolio,
         'Rating': rating,
-        "Job's Completed": jobsDone,
       },
       'Address Information': {
         'House Number': houseNum,
@@ -193,48 +190,12 @@ class _BodyState extends State<Body> {
         'Job Status': jobStatus,
         'People Applied': peopleApplied,
         'Deadline': deadline,
-      }
+      },
+      'Upload Date':
+          '${dateTime.day > 9 ? dateTime.day : '0${dateTime.day}'}-${dateTime.month > 9 ? dateTime.month : '0${dateTime.month}'}-${dateTime.year - 2000}',
+      'Upload Time':
+          '${dateTime.hour > 9 ? dateTime.hour : '0${dateTime.hour}'}:${dateTime.minute > 9 ? dateTime.minute : '0${dateTime.minute}'}',
     });
-  }
-
-  Storage storage = Storage();
-
-  Future addCertification() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      allowedExtensions: ['pdf', 'doc', 'docx'],
-      type: FileType.custom,
-    );
-
-    if (result != null) {
-      result.files.forEach((file) {
-        final fileNames = result!.names;
-        final filePath = result!.paths;
-        storage.jobUploadFiles(
-            fileNames as String, 'Certification', filePath as String, jobID);
-      });
-    } else {
-      throw ('No file picked');
-    }
-  }
-
-  Future addExperience() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      allowedExtensions: ['pdf', 'doc', 'docx'],
-      type: FileType.custom,
-    );
-
-    if (result != null) {
-      result.files.forEach((file) {
-        final fileNames = result!.names;
-        final filePath = result!.paths;
-        storage.jobUploadFiles(
-            fileNames as String, 'Certification', filePath as String, jobID);
-      });
-    } else {
-      throw ('No file picked');
-    }
   }
 
   bool FieldsCheck() {
@@ -267,9 +228,29 @@ class _BodyState extends State<Body> {
     }
   }
 
+  Storage storage = Storage();
+
+  Future addPortfolio(String jobId) async {
+    if (resultList != null) {
+      resultList?.files.forEach((file) async {
+        final fileNames = file!.name;
+        final filePath = file!.path;
+        await storage.jobUploadFiles(fileNames, 'Portfolio', filePath as String,
+            jobId, 'Customer Job Upload');
+      });
+    } else {
+      throw ('No file picked');
+    }
+  }
+
   @override
   void initState() {
-    if (chargePHint != 'N/A' || uploadTown != '' || deadlineDay != 'Day') {
+    if (chargePHint != 'N/A' ||
+        uploadTown != '' ||
+        deadlineDay != 'Day' ||
+        isPortfolioTicked == true ||
+        isReferencesTicked == true ||
+        uploadPortfolioList.isNotEmpty) {
       seenByHintText = 'All';
       serviceCatHintText = allCategoriesName[0];
       chargePHint = 'N/A';
@@ -281,6 +262,10 @@ class _BodyState extends State<Body> {
       deadlineDay = 'Day';
       deadlineMonth = 'Month';
       deadlineYear = 'Year';
+      dropdownvalue = 'N/A';
+      uploadPortfolioList.clear();
+      isPortfolioTicked = false;
+      isReferencesTicked = false;
     }
     super.initState();
   }
@@ -336,7 +321,9 @@ class _BodyState extends State<Body> {
                                     child:
                                         Icon(Icons.visibility, color: primary)),
                               ),
-                              SeenBySelect(),
+                              SeenBySelect(
+                                isReadOnly: jobUploadReadOnly,
+                              ),
                             ],
                           ),
                         ],
@@ -371,21 +358,22 @@ class _BodyState extends State<Body> {
                                     lastDate: DateTime(2024),
                                   ).then((date) {
                                     setState(() {
-                                      deadlineDay = date!.day.toString();
-                                      if (date!.month == 10 ||
-                                          date!.month == 11 ||
-                                          date!.month == 12) {
-                                        deadlineMonth = date!.month.toString();
+                                      if (date!.day > 9) {
+                                        deadlineDay = date.day.toString();
+                                      } else {
+                                        deadlineDay = '0${date.day}';
+                                      }
+
+                                      if (date.month == 10 ||
+                                          date.month == 11 ||
+                                          date.month == 12) {
+                                        deadlineMonth = date.month.toString();
                                       } else {
                                         deadlineMonth =
-                                            ('0' + date!.month.toString());
+                                            ('0' + date.month.toString());
                                       }
-                                      deadlineYear = date!.year.toString();
+                                      deadlineYear = date.year.toString();
                                     });
-
-                                    print(deadlineDay);
-                                    print(deadlineMonth);
-                                    print(deadlineYear);
                                   });
                                 },
                                 child: Container(
@@ -412,14 +400,21 @@ class _BodyState extends State<Body> {
                     ),
                     SizedBox(height: 30 * screenHeight),
                     JobUploadServiceInfo(
+                      isReadOnly: jobUploadReadOnly,
                       chargeController: chargeController,
                     ),
                     SizedBox(height: 30 * screenHeight),
-                    JobUploadWorkCertInfo(),
+                    JobUploadWorkCertInfo(
+                      isReadOnly: jobUploadReadOnly,
+                    ),
                     SizedBox(height: 30 * screenHeight),
-                    JobUploadLocationInfo(),
+                    JobUploadLocationInfo(
+                      isReadOnly: jobUploadReadOnly,
+                    ),
                     SizedBox(height: 30 * screenHeight),
-                    JobUploadOptionalsInfo(),
+                    JobUploadOptionalsInfo(
+                      isReadOnly: jobUploadReadOnly,
+                    ),
                     SizedBox(height: 30 * screenHeight),
                   ],
                 ),
@@ -433,7 +428,7 @@ class _BodyState extends State<Body> {
           icon: Icons.cloud_upload_rounded,
           buttonText: 'Upload',
           isIconPresent: true,
-        )
+        ),
       ],
     );
   }

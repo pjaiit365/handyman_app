@@ -77,18 +77,30 @@ class Storage {
     }
   }
 
-  Future jobUploadFiles(
-      String fileName, String directory, String filePath, String jobID) async {
+  Future jobUploadFiles(String fileName, String directory, String filePath,
+      String jobID, String type) async {
     File file = File(filePath);
 
     try {
-      if (file != null) {
-        await FirebaseStorage.instance
-            .ref('$loggedInUserId/$jobID/$directory')
-            .child(fileName)
-            .putFile(file);
-      } else {
-        throw ('File not uploaded.');
+      await FirebaseStorage.instance
+          .ref('$loggedInUserId/$type/$jobID/$directory')
+          .child(fileName)
+          .putFile(file);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getPortfolioDownloadUrl(String jobId, String type) async {
+    jobPortfolioUrls.clear();
+    try {
+      final result = await FirebaseStorage.instance
+          .ref('$currentJobClickedUserId/$type/$jobId/Portfolio')
+          .listAll();
+
+      for (final item in result.items) {
+        final fileUrl = await item.getDownloadURL();
+        jobPortfolioUrls.add(fileUrl);
       }
     } catch (e) {
       print(e.toString());

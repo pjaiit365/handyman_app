@@ -90,13 +90,10 @@ class _BodyState extends State<Body> {
   }
 
   Widget buildLoadingIndicator() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        if (Platform.isAndroid) CircularProgressIndicator(),
-        if (Platform.isIOS) CupertinoActivityIndicator(),
-      ],
+    return Center(
+      child: (Platform.isAndroid)
+          ? CircularProgressIndicator()
+          : CupertinoActivityIndicator(),
     );
   }
 }

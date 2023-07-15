@@ -85,9 +85,21 @@ class _AddFileItemState extends State<AddFileItem> {
                           ? null
                           : () {
                               setState(() {
+                                if (widget.selectedOptions ==
+                                    uploadPortfolioList) {
+                                  resultList?.files.removeAt(index);
+                                } else if (widget.selectedOptions ==
+                                    uploadCertList) {
+                                  resultCertList?.files.removeAt(index);
+                                } else if (widget.selectedOptions ==
+                                    uploadExperienceList) {
+                                  resultList?.files.removeAt(index);
+                                }
                                 widget.selectedOptions.removeAt(index);
-                                storage.deleteFile(widget.directory,
-                                    widget.selectedOptions[index]);
+
+                                //TODO: CHECK OUT THIS STORAGE DELETE OPTION
+                                // storage.deleteFile(widget.directory,
+                                //     widget.selectedOptions[index]);
                               });
                             },
                       child: Icon(

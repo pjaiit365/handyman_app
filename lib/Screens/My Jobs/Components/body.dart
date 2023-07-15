@@ -7,9 +7,14 @@ import 'package:handyman_app/constants.dart';
 import 'my_job_items.dart';
 import 'my_jobs_tabs.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
 
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,9 +23,39 @@ class Body extends StatelessWidget {
       children: <Widget>[
         SizedBox(height: 15 * screenHeight),
         MyJobsTabs(
-          isJobCompletedClicked: isJobCompletedClicked,
-          isJobOffersClicked: isJobOffersClicked,
-          isJobUpcomingClicked: isJobUpcomingClicked,
+          upcomingCallback: () {
+            setState(() {
+              isJobUpcomingClicked = !isJobUpcomingClicked;
+            });
+            if (isJobUpcomingClicked == true) {
+              isJobCompletedClicked = false;
+              isJobOffersClicked = false;
+            }
+            if (isJobCompletedClicked == false && isJobOffersClicked == false)
+              isJobUpcomingClicked = true;
+          },
+          offersCallback: () {
+            setState(() {
+              isJobOffersClicked = !isJobOffersClicked;
+            });
+            if (isJobOffersClicked == true) {
+              isJobCompletedClicked = false;
+              isJobUpcomingClicked = false;
+            }
+            if (isJobCompletedClicked == false && isJobUpcomingClicked == false)
+              isJobOffersClicked = true;
+          },
+          completedCallback: () {
+            setState(() {
+              isJobCompletedClicked = !isJobCompletedClicked;
+            });
+            if (isJobCompletedClicked == true) {
+              isJobUpcomingClicked = false;
+              isJobOffersClicked = false;
+            }
+            if (isJobUpcomingClicked == false && isJobOffersClicked == false)
+              isJobCompletedClicked = true;
+          },
         ),
         SizedBox(height: 25 * screenHeight),
         if (isJobUpcomingClicked == true)

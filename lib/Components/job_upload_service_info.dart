@@ -4,14 +4,21 @@ import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_item_dropdown.dart';
 import 'package:handyman_app/Screens/Home/Components/body.dart';
+import 'package:handyman_app/Services/read_data.dart';
 
 import '../Models/category.dart';
 import '../constants.dart';
 
 class JobUploadServiceInfo extends StatefulWidget {
+  bool isReadOnly;
+  String serviceProvided;
   final TextEditingController chargeController;
-  const JobUploadServiceInfo({Key? key, required this.chargeController})
-      : super(key: key);
+  JobUploadServiceInfo({
+    Key? key,
+    required this.chargeController,
+    this.serviceProvided = '',
+    this.isReadOnly = false,
+  }) : super(key: key);
 
   @override
   State<JobUploadServiceInfo> createState() => _JobUploadServiceInfoState();
@@ -79,6 +86,7 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ServiceCategorySelect(
+                isReadOnly: widget.isReadOnly,
                 title: 'Services Category',
                 dropdownList: allCategoriesName.toSet().toList(),
                 hintText: serviceCatHintText,
@@ -87,16 +95,17 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
                     getCategoryData(newValue);
                     serviceProvHintText = servicesProvided[0];
                     serviceCatHintText = newValue;
-
-                    print(servicesProvided);
                   });
                 },
               ),
               SizedBox(height: 20 * screenHeight),
               ServiceCategorySelect(
+                isReadOnly: widget.isReadOnly,
                 title: 'Services Provided',
                 dropdownList: servicesProvided.toList(),
-                hintText: serviceProvHintText,
+                hintText: widget.isReadOnly
+                    ? widget.serviceProvided
+                    : serviceProvHintText,
                 onChanged: (newValue) {
                   setState(() {
                     serviceProvHintText = newValue;
@@ -114,7 +123,7 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
                       LengthLimitingTextInputFormatter(3)
                     ],
                     isHintText: chargeHintText == '0' ? true : false,
-                    isReadOnly: jobUploadReadOnly,
+                    isReadOnly: widget.isReadOnly,
                     controller: widget.chargeController,
                     title: 'Charge',
                     hintText: chargeHintText == '0'
@@ -152,6 +161,7 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
                   Padding(
                     padding: EdgeInsets.only(bottom: screenHeight * 1.0),
                     child: ServiceCategorySelect(
+                      isReadOnly: widget.isReadOnly,
                       title: 'Charge per',
                       width: 117,
                       dropdownList: chargePerList,
@@ -168,6 +178,7 @@ class _JobUploadServiceInfoState extends State<JobUploadServiceInfo> {
               ),
               SizedBox(height: 20 * screenHeight),
               ServiceCategorySelect(
+                isReadOnly: widget.isReadOnly,
                 title: 'Level of Expertise',
                 dropdownList: expertiseList,
                 hintText: expertHint,
