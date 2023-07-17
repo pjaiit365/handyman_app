@@ -9,7 +9,8 @@ import '../../../Components/schedule_day_tab.dart';
 import '../../../Components/schedule_note.dart';
 import '../../../Components/schedule_time_tab.dart';
 import '../../../Components/summary_details.dart';
-import '../../Successful/booking_successful_screen.dart';
+import '../../../Services/read_data.dart';
+import '../../Successful/Booking Successful/booking_successful_screen.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -37,12 +38,36 @@ class _BodyState extends State<Body> {
                     SizedBox(height: 24 * screenHeight),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookingSuccessfulScreen(),
-                          ),
-                        );
+                        (apppointmentRegion == '' ||
+                                apppointmentTown == '' ||
+                                apppointmentHouseNum == '' ||
+                                apppointmentStreet == '')
+                            ? () {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Colors.black45,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      content: Center(
+                                        child: Text(
+                                          'One or more required fields has an error. Check them again.',
+                                          style: TextStyle(height: 1.3),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )),
+                                );
+                              }
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BookingSuccessfulScreen(),
+                                ),
+                              );
                       },
                       child: Container(
                         height: 49 * screenHeight,
@@ -73,6 +98,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,13 +107,23 @@ class _BodyState extends State<Body> {
           Center(
             child: Container(
               height: 92 * screenHeight,
-              width: 87.65,
+              width: 87.65 * screenWidth,
               decoration: BoxDecoration(
+                color: sectionColor,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage('assets/images/profile_pic.jpeg'),
+                  fit: BoxFit.cover,
+                  image: NetworkImage(allJobItemList[0].pic),
                 ),
               ),
+              child: allJobItemList[0].pic == ''
+                  ? Center(
+                      child: Icon(
+                      Icons.person,
+                      color: white,
+                      size: 42,
+                    ))
+                  : SizedBox(),
             ),
           ),
           SizedBox(height: 10 * screenHeight),
@@ -96,7 +132,7 @@ class _BodyState extends State<Body> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Harry Garett',
+                allJobItemList[0].fullName,
                 style: TextStyle(
                   color: black,
                   fontSize: 20,
@@ -152,6 +188,7 @@ class _BodyState extends State<Body> {
           SizedBox(height: 10 * screenHeight),
           ScheduleNote(),
           SizedBox(height: 10 * screenHeight),
+          SizedBox(height: 25 * screenHeight),
         ],
       ),
     );

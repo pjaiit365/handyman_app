@@ -43,9 +43,7 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: isDataLoaded ? buildContent() : buildLoadingIndicator(),
-    );
+    return isDataLoaded ? buildContent() : buildLoadingIndicator();
   }
 
   Widget buildContent() {
@@ -53,95 +51,94 @@ class _BodyState extends State<Body> {
       return buildEmptyContent(); // Handle the case when the list is empty
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        PersonnelDetailsTab(),
-        SizedBox(height: 23 * screenHeight),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ContactPersonnelButton(
-              call: true,
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatAlternateScreen(),
-                  ),
-                );
-              },
-            ),
-            ContactPersonnelButton(
-              call: false,
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        SizedBox(height: 22 * screenHeight),
-        SectionTabs(
-          aboutCallback: () {
-            setState(() {
-              aboutSelected = !aboutSelected;
-              if (aboutSelected == true) {
-                reviewsSelected = false;
-                portfolioSelected = false;
-              }
-              if (reviewsSelected == false && portfolioSelected == false) {
-                aboutSelected = true;
-              }
-            });
-          },
-          reviewCallback: () {
-            setState(() {
-              reviewsSelected = !reviewsSelected;
-              if (reviewsSelected == true) {
-                aboutSelected = false;
-                portfolioSelected = false;
-              }
-              if (aboutSelected == false && portfolioSelected == false) {
-                reviewsSelected = true;
-              }
-            });
-          },
-          portfolioCallback: () {
-            setState(() {
-              portfolioSelected = !portfolioSelected;
-              if (portfolioSelected == true) {
-                reviewsSelected = false;
-                aboutSelected = false;
-              }
-              if (reviewsSelected == false && aboutSelected == false) {
-                portfolioSelected = true;
-              }
-            });
-          },
-        ),
-        SizedBox(height: screenHeight * 23),
-        if (aboutSelected == true) AboutTab(),
-        if (reviewsSelected == true) ReviewsTab(),
-        if (portfolioSelected == true) PortfolioTab(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          PersonnelDetailsTab(),
+          SizedBox(height: 23 * screenHeight),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ContactPersonnelButton(
+                call: true,
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatAlternateScreen(),
+                    ),
+                  );
+                },
+              ),
+              ContactPersonnelButton(
+                call: false,
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 22 * screenHeight),
+          SectionTabs(
+            aboutCallback: () {
+              setState(() {
+                aboutSelected = !aboutSelected;
+                if (aboutSelected == true) {
+                  reviewsSelected = false;
+                  portfolioSelected = false;
+                }
+                if (reviewsSelected == false && portfolioSelected == false) {
+                  aboutSelected = true;
+                }
+              });
+            },
+            reviewCallback: () {
+              setState(() {
+                reviewsSelected = !reviewsSelected;
+                if (reviewsSelected == true) {
+                  aboutSelected = false;
+                  portfolioSelected = false;
+                }
+                if (aboutSelected == false && portfolioSelected == false) {
+                  reviewsSelected = true;
+                }
+              });
+            },
+            portfolioCallback: () {
+              setState(() {
+                portfolioSelected = !portfolioSelected;
+                if (portfolioSelected == true) {
+                  reviewsSelected = false;
+                  aboutSelected = false;
+                }
+                if (reviewsSelected == false && aboutSelected == false) {
+                  portfolioSelected = true;
+                }
+              });
+            },
+          ),
+          SizedBox(height: screenHeight * 23),
+          if (aboutSelected == true) AboutTab(),
+          if (reviewsSelected == true) ReviewsTab(),
+          if (portfolioSelected == true) PortfolioTab(),
+        ],
+      ),
     );
   }
 
   Widget buildLoadingIndicator() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        if (Platform.isAndroid) CircularProgressIndicator(),
-        if (Platform.isIOS) CupertinoActivityIndicator(),
-      ],
+    return Center(
+      child: (Platform.isAndroid)
+          ? CircularProgressIndicator(color: primary)
+          : CupertinoActivityIndicator(color: primary),
     );
   }
 

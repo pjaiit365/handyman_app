@@ -74,38 +74,50 @@ class _BodyState extends State<Body> {
         future: getAllCustomerUploadedJobs(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 20 * screenHeight),
-                  ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return UploadListItem(
-                          index: index,
-                          screen: EditCustomerJobUpload(),
-                          name: allCustomerJobsUpload[index].fullName,
-                          imageLocation: allCustomerJobsUpload[index].image,
-                          serviceCat:
-                              allCustomerJobsUpload[index].serviceProvided,
-                          date: allCustomerJobsUpload[index].date,
-                          time: allCustomerJobsUpload[index].time,
-                          jobStatus:
-                              allCustomerJobsUpload[index].uploadJobStatus);
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 15 * screenHeight);
-                    },
-                    itemCount: allCustomerJobsUpload.toSet().toList().length,
-                  ),
-                  SizedBox(height: 20 * screenHeight),
-                ],
-              ),
-            );
+            return allCustomerJobsUpload.isEmpty
+                ? Center(
+                    child: Text(
+                      'No Jobs Uploaded',
+                      style: TextStyle(
+                          color: primary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 20 * screenHeight),
+                        ListView.separated(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return UploadListItem(
+                                index: index,
+                                screen: EditCustomerJobUpload(),
+                                name: allCustomerJobsUpload[index].fullName,
+                                imageLocation:
+                                    allCustomerJobsUpload[index].image,
+                                serviceCat: allCustomerJobsUpload[index]
+                                    .serviceProvided,
+                                date: allCustomerJobsUpload[index].date,
+                                time: allCustomerJobsUpload[index].time,
+                                jobStatus: allCustomerJobsUpload[index]
+                                    .uploadJobStatus);
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 15 * screenHeight);
+                          },
+                          itemCount:
+                              allCustomerJobsUpload.toSet().toList().length,
+                        ),
+                        SizedBox(height: 20 * screenHeight),
+                      ],
+                    ),
+                  );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/default_back_button.dart';
-import 'package:handyman_app/Screens/Job Deatils/Components/body.dart';
+import 'package:handyman_app/Screens/Job Details/Components/body.dart';
 import 'package:handyman_app/constants.dart';
 
 class JobDetailsScreen extends StatefulWidget {
@@ -39,7 +39,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               if (isJobBookmarked == false) {
                 handymanFavouritesImageList.removeAt(jobSelectedIndex);
                 handymanFavouritesNameList.removeAt(jobSelectedIndex);
-                handymanFavouritesPriceList.removeAt(jobSelectedIndex);
+                handymanFavouritesChargeList.removeAt(jobSelectedIndex);
                 handymanFavouritesStatusList.removeAt(jobSelectedIndex);
                 handymanFavouritesJobTypeList.removeAt(jobSelectedIndex);
               }
@@ -48,7 +48,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                     .add(jobDashboardImage[jobSelectedIndex]);
                 handymanFavouritesNameList
                     .add(jobDashboardName[jobSelectedIndex]);
-                handymanFavouritesPriceList
+                handymanFavouritesChargeList
                     .add(jobDashboardPrice[jobSelectedIndex]);
                 handymanFavouritesStatusList
                     .add(jobStatusOptions[jobSelectedIndex]);

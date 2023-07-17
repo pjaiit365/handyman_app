@@ -4,12 +4,36 @@ import 'package:handyman_app/Components/default_back_button.dart';
 import 'package:handyman_app/Screens/Appointment/Components/body.dart';
 import 'package:handyman_app/Screens/Chat/chat_alternate_screen.dart';
 
+import '../../Components/schedule_day_tab.dart';
+import '../../Components/schedule_time_tab.dart';
 import '../../constants.dart';
 
-class AppointmentScreen extends StatelessWidget {
+class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<AppointmentScreen> createState() => _AppointmentScreenState();
+}
+
+class _AppointmentScreenState extends State<AppointmentScreen> {
+  @override
+  void initState() {
+    if (timeList.length > 5) {
+      timeList.removeAt(5);
+    }
+    selectedDay = 0;
+    selectedTime = 0;
+    addressValue = 'Home';
+    apppointmentTown = '';
+    apppointmentStreet = '';
+    apppointmentHouseNum = '';
+    apppointmentRegion = '';
+    dropdownvalue = 'N/A';
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

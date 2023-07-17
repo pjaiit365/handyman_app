@@ -351,13 +351,15 @@ List<String> supportSectionIcons = [
 
 List<String> customerFavouritesImageList = [];
 List<String> customerFavouritesNameList = [];
-List<String> customerFavouritesPriceList = [];
+List<String> customerFavouritesChargeList = [];
+List<String> customerFavouritesChargeRateList = [];
 List<String> customerFavouritesRatingList = [];
 List<String> customerFavouritesJobTypeList = [];
 //-----------------------------------------------------------
 List<String> handymanFavouritesImageList = [];
 List<String> handymanFavouritesNameList = [];
-List<String> handymanFavouritesPriceList = [];
+List<String> handymanFavouritesChargeList = [];
+List<String> handymanFavouritesChargeRateList = [];
 List<bool> handymanFavouritesStatusList = [];
 List<String> handymanFavouritesJobTypeList = [];
 
@@ -575,6 +577,5 @@ String currentJobClickedUserId = '';
 int selectedJobUploadIndex = 0;
 
 List<String> jobApplicationLinks = [];
-int jobApplicationMediaCount = 0;
 
 String jobApplicationTime = '';

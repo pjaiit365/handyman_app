@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Job%20Deatils/job_details_screen.dart';
+import 'package:handyman_app/Screens/Job%20Details/job_details_screen.dart';
 
 import '../Services/read_data.dart';
 import '../constants.dart';

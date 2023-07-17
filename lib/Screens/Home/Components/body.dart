@@ -11,6 +11,7 @@ import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Customer/profile_customer.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
+import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/Services/storage_service.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -117,9 +118,6 @@ Future getCustomerCategoryData() async {
         }
       }
     });
-    print(allCustomerCategoryData.length);
-    print(allCustomerCategoryData);
-    print(handymanDashboardImage);
   } else {
     print('No Jobs Found.');
   }
@@ -174,10 +172,27 @@ Future getHandymanCategoryData() async {
         }
       }
     });
-    print(allHandymanCategoryData.length);
-    print(allHandymanCategoryData);
   } else {
     print('No Jobs Found.');
+  }
+}
+
+Future getRatings() async {
+  final result = await FirebaseFirestore.instance
+      .collection('profile')
+      .where('User ID', isEqualTo: loggedInUserId)
+      .get();
+  if (result.docs.isNotEmpty) {
+    final querySnapshot =
+        result.docs.first.get('Work Experience & Certification.Rating');
+    if (querySnapshot == 0) {
+      ratingHintText = '0.0';
+    } else {
+      ratingHintText = querySnapshot.toString();
+    }
+    print(ratingHintText);
+  } else {
+    print('No user found.');
   }
 }
 
@@ -190,11 +205,11 @@ class _BodyState extends State<Body> {
       downloadUrl = await Storage().downloadUrl('profile_pic');
       setState(() {
         imageUrl = downloadUrl;
-        print(imageUrl);
       });
     }
   }
 
+  ReadData readData = ReadData();
   @override
   void initState() {
     getAllCategories();
@@ -202,6 +217,8 @@ class _BodyState extends State<Body> {
     getCustomerCategoryData();
     getHandymanCategoryData();
     getProfilePic();
+    getRatings();
+    readData.getBookmarkedData();
 
     super.initState();
   }

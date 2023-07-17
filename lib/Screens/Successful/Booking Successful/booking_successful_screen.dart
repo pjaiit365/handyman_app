@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Components/default_back_button.dart';
 
-import '../../constants.dart';
-import '../Successful/Components/body.dart';
+import '../../../constants.dart';
+import '../../Successful/Booking Successful/Components/body.dart';
 
 class BookingSuccessfulScreen extends StatelessWidget {
   const BookingSuccessfulScreen({Key? key}) : super(key: key);

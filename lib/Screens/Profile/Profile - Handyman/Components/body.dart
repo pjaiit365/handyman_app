@@ -2,13 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Components/profile_item.dart';
 import 'package:handyman_app/Components/profile_service_information.dart';
-import 'package:handyman_app/Components/saved_addresses.dart';
 import 'package:handyman_app/constants.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-import '../../../../Components/profile_item_dropdown.dart';
 import '../../../../Components/profile_location_information.dart';
 import '../../../../Components/profile_payment_information.dart';
 import '../../../../Components/profile_personal_information.dart';
@@ -78,7 +75,7 @@ class _BodyState extends State<Body> {
                   ? List<String>.from(profileData['Work Experience & Certification']['Certification'])
                   : [],
           experience: profileData['Work Experience & Certification']['Experience'] != '' ? List<String>.from(profileData['Work Experience & Certification']['Experience']) : [],
-          rating: profileData['Work Experience & Certification']['Rating'],
+          rating: profileData['Work Experience & Certification']['Rating'] == 0 ? 0.0 : profileData['Work Experience & Certification']['Rating'],
           jobTotal: profileData['Work Experience & Certification']['Number of Jobs']);
 
       setState(() {

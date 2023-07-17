@@ -1,31 +1,72 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Components/appointment_tab_row.dart';
 import '../../../constants.dart';
 
-class ApplicationPortfolioTab extends StatelessWidget {
+List jobApplicationPortfolioList = [];
+
+class ApplicationPortfolioTab extends StatefulWidget {
   const ApplicationPortfolioTab({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    Future selectPortfolio() async {
-      try {
-        final files = FilePicker.platform.pickFiles(
-          allowMultiple: true,
-          type: FileType.media,
-        );
+  State<ApplicationPortfolioTab> createState() =>
+      _ApplicationPortfolioTabState();
+}
 
-        if (files != null) {}
-      } catch (e) {
-        print(e.toString());
-      }
+class _ApplicationPortfolioTabState extends State<ApplicationPortfolioTab> {
+  Future selectPortfolio() async {
+    try {
+      final files = await FilePicker.platform
+          .pickFiles(
+        allowMultiple: true,
+        type: FileType.media,
+      )
+          .catchError((err) {
+        print(err.toString());
+      });
+
+      resultList = files!;
+
+      files.files.forEach((file) {
+        final filePath = file.path;
+        final fileName = file.name;
+
+        if (!jobApplicationPortfolioList.contains(filePath)) {
+          setState(() {
+            jobApplicationPortfolioList.add(filePath);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Colors.black45,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                content: Center(
+                  child: Text(
+                    '$fileName has already been added.',
+                    style: TextStyle(height: 1.3),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+          );
+        }
+      });
+    } catch (e) {
+      print(e.toString());
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -88,23 +129,23 @@ class ApplicationPortfolioTab extends StatelessWidget {
                 ),
               ),
             ),
-            jobApplicationMediaCount == 0
+            jobApplicationPortfolioList.isEmpty
                 ? SizedBox()
                 : SizedBox(height: 15 * screenHeight),
-            jobApplicationMediaCount == 0
+            jobApplicationPortfolioList.isEmpty
                 ? SizedBox()
                 : Text(
-                    'Media Count: $jobApplicationMediaCount',
+                    'Media Count: ${jobApplicationPortfolioList.length}',
                     style: TextStyle(
                       color: primary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-            jobApplicationMediaCount == 0
+            jobApplicationPortfolioList.isEmpty
                 ? SizedBox()
                 : SizedBox(height: 15 * screenHeight),
-            jobApplicationMediaCount == 0
+            jobApplicationPortfolioList.isEmpty
                 ? SizedBox()
                 : SizedBox(
                     height: 90 * screenHeight,
@@ -113,19 +154,26 @@ class ApplicationPortfolioTab extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return Container(
-                            height: 90 * screenHeight,
-                            width: 80 * screenWidth,
-                            decoration: BoxDecoration(
-                              color: primary,
-                              borderRadius: BorderRadius.circular(9),
+                          return GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              height: 90 * screenHeight,
+                              width: 80 * screenWidth,
+                              decoration: BoxDecoration(
+                                  color: primary,
+                                  borderRadius: BorderRadius.circular(9),
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: FileImage(File(
+                                          jobApplicationPortfolioList[
+                                              index])))),
                             ),
                           );
                         },
                         separatorBuilder: (context, index) {
                           return SizedBox(width: 19 * screenWidth);
                         },
-                        itemCount: 5),
+                        itemCount: jobApplicationPortfolioList.length),
                   ),
           ],
         ),

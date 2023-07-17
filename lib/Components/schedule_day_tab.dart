@@ -50,7 +50,7 @@ class _ScheduleDayTabState extends State<ScheduleDayTab> {
     final currentDate = DateTime.now();
     final currentWeekday = currentDate.weekday;
 
-    for (int i = currentWeekday; i <= 21; i++) {
+    for (int i = currentWeekday; i <= 20; i++) {
       dates.add(currentDate.add(Duration(days: i - currentWeekday)));
     }
     return Center(
@@ -91,7 +91,7 @@ class _ScheduleDayTabState extends State<ScheduleDayTab> {
                   separatorBuilder: (context, index) {
                     return SizedBox(width: 12 * screenWidth);
                   },
-                  itemCount: dates.length,
+                  itemCount: 10,
                 ),
               ),
             )

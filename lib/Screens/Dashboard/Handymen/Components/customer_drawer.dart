@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
+import 'package:handyman_app/Screens/Bookings/customer_bookings_screen.dart';
 import 'package:handyman_app/Screens/Favourites/Customer/customer_favourite_screen.dart';
 import 'package:handyman_app/Screens/Job%20Upload/Customer/customer_job_upload_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
@@ -23,6 +26,7 @@ class CustomerDrawer extends StatelessWidget {
     Future signOut() async {
       await FirebaseAuth.instance.signOut();
       allUsers.clear();
+      imageUrl = '';
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -124,7 +128,7 @@ class CustomerDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Bookings',
                     icon: Icons.bookmark,
-                    screen: NotificationScreen(),
+                    screen: CustomerBookingsScreen(),
                   ),
                   SizedBox(height: 27 * screenHeight),
                   Center(

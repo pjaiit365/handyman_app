@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Job%20Application/Components/application_references_tab.dart';
 import 'package:handyman_app/Screens/Job%20Application/Components/application_summary_details.dart';
+import 'package:handyman_app/Screens/Successful/Job%20Application%20Successful/job_application_successful_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -15,7 +16,7 @@ import '../../../Components/schedule_day_tab.dart';
 import '../../../Components/schedule_note.dart';
 import '../../../Components/schedule_time_tab.dart';
 import '../../../Components/summary_details.dart';
-import '../../Successful/booking_successful_screen.dart';
+import '../../Successful/Booking Successful/booking_successful_screen.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -56,14 +57,40 @@ class _BodyState extends State<Body> {
                     ApplicationSummaryDetails(),
                     SizedBox(height: 24 * screenHeight),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookingSuccessfulScreen(),
-                          ),
-                        );
-                      },
+                      onTap: (jobApplicationPortfolioList.isEmpty ||
+                              jobApplicationLinks.isEmpty ||
+                              apppointmentRegion == '' ||
+                              apppointmentTown == '' ||
+                              apppointmentHouseNum == '' ||
+                              apppointmentStreet == '')
+                          ? () {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Colors.black45,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    content: Center(
+                                      child: Text(
+                                        'One or more required fields has an error. Check them again.',
+                                        style: TextStyle(height: 1.3),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )),
+                              );
+                            }
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      JobApplicationSuccessfulScreen(),
+                                ),
+                              );
+                            },
                       child: Container(
                         height: 49 * screenHeight,
                         width: 312 * screenWidth,

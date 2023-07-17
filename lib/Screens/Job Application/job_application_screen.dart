@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/schedule_time_tab.dart';
+import 'package:handyman_app/Screens/Job%20Application/Components/application_portfolio_tab.dart';
 import 'package:handyman_app/Screens/Job%20Application/Components/body.dart';
 
 import '../../Components/default_back_button.dart';
@@ -27,6 +28,9 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
     apppointmentHouseNum = '';
     apppointmentRegion = '';
     dropdownvalue = 'N/A';
+    jobApplicationLinks.clear();
+    jobApplicationPortfolioList.clear();
+    resultList = null;
     super.initState();
   }
 

@@ -162,8 +162,8 @@ class _BodyState extends State<Body> {
   Future addPortfolio(String jobId) async {
     if (resultList != null) {
       resultList?.files.forEach((file) async {
-        final fileNames = file!.name;
-        final filePath = file!.path;
+        final fileNames = file.name;
+        final filePath = file.path;
         await storage.jobUploadFiles(fileNames, 'Portfolio', filePath as String,
             jobId, 'Customer Job Upload');
       });
@@ -324,10 +324,13 @@ class _BodyState extends State<Body> {
                               chargeController: chargeController,
                             ),
                             SizedBox(height: 30 * screenHeight),
-                            JobUploadWorkCertInfo(),
+                            JobUploadWorkCertInfo(
+                              isReadOnly: isJobUploadEditReadOnly,
+                            ),
                             SizedBox(height: 30 * screenHeight),
                             JobUploadLocationInfo(
-                                isReadOnly: isJobUploadEditReadOnly),
+                              isReadOnly: isJobUploadEditReadOnly,
+                            ),
                             SizedBox(height: 30 * screenHeight),
                             JobUploadOptionalsInfo(
                                 isReadOnly: isJobUploadEditReadOnly),

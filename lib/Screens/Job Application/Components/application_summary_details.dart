@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/schedule_day_tab.dart';
 import 'package:handyman_app/Components/schedule_time_tab.dart';
+import 'package:handyman_app/Screens/Job%20Application/Components/application_portfolio_tab.dart';
 import 'package:handyman_app/Screens/Job%20Application/Components/appointment_charge_details.dart';
 
 import '../../../Components/summary_element.dart';
@@ -45,7 +46,7 @@ class ApplicationSummaryDetails extends StatelessWidget {
               children: <Widget>[
                 SummaryElement(
                     title: 'Charge',
-                    subtitle: '\$ ' + allJobItemList[0].charge.toString()),
+                    subtitle: '\$ ${allJobItemList[0].charge}'),
                 SummaryElement(
                     title: 'Charge per', subtitle: jobApplicationChargeRate),
               ],
@@ -59,9 +60,10 @@ class ApplicationSummaryDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SummaryElement(
-                    title: 'Date',
-                    subtitle:
-                        '${dates[selectedDay].day > 9 ? dates[selectedDay].day : '0${dates[selectedDay].day}'}- ${dates[selectedDay].month > 9 ? dates[selectedDay].month : '0${dates[selectedDay].month}'}-${dates[selectedDay].year}'),
+                  title: 'Date',
+                  subtitle:
+                      '${dates[selectedDay].day > 9 ? dates[selectedDay].day : '0${dates[selectedDay].day}'}-${dates[selectedDay].month > 9 ? dates[selectedDay].month : '0${dates[selectedDay].month}'}-${dates[selectedDay].year}',
+                ),
                 Padding(
                   padding: EdgeInsets.only(right: screenWidth * 8.0),
                   child: SummaryElement(
@@ -79,22 +81,82 @@ class ApplicationSummaryDetails extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4 * screenHeight),
-            Text(
-              '$apppointmentHouseNum, $apppointmentStreet,\n'
-                      '$apppointmentTown,\n'
-                      '$apppointmentRegion,GHANA \n($addressValue)'
-                  .toUpperCase(),
-              style: TextStyle(
-                color: black,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-            ),
+            (apppointmentRegion == '' ||
+                    apppointmentTown == '' ||
+                    apppointmentHouseNum == '' ||
+                    apppointmentStreet == '')
+                ? Text(
+                    'Address is incomplete or empty',
+                    style: TextStyle(
+                      color: red,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  )
+                : Text(
+                    '$apppointmentHouseNum, $apppointmentStreet,\n'
+                            '$apppointmentTown,\n'
+                            '$apppointmentRegion,GHANA \n($addressValue)'
+                        .toUpperCase(),
+                    style: TextStyle(
+                      color: black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
             SizedBox(height: 15 * screenHeight),
             SummaryElement(
               title: 'Note',
-              subtitle: '$jobApplicationNote\n\nThank you. ',
-            )
+              subtitle: (jobApplicationNote == '')
+                  ? 'No notes present.'
+                  : '$jobApplicationNote\n\nThank you.',
+            ),
+            (allJobItemList[0].isPortfolioPresent == false)
+                ? SizedBox()
+                : SizedBox(height: 15 * screenHeight),
+            (allJobItemList[0].isPortfolioPresent == false)
+                ? SizedBox()
+                : (jobApplicationPortfolioList.isNotEmpty)
+                    ? Text(
+                        'Portfolio present',
+                        style: TextStyle(
+                          color: primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      )
+                    : Text(
+                        'No portfolio present. Add portfolio.',
+                        style: TextStyle(
+                          color: red,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+            (allJobItemList[0].isReferencesPresent == false)
+                ? SizedBox()
+                : SizedBox(height: 15 * screenHeight),
+            (allJobItemList[0].isReferencesPresent == false)
+                ? SizedBox()
+                : (jobApplicationLinks.isNotEmpty)
+                    ? Text(
+                        'References present',
+                        style: TextStyle(
+                          height: 1.3,
+                          color: primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      )
+                    : Text(
+                        'No references present. Add references.',
+                        style: TextStyle(
+                          height: 1.3,
+                          color: red,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
           ],
         ),
       ),

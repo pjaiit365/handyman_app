@@ -2,16 +2,21 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:handyman_app/Models/bookmark.dart';
 import 'package:handyman_app/Models/customer_job_upload_item_data.dart';
 import 'package:handyman_app/Models/job_item_data.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
+import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
 import 'package:handyman_app/Screens/Job%20Upload/Sub%20Screen/Customer/customer_job_upload_list.dart';
 import 'package:handyman_app/Screens/Job%20Upload/Sub%20Screen/Handyman/Components/body.dart';
 
 import '../Components/job_upload_optionals_info.dart';
+import '../Models/customer_category_data.dart';
+import '../Models/handyman_category_data.dart';
 import '../Models/handyman_job_upload_item_data.dart';
 import '../Screens/Job Upload/Sub Screen/Customer/Components/body.dart';
 import '../constants.dart';
@@ -20,6 +25,7 @@ List<dynamic> allJobItemList = [];
 List<dynamic> jobUploadItemData = [];
 late CustomerJobUploadItemData jobUploadData;
 late HandymanJobUploadItemData handymanJobUploadData;
+String appointmentChargeRate = '';
 
 class ReadData {
   Future getHandymanJobItemData(String jobId) async {
@@ -35,6 +41,7 @@ class ReadData {
         currentJobClickedUserId = document.docs.single.get('Customer ID');
 
         final documentData = document.docs.single.data();
+
         final jobItemData = JobItemData(
           pic: documentData['User Pic'] == '' ? '' : documentData['User Pic'],
           deadline: documentData['Job Details']['Deadline'],
@@ -78,6 +85,8 @@ class ReadData {
         currentJobClickedUserId = document.docs.single.get('Customer ID');
 
         final documentData = document.docs.single.data();
+        appointmentChargeRate =
+            documentData['Service Information']['Charge Rate'];
         final jobItemData = JobItemData(
           rating: documentData['Work Experience & Certification']['Rating'],
           pic: documentData['User Pic'],
@@ -249,22 +258,33 @@ class ReadData {
     try {
       await FirebaseFirestore.instance
           .collection('Customer Job Upload')
-          .doc(allHandymanJobsUpload[selectedJobUploadIndex].jobUploadId)
+          .doc(allCustomerJobsUpload[selectedJobUploadIndex].jobUploadId)
           .delete()
           .catchError((err) {
         print(err.toString());
       });
 
-      //TODO:FIX THE DELETION OF FILES ANF FOLDERS FROM FIREBASE STORAGE
-      await FirebaseStorage.instance
-          .ref(
-              '$loggedInUserId/Customer Job Upload/${allHandymanJobsUpload[selectedJobUploadIndex].jobUploadId}')
-          .listAll()
-          .then((document) {
-        FirebaseStorage.instance.ref(document.items.first.fullPath).delete();
-      }).catchError((err) {
-        print(err.toString());
-      });
+      //directory in firebase storage whose files and sub directories are to be deleted
+      final directoryRef = FirebaseStorage.instance.ref().child(
+          '$loggedInUserId/Customer Job Upload/${allCustomerJobsUpload[selectedJobUploadIndex].jobUploadId}');
+
+      //deleting all files present in directoryReference specified
+      try {
+        final querySnapshot = await directoryRef.listAll();
+        querySnapshot.items.forEach((file) async {
+          await file.delete();
+        });
+
+        //deleting all files present in each sub directory
+        querySnapshot.prefixes.forEach((folder) async {
+          final result = await folder.listAll();
+          result.items.forEach((file) async {
+            await file.delete();
+          });
+        });
+      } catch (e) {
+        print(e.toString());
+      }
 
       showDialog(
         context: context,
@@ -317,16 +337,27 @@ class ReadData {
         print(err.toString());
       });
 
-      //TODO:FIX THE DELETION OF FILES ANF FOLDERS FROM FIREBASE STORAGE
-      await FirebaseStorage.instance
-          .ref(
-              '$loggedInUserId/Handyman Job Upload/${allHandymanJobsUpload[selectedJobUploadIndex].jobUploadId}')
-          .listAll()
-          .then((document) {
-        FirebaseStorage.instance.ref(document.items.first.fullPath).delete();
-      }).catchError((err) {
-        print(err.toString());
-      });
+      //directory in firebase storage whose files and sub directories are to be deleted
+      final directoryReference = await FirebaseStorage.instance.ref(
+          '$loggedInUserId/Handyman Job Upload/${allHandymanJobsUpload[selectedJobUploadIndex].jobUploadId}');
+
+      //deleting all files present in directoryReference specified
+      try {
+        final querySnapshot = await directoryReference.listAll();
+        querySnapshot.items.forEach((file) async {
+          await file.delete();
+        });
+
+        //deleting all files present in each sub directory
+        querySnapshot.prefixes.forEach((folder) async {
+          final querySnapshot = await folder.listAll();
+          querySnapshot.items.forEach((file) async {
+            await file.delete();
+          });
+        });
+      } catch (e) {
+        print(e.toString());
+      }
 
       showDialog(
         context: context,
@@ -364,6 +395,140 @@ class ReadData {
           ),
         );
       });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getBookmarkedData() async {
+    handymenJobsBookmarked.clear();
+    customerJobsBookmarked.clear();
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Bookmark')
+          .where('User ID', isEqualTo: loggedInUserId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentData = querySnapshot.docs.single.data();
+        final bookmarkData = Bookmark(
+          bookmarkId: documentData['Bookmark ID'],
+          customerId: documentData['User ID'],
+          handymanIdList: documentData['Handyman Job IDs'] == []
+              ? []
+              : documentData['Handyman Job IDs'],
+          customerIdList: documentData['Customer Job IDs'] == []
+              ? []
+              : documentData['Customer Job IDs'],
+        );
+        handymenJobsBookmarked = List<String>.from(bookmarkData.handymanIdList);
+        customerJobsBookmarked = List<String>.from(bookmarkData.customerIdList);
+      } else {
+        print('No documents present.');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getCustomerFavouritesData() async {
+    customerFavouritesImageList.clear();
+    customerFavouritesChargeList.clear();
+    customerFavouritesNameList.clear();
+    customerFavouritesJobTypeList.clear();
+    customerFavouritesRatingList.clear();
+    customerFavouritesChargeRateList.clear();
+
+    try {
+      if (handymenJobsBookmarked.isNotEmpty) {
+        handymenJobsBookmarked.forEach(
+          (document) async {
+            final querySnapshot = await FirebaseFirestore.instance
+                .collection('Handyman Job Upload')
+                .doc(document)
+                .get();
+            final documentData = querySnapshot.data()!;
+            final categoryData = CustomerCategoryData(
+              pic: documentData['User Pic'],
+              jobID: documentData['Job ID'],
+              seenBy: documentData['Seen By'],
+              fullName: documentData['Name'],
+              jobService: documentData['Service Information']
+                  ['Service Provided'],
+              rating: documentData['Work Experience & Certification']['Rating'],
+              charge: documentData['Service Information']['Charge'],
+              chargeRate: documentData['Service Information']['Charge Rate'],
+              jobCategory: documentData['Service Information']
+                  ['Service Category'],
+            );
+
+            customerFavouritesImageList.add(categoryData.pic);
+            customerFavouritesJobTypeList.add(categoryData.jobService);
+            customerFavouritesNameList.add(categoryData.fullName);
+            customerFavouritesChargeList.add(categoryData.charge.toString());
+            customerFavouritesRatingList.add(categoryData.rating);
+            if (categoryData.chargeRate == 'Hour') {
+              customerFavouritesChargeRateList.add('Hr');
+            } else if (categoryData.chargeRate == '6 Hours') {
+              customerFavouritesChargeRateList.add('6 Hrs');
+            } else if (categoryData.chargeRate == '12 Hours') {
+              customerFavouritesChargeRateList.add('12 Hrs');
+            } else {
+              customerFavouritesChargeRateList.add('Day');
+            }
+          },
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getHandymanFavouritesData() async {
+    handymanFavouritesImageList.clear();
+    handymanFavouritesChargeList.clear();
+    handymanFavouritesNameList.clear();
+    handymanFavouritesJobTypeList.clear();
+    handymanFavouritesChargeRateList.clear();
+
+    try {
+      if (customerJobsBookmarked.isNotEmpty) {
+        customerJobsBookmarked.forEach(
+          (document) async {
+            final querySnapshot = await FirebaseFirestore.instance
+                .collection('Customer Job Upload')
+                .doc(document)
+                .get();
+            final documentData = querySnapshot.data()!;
+            final categoryData = HandymanCategoryData(
+                pic: documentData['User Pic'],
+                jobID: documentData['Job ID'],
+                seenBy: documentData['Seen By'],
+                fullName: documentData['Name'],
+                jobService: documentData['Service Information']
+                    ['Service Provided'],
+                charge: documentData['Service Information']['Charge'],
+                chargeRate: documentData['Service Information']['Charge Rate'],
+                jobCategory: documentData['Service Information']
+                    ['Service Category'],
+                jobStatus: documentData['Job Details']['Job Status']);
+
+            handymanFavouritesImageList.add(categoryData.pic);
+            handymanFavouritesJobTypeList.add(categoryData.jobService);
+            handymanFavouritesNameList.add(categoryData.fullName);
+            handymanFavouritesChargeList.add(categoryData.charge.toString());
+            if (categoryData.chargeRate == 'Hour') {
+              handymanFavouritesChargeRateList.add('Hr');
+            } else if (categoryData.chargeRate == '6 Hours') {
+              handymanFavouritesChargeRateList.add('6 Hrs');
+            } else if (categoryData.chargeRate == '12 Hours') {
+              customerFavouritesChargeRateList.add('12 Hrs');
+            } else {
+              handymanFavouritesChargeRateList.add('Day');
+            }
+          },
+        );
+      }
     } catch (e) {
       print(e.toString());
     }

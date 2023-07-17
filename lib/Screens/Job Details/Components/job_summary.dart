@@ -59,15 +59,26 @@ class JobSummary extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: 92 * screenHeight,
-                    width: 86 * screenWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/profile_pic.jpeg'),
-                          fit: BoxFit.fill),
-                    ),
-                  ),
+                      height: 92 * screenHeight,
+                      width: 86 * screenWidth,
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: allJobItemList[0].pic == ''
+                            ? null
+                            : Border.all(color: appointmentTimeColor, width: 1),
+                        image: DecorationImage(
+                            image: NetworkImage(allJobItemList[0].pic),
+                            fit: BoxFit.cover),
+                      ),
+                      child: allJobItemList[0].pic == ''
+                          ? Center(
+                              child: Icon(
+                              Icons.person,
+                              color: grey,
+                              size: 42,
+                            ))
+                          : null),
                   SizedBox(height: 12 * screenHeight),
                   Icon(Icons.verified_rounded, color: green),
                 ],
