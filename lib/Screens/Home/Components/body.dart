@@ -190,7 +190,6 @@ Future getRatings() async {
     } else {
       ratingHintText = querySnapshot.toString();
     }
-    print(ratingHintText);
   } else {
     print('No user found.');
   }

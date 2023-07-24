@@ -100,20 +100,6 @@ class _BodyState extends State<Body> {
       final fileName = result.files.single.name;
       final filePath = result.files.single.path!;
 
-      //delete any profile pic available
-      // final listReference =
-      //     await FirebaseStorage.instance.ref('$loggedInUserId/profile').list();
-
-      //to delete any items available in profile folder
-      // if (listReference.items != 0) {
-      //   await FirebaseStorage.instance
-      //       .ref()
-      //       .child(loggedInUserId)
-      //       .delete()
-      //       .then((value) => print('Profile Pic deleted.'));
-      //   print('File deleted');
-      // }
-
       //upload new profile pic
       storage.uploadPic(filePath, fileName).then((value) => print('Done'));
     } else {
@@ -274,7 +260,7 @@ class _BodyState extends State<Body> {
                       [
                         storage.downloadUrl('profile_pic'),
                         Future.delayed(
-                          Duration(seconds: 30),
+                          Duration(seconds: 3),
                         ),
                       ],
                     ),

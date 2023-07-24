@@ -40,52 +40,52 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: isDataLoaded ? buildContent() : buildLoadingIndicator(),
-    );
+    return isDataLoaded ? buildContent() : buildLoadingIndicator();
   }
 
   Widget buildContent() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        JobSummary(),
-        SizedBox(height: 22),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            JobDetailsEssentialsContainer(
-              title: 'People Applied',
-              subtitle: allJobItemList[0].peopleApplied.toString(),
-            ),
-            JobDetailsEssentialsContainer(
-              title: 'Deadline',
-              subtitle: allJobItemList[0].deadline,
-            ),
-          ],
-        ),
-        SizedBox(height: 24 * screenHeight),
-        JobDetailsTab(
-          aboutCallBack: () {
-            setState(() {
-              isJobAboutClicked = !isJobAboutClicked;
-            });
-            if (isJobAboutClicked == true) isJobPortfolioClicked = false;
-            if (isJobPortfolioClicked == false) isJobAboutClicked = true;
-          },
-          portfolioCallBack: () {
-            setState(() {
-              isJobPortfolioClicked = !isJobPortfolioClicked;
-            });
-            if (isJobPortfolioClicked == true) isJobAboutClicked = false;
-            if (isJobAboutClicked == false) isJobPortfolioClicked = true;
-          },
-        ),
-        SizedBox(height: 16 * screenHeight),
-        if (isJobAboutClicked == true) AboutTab(),
-        if (isJobPortfolioClicked == true) PortfolioTab(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          JobSummary(),
+          SizedBox(height: 22),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              JobDetailsEssentialsContainer(
+                title: 'People Applied',
+                subtitle: allJobItemList[0].peopleApplied.toString(),
+              ),
+              JobDetailsEssentialsContainer(
+                title: 'Deadline',
+                subtitle: allJobItemList[0].deadline,
+              ),
+            ],
+          ),
+          SizedBox(height: 24 * screenHeight),
+          JobDetailsTab(
+            aboutCallBack: () {
+              setState(() {
+                isJobAboutClicked = !isJobAboutClicked;
+              });
+              if (isJobAboutClicked == true) isJobPortfolioClicked = false;
+              if (isJobPortfolioClicked == false) isJobAboutClicked = true;
+            },
+            portfolioCallBack: () {
+              setState(() {
+                isJobPortfolioClicked = !isJobPortfolioClicked;
+              });
+              if (isJobPortfolioClicked == true) isJobAboutClicked = false;
+              if (isJobAboutClicked == false) isJobPortfolioClicked = true;
+            },
+          ),
+          SizedBox(height: 16 * screenHeight),
+          if (isJobAboutClicked == true) AboutTab(),
+          if (isJobPortfolioClicked == true) PortfolioTab(),
+        ],
+      ),
     );
   }
 

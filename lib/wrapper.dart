@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Welcome/welcome_screen.dart';
-import 'package:handyman_app/constants.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);

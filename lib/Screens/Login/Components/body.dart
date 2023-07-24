@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Forgot%20Password/forgot_password_screen.dart';
@@ -160,7 +161,7 @@ class _BodyState extends State<Body> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             content: Text(
-              e.message.toString() + '\nTry again later.',
+              '${e.message}\nTry again later.',
               style: TextStyle(
                 height: 1.3,
                 fontSize: 16,

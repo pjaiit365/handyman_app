@@ -1,9 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/wrapper.dart';
-
 import '../../../constants.dart';
-import '../../Welcome/welcome_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SplashScreenCont extends StatelessWidget {

@@ -438,46 +438,45 @@ class ReadData {
     customerFavouritesJobTypeList.clear();
     customerFavouritesRatingList.clear();
     customerFavouritesChargeRateList.clear();
+    customerFavouritesIDList.clear();
 
     try {
       if (handymenJobsBookmarked.isNotEmpty) {
-        handymenJobsBookmarked.forEach(
-          (document) async {
-            final querySnapshot = await FirebaseFirestore.instance
-                .collection('Handyman Job Upload')
-                .doc(document)
-                .get();
-            final documentData = querySnapshot.data()!;
-            final categoryData = CustomerCategoryData(
-              pic: documentData['User Pic'],
-              jobID: documentData['Job ID'],
-              seenBy: documentData['Seen By'],
-              fullName: documentData['Name'],
-              jobService: documentData['Service Information']
-                  ['Service Provided'],
-              rating: documentData['Work Experience & Certification']['Rating'],
-              charge: documentData['Service Information']['Charge'],
-              chargeRate: documentData['Service Information']['Charge Rate'],
-              jobCategory: documentData['Service Information']
-                  ['Service Category'],
-            );
+        for (var document in handymenJobsBookmarked) {
+          final querySnapshot = await FirebaseFirestore.instance
+              .collection('Handyman Job Upload')
+              .doc(document)
+              .get();
+          final documentData = querySnapshot.data()!;
+          final categoryData = CustomerCategoryData(
+            pic: documentData['User Pic'],
+            jobID: documentData['Job ID'],
+            seenBy: documentData['Seen By'],
+            fullName: documentData['Name'],
+            jobService: documentData['Service Information']['Service Provided'],
+            rating: documentData['Work Experience & Certification']['Rating'],
+            charge: documentData['Service Information']['Charge'],
+            chargeRate: documentData['Service Information']['Charge Rate'],
+            jobCategory: documentData['Service Information']
+                ['Service Category'],
+          );
 
-            customerFavouritesImageList.add(categoryData.pic);
-            customerFavouritesJobTypeList.add(categoryData.jobService);
-            customerFavouritesNameList.add(categoryData.fullName);
-            customerFavouritesChargeList.add(categoryData.charge.toString());
-            customerFavouritesRatingList.add(categoryData.rating);
-            if (categoryData.chargeRate == 'Hour') {
-              customerFavouritesChargeRateList.add('Hr');
-            } else if (categoryData.chargeRate == '6 Hours') {
-              customerFavouritesChargeRateList.add('6 Hrs');
-            } else if (categoryData.chargeRate == '12 Hours') {
-              customerFavouritesChargeRateList.add('12 Hrs');
-            } else {
-              customerFavouritesChargeRateList.add('Day');
-            }
-          },
-        );
+          customerFavouritesImageList.add(categoryData.pic);
+          customerFavouritesIDList.add(categoryData.jobID);
+          customerFavouritesJobTypeList.add(categoryData.jobService);
+          customerFavouritesNameList.add(categoryData.fullName);
+          customerFavouritesChargeList.add(categoryData.charge.toString());
+          customerFavouritesRatingList.add(categoryData.rating);
+          if (categoryData.chargeRate == 'Hour') {
+            customerFavouritesChargeRateList.add('Hr');
+          } else if (categoryData.chargeRate == '6 Hours') {
+            customerFavouritesChargeRateList.add('6 Hrs');
+          } else if (categoryData.chargeRate == '12 Hours') {
+            customerFavouritesChargeRateList.add('12 Hrs');
+          } else {
+            customerFavouritesChargeRateList.add('Day');
+          }
+        }
       }
     } catch (e) {
       print(e.toString());
@@ -490,45 +489,78 @@ class ReadData {
     handymanFavouritesNameList.clear();
     handymanFavouritesJobTypeList.clear();
     handymanFavouritesChargeRateList.clear();
+    handymanFavouritesIDList.clear();
 
     try {
       if (customerJobsBookmarked.isNotEmpty) {
-        customerJobsBookmarked.forEach(
-          (document) async {
-            final querySnapshot = await FirebaseFirestore.instance
-                .collection('Customer Job Upload')
-                .doc(document)
-                .get();
-            final documentData = querySnapshot.data()!;
-            final categoryData = HandymanCategoryData(
-                pic: documentData['User Pic'],
-                jobID: documentData['Job ID'],
-                seenBy: documentData['Seen By'],
-                fullName: documentData['Name'],
-                jobService: documentData['Service Information']
-                    ['Service Provided'],
-                charge: documentData['Service Information']['Charge'],
-                chargeRate: documentData['Service Information']['Charge Rate'],
-                jobCategory: documentData['Service Information']
-                    ['Service Category'],
-                jobStatus: documentData['Job Details']['Job Status']);
+        for (var document in customerJobsBookmarked) {
+          final querySnapshot = await FirebaseFirestore.instance
+              .collection('Customer Job Upload')
+              .doc(document)
+              .get();
+          final documentData = querySnapshot.data()!;
+          final categoryData = HandymanCategoryData(
+              pic: documentData['User Pic'],
+              jobID: documentData['Job ID'],
+              seenBy: documentData['Seen By'],
+              fullName: documentData['Name'],
+              jobService: documentData['Service Information']
+                  ['Service Provided'],
+              charge: documentData['Service Information']['Charge'],
+              chargeRate: documentData['Service Information']['Charge Rate'],
+              jobCategory: documentData['Service Information']
+                  ['Service Category'],
+              jobStatus: documentData['Job Details']['Job Status']);
 
-            handymanFavouritesImageList.add(categoryData.pic);
-            handymanFavouritesJobTypeList.add(categoryData.jobService);
-            handymanFavouritesNameList.add(categoryData.fullName);
-            handymanFavouritesChargeList.add(categoryData.charge.toString());
-            if (categoryData.chargeRate == 'Hour') {
-              handymanFavouritesChargeRateList.add('Hr');
-            } else if (categoryData.chargeRate == '6 Hours') {
-              handymanFavouritesChargeRateList.add('6 Hrs');
-            } else if (categoryData.chargeRate == '12 Hours') {
-              customerFavouritesChargeRateList.add('12 Hrs');
-            } else {
-              handymanFavouritesChargeRateList.add('Day');
-            }
-          },
-        );
+          handymanFavouritesIDList.add(categoryData.jobID);
+          handymanFavouritesImageList.add(categoryData.pic);
+          handymanFavouritesJobTypeList.add(categoryData.jobService);
+          handymanFavouritesNameList.add(categoryData.fullName);
+          handymanFavouritesStatusList.add(categoryData.jobStatus);
+          handymanFavouritesChargeList.add(categoryData.charge.toString());
+          if (categoryData.chargeRate == 'Hour') {
+            handymanFavouritesChargeRateList.add('Hr');
+          } else if (categoryData.chargeRate == '6 Hours') {
+            handymanFavouritesChargeRateList.add('6 Hrs');
+          } else if (categoryData.chargeRate == '12 Hours') {
+            customerFavouritesChargeRateList.add('12 Hrs');
+          } else {
+            handymanFavouritesChargeRateList.add('Day');
+          }
+        }
       }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future deleteFiles(String path) async {
+    final directoryRef = FirebaseStorage.instance.ref().child(path);
+
+    try {
+      final querySnapshot = await directoryRef.listAll();
+      querySnapshot.items.forEach((file) async {
+        await file.delete();
+      });
+
+      querySnapshot.prefixes.forEach((folder) async {
+        await deleteFilesInFolders(folder);
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future deleteFilesInFolders(Reference directoryRef) async {
+    try {
+      final querySnapshot = await directoryRef.listAll();
+      querySnapshot.items.forEach((file) async {
+        await file.delete();
+      });
+
+      querySnapshot.prefixes.forEach((folder) async {
+        await deleteFilesInFolders(folder);
+      });
     } catch (e) {
       print(e.toString());
     }

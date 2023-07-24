@@ -32,7 +32,8 @@ class Body extends StatelessWidget {
                         itemCount: handymanFavouritesChargeList.length,
                         itemBuilder: (context, index) {
                           return JobCategoryItem(
-                            jobItemId: jobDashboardID[index],
+                            isFavourite: true,
+                            jobItemId: handymanFavouritesIDList[index],
                             chargeRate: handymanDashboardChargeRate[index],
                             isFavouriteSelected: true,
                             index: index,

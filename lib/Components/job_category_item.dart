@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Job%20Details/job_details_screen.dart';
 
-import '../Services/read_data.dart';
 import '../constants.dart';
 
 class JobCategoryItem extends StatelessWidget {
   final bool status;
   bool isFavouriteSelected;
+  bool isFavourite;
   final String jobType;
   final String name;
   final String price;
@@ -20,6 +19,7 @@ class JobCategoryItem extends StatelessWidget {
     Key? key,
     required this.status,
     this.isFavouriteSelected = false,
+    this.isFavourite = false,
     required this.jobType,
     required this.name,
     required this.price,
@@ -34,7 +34,14 @@ class JobCategoryItem extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
-          jobSelectedIndex = index;
+          if (isFavourite == true) {
+            int jobIndex =
+                jobDashboardID.indexOf(handymanFavouritesIDList[index]);
+            jobSelectedIndex = jobIndex;
+          } else {
+            jobSelectedIndex = index;
+          }
+
           typeClicked = 'Handyman';
 
           Navigator.push(

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/default_back_button.dart';
 import 'package:handyman_app/Screens/Handyman Details/Components/body.dart';
+import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
 
 class HandymanDetailsScreen extends StatefulWidget {
@@ -16,7 +17,6 @@ List<String> customerJobsBookmarked = [];
 
 class _HandymanDetailsScreenState extends State<HandymanDetailsScreen> {
   Future isBookmarked() async {
-    print(handymanDashboardID[handymanSelectedIndex]);
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Bookmark')
@@ -48,11 +48,34 @@ class _HandymanDetailsScreenState extends State<HandymanDetailsScreen> {
   }
 
   bool isHandymanBookmarked = false;
+
+  @override
+  void initState() {
+    if (handymenJobsBookmarked
+        .contains(handymanDashboardID[handymanSelectedIndex])) {
+      isHandymanBookmarked = true;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: DefaultBackButton(),
+        leading: IconButton(
+          highlightColor: tabLight,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Padding(
+            padding: EdgeInsets.only(left: screenWidth * 12.0),
+            child: Icon(
+              Icons.arrow_back_ios_rounded,
+              color: primary,
+              weight: 15,
+            ),
+          ),
+        ),
         elevation: 0.0,
         backgroundColor: white,
         title: Text(
@@ -79,28 +102,10 @@ class _HandymanDetailsScreenState extends State<HandymanDetailsScreen> {
                 }
               }
               isBookmarked();
-              // if (isHandymanBookmarked == false) {
-              //   customerFavouritesImageList.removeAt(handymanSelectedIndex);
-              //   customerFavouritesNameList.removeAt(handymanSelectedIndex);
-              //   customerFavouritesPriceList.removeAt(handymanSelectedIndex);
-              //   customerFavouritesRatingList.removeAt(handymanSelectedIndex);
-              //   customerFavouritesJobTypeList.removeAt(handymanSelectedIndex);
-              // }
-              // if (isHandymanBookmarked == true) {
-              //   customerFavouritesImageList
-              //       .add(handymanDashboardImage[handymanSelectedIndex]);
-              //   customerFavouritesNameList
-              //       .add(handymanDashboardName[handymanSelectedIndex]);
-              //   customerFavouritesPriceList
-              //       .add(handymanDashboardPrice[handymanSelectedIndex]);
-              //   customerFavouritesRatingList
-              //       .add(handymanDashboardRating[handymanSelectedIndex]);
-              //   customerFavouritesJobTypeList
-              //       .add(handymanDashboardJobType[handymanSelectedIndex]);
-              // }
             },
             icon: (handymenJobsBookmarked
-                    .contains(handymanDashboardID[handymanSelectedIndex]))
+                        .contains(handymanDashboardID[handymanSelectedIndex]) &&
+                    isHandymanBookmarked == true)
                 ? Icon(
                     Icons.bookmark,
                     color: primary,

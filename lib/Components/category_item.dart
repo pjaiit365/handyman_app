@@ -15,9 +15,11 @@ class CategoryItem extends StatelessWidget {
   final String price;
   final String imageLocation;
   final String chargeRate;
+  bool isFavourites;
   CategoryItem({
     Key? key,
     this.isFavouriteSelected = false,
+    this.isFavourites = false,
     required this.index,
     required this.jobType,
     required this.name,
@@ -32,7 +34,14 @@ class CategoryItem extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
-          handymanSelectedIndex = index;
+          if (isFavourites == true) {
+            int jobIndex =
+                handymanDashboardID.indexOf(customerFavouritesIDList[index]);
+            print(jobIndex);
+            handymanSelectedIndex = jobIndex;
+          } else {
+            handymanSelectedIndex = index;
+          }
           typeClicked = 'Customer';
 
           Navigator.push(

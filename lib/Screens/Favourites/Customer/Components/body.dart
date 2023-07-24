@@ -39,6 +39,7 @@ class _BodyState extends State<Body> {
                         itemCount: customerFavouritesChargeList.length,
                         itemBuilder: (context, index) {
                           return CategoryItem(
+                            isFavourites: true,
                             chargeRate: customerFavouritesChargeRateList[index],
                             isFavouriteSelected: true,
                             index: index,

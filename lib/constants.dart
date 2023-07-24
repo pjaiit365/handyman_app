@@ -350,6 +350,7 @@ List<String> supportSectionIcons = [
 ];
 
 List<String> customerFavouritesImageList = [];
+List<String> customerFavouritesIDList = [];
 List<String> customerFavouritesNameList = [];
 List<String> customerFavouritesChargeList = [];
 List<String> customerFavouritesChargeRateList = [];
@@ -357,6 +358,7 @@ List<String> customerFavouritesRatingList = [];
 List<String> customerFavouritesJobTypeList = [];
 //-----------------------------------------------------------
 List<String> handymanFavouritesImageList = [];
+List<String> handymanFavouritesIDList = [];
 List<String> handymanFavouritesNameList = [];
 List<String> handymanFavouritesChargeList = [];
 List<String> handymanFavouritesChargeRateList = [];
