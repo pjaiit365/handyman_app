@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/appointment_static_time.dart';
 import 'package:handyman_app/constants.dart';
@@ -61,13 +64,7 @@ class _BodyState extends State<Body> {
                                       )),
                                 );
                               }
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      BookingSuccessfulScreen(),
-                                ),
-                              );
+                            : scheduleJob();
                       },
                       child: Container(
                         height: 49 * screenHeight,
@@ -93,6 +90,101 @@ class _BodyState extends State<Body> {
         );
       },
     );
+  }
+
+  Future scheduleJob() async {
+    try {
+      final document = await FirebaseFirestore.instance
+          .collection('Job Application')
+          .where('Customer ID', isEqualTo: loggedInUserId)
+          .get();
+      if (document.docs.isNotEmpty) {
+        final docID = document.docs.single.id;
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Jobs Applied': [allJobItemList[0].jobID]
+        });
+      } else {
+        final document =
+            await FirebaseFirestore.instance.collection('Job Application').add({
+          'Jobs Applied': [allJobItemList[0].jobID],
+          'Jobs Upcoming': [],
+          'Jobs Completed': [],
+          'Job Offers': [],
+          'Customer ID': loggedInUserId,
+        });
+
+        final docID = document.id;
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({'Job Application ID': docID});
+      }
+
+      final docOffers = await FirebaseFirestore.instance
+          .collection('Job Application')
+          .where('Customer ID', isEqualTo: allJobItemList[0].jobID)
+          .get();
+
+      if (docOffers.docs.isNotEmpty) {
+        final docID = document.docs.single.id;
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Job Offers': [loggedInUserId]
+        });
+      } else {
+        final document =
+            await FirebaseFirestore.instance.collection('Job Application').add({
+          'Jobs Applied': [],
+          'Jobs Upcoming': [],
+          'Jobs Completed': [],
+          'Job Offers': [loggedInUserId],
+          'Customer ID': allJobItemList[0].jobID,
+        });
+
+        final docID = document.id;
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({'Job Application ID': docID});
+      }
+
+      final jobUploadDoc = await FirebaseFirestore.instance
+          .collection('Handyman Job Upload')
+          .where('Job ID', isEqualTo: allJobItemList[0].jobID)
+          .get();
+
+      if (jobUploadDoc.docs.isNotEmpty) {
+        final docID = jobUploadDoc.docs.single.id;
+
+        await FirebaseFirestore.instance
+            .collection('Handyman Job Upload')
+            .doc(docID)
+            .update({
+          'Job Details.Applier IDs': [loggedInUserId],
+          'Job Details.People Applied': 2,
+        });
+      } else {
+        print('Job upload update failed.');
+      }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookingSuccessfulScreen(),
+        ),
+      );
+    } on FirebaseException catch (err) {
+      print(err.toString());
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

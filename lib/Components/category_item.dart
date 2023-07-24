@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
-
-import '../Services/read_data.dart';
 import '../constants.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -37,19 +33,17 @@ class CategoryItem extends StatelessWidget {
           if (isFavourites == true) {
             int jobIndex =
                 handymanDashboardID.indexOf(customerFavouritesIDList[index]);
-            print(jobIndex);
             handymanSelectedIndex = jobIndex;
           } else {
             handymanSelectedIndex = index;
           }
-          typeClicked = 'Customer';
-
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => HandymanDetailsScreen(),
             ),
           );
+          typeClicked = 'Customer';
         },
         child: Container(
           height: 123 * screenHeight,

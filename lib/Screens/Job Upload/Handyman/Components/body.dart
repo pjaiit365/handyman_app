@@ -193,6 +193,10 @@ class _BodyState extends State<Body> {
         'Charge Rate': chargeRate,
         'Expertise': expertise,
       },
+      'Job Details': {
+        'People Applied': 0,
+        'Applier IDs': [],
+      },
       'Work Experience & Certification': {
         'Certification': certification,
         'Experience': experience,

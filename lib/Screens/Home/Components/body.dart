@@ -81,6 +81,8 @@ Future getCustomerCategoryData() async {
   final documents = await FirebaseFirestore.instance
       .collection('Handyman Job Upload')
       .where('Seen By', isEqualTo: 'All')
+      .where('Customer ID', isNotEqualTo: loggedInUserId)
+      .orderBy('Customer ID')
       .get();
 
   if (documents.docs.isNotEmpty) {
@@ -136,6 +138,8 @@ Future getHandymanCategoryData() async {
   final documents = await FirebaseFirestore.instance
       .collection('Customer Job Upload')
       .where('Seen By', isEqualTo: 'All')
+      .where('Customer ID', isNotEqualTo: loggedInUserId)
+      .orderBy('Customer ID')
       .get();
 
   if (documents.docs.isNotEmpty) {

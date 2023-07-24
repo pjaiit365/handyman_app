@@ -189,6 +189,7 @@ class _BodyState extends State<Body> {
       'Job Details': {
         'Job Status': jobStatus,
         'People Applied': peopleApplied,
+        'Applier IDs': [],
         'Deadline': deadline,
       },
       'Upload Date':

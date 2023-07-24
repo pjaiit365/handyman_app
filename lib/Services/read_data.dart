@@ -443,6 +443,8 @@ class ReadData {
     try {
       if (handymenJobsBookmarked.isNotEmpty) {
         for (var document in handymenJobsBookmarked) {
+          print(document);
+
           final querySnapshot = await FirebaseFirestore.instance
               .collection('Handyman Job Upload')
               .doc(document)
@@ -494,6 +496,7 @@ class ReadData {
     try {
       if (customerJobsBookmarked.isNotEmpty) {
         for (var document in customerJobsBookmarked) {
+          print(document);
           final querySnapshot = await FirebaseFirestore.instance
               .collection('Customer Job Upload')
               .doc(document)

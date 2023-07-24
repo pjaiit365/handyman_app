@@ -65,7 +65,7 @@ class _HandymanDetailsScreenState extends State<HandymanDetailsScreen> {
         leading: IconButton(
           highlightColor: tabLight,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           },
           icon: Padding(
             padding: EdgeInsets.only(left: screenWidth * 12.0),

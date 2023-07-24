@@ -37,19 +37,18 @@ class JobCategoryItem extends StatelessWidget {
           if (isFavourite == true) {
             int jobIndex =
                 jobDashboardID.indexOf(handymanFavouritesIDList[index]);
+
             jobSelectedIndex = jobIndex;
           } else {
             jobSelectedIndex = index;
           }
-
-          typeClicked = 'Handyman';
-
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => JobDetailsScreen(),
             ),
           );
+          typeClicked = 'Handyman';
         },
         child: Container(
           height: 123 * screenHeight,
