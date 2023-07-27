@@ -9,12 +9,13 @@ import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Forgot%20Password/forgot_password_screen.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Registration/registration_screen.dart';
+import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
+import 'package:handyman_app/wrapper.dart';
 import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
 import '../../../Models/users.dart';
-import '../../../Read Data/get_user_first_name.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -24,6 +25,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  ReadData readData = ReadData();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -36,17 +39,60 @@ class _BodyState extends State<Body> {
 
   Future signIn() async {
     try {
-      //user sign in with credentials
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      //display alert dialog box with loading indicator
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                (Platform.isIOS)
+                    ? const CupertinoActivityIndicator(
+                        radius: 20,
+                        color: Color(0xff32B5BD),
+                      )
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
+              ],
+            ),
+          );
+        },
       );
+      //user sign in with credentials
+      if (_emailController.text.trim() != 'admin@admin.com') {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      } else {
+        setState(() {
+          loginTextFieldError = true;
+        });
+        throw Exception();
+      }
 
       //obtaining current user's UID from firebase
       userId = FirebaseAuth.instance.currentUser!.uid;
       loggedInUserId = userId;
       //getting current user's data into in-app variable for easy access
       getUserData();
+      await readData.getCustomerJobApplicationData('Job Offers', 'Customer');
+      await readData.getCustomerJobApplicationData('Jobs Applied', 'Customer');
+      await readData.getCustomerJobApplicationData('Jobs Upcoming', 'Customer');
+      await readData.getCustomerJobApplicationData(
+          'Jobs Completed', 'Customer');
+      await readData.getHandymanJobApplicationData('Job Offers', 'Handyman');
+      await readData.getHandymanJobApplicationData('Jobs Applied', 'Handyman');
+      await readData.getHandymanJobApplicationData('Jobs Upcoming', 'Handyman');
+      await readData.getHandymanJobApplicationData(
+          'Jobs Completed', 'Handyman');
 
       final userData = await getUserData();
 
@@ -72,39 +118,12 @@ class _BodyState extends State<Body> {
         return;
       }
 
-      //display alert dialog box with loading indicator
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                (Platform.isIOS)
-                    ? const CupertinoActivityIndicator(
-                        radius: 20,
-                        color: Color(0xff32B5BD),
-                      )
-                    : const CircularProgressIndicator(
-                        color: Color(0xff32B5BD),
-                      ),
-              ],
-            ),
-          );
-        },
-      );
-
       //Delaying opening next route(screen) in order to load data needed on next screen
-      await Future.delayed(Duration(seconds: 3), () {
+      await Future.delayed(Duration(seconds: 1), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => Wrapper(),
           ),
         );
       });
@@ -113,40 +132,14 @@ class _BodyState extends State<Body> {
         loginTextFieldError = false;
       });
     } on FirebaseAuthException catch (e) {
-      //display alert dialog box with loading indicator
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                (Platform.isIOS)
-                    ? const CupertinoActivityIndicator(
-                        radius: 20,
-                        color: Color(0xff32B5BD),
-                      )
-                    : const CircularProgressIndicator(
-                        color: Color(0xff32B5BD),
-                      ),
-              ],
-            ),
-          );
-        },
-      ).timeout(
-        Duration(seconds: 1),
-      );
+      Navigator.pop(context);
+      if (e.code == 'wrong-password') {
+        setState(() {
+          loginTextFieldError = true;
+        });
+      }
 
-      setState(() {
-        loginTextFieldError = true;
-      });
-
-      print(e.message.toString());
+      print(e.code.toString());
 
       showDialog(
         context: context,
@@ -163,7 +156,32 @@ class _BodyState extends State<Body> {
             content: Text(
               '${e.message}\nTry again later.',
               style: TextStyle(
-                height: 1.3,
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
+    } catch (err) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Error'.toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${err.toString()} \nTry again later.',
+              style: TextStyle(
+                height: 1.4,
                 fontSize: 16,
                 color: black,
               ),

@@ -2,15 +2,17 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/Bookings/customer_bookings_screen.dart';
+import 'package:handyman_app/Screens/Chat/Sub%20Screen/chat.dart';
 import 'package:handyman_app/Screens/Favourites/Customer/customer_favourite_screen.dart';
 import 'package:handyman_app/Screens/Job%20Upload/Customer/customer_job_upload_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
+import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
+import '../../../../Services/read_data.dart';
 import '../../../../constants.dart';
 import '../../../Home/home_screen.dart';
 import '../../../Notifications/notification_screen.dart';
@@ -174,13 +176,13 @@ class CustomerDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Contact Us',
                     icon: Icons.call,
-                    screen: NotificationScreen(),
+                    screen: ChatMessaging(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(
                     title: 'Help/Support',
                     icon: Icons.help_rounded,
-                    screen: NotificationScreen(),
+                    screen: PaymentOptionsScreen(),
                   ),
                   SizedBox(height: 27 * screenHeight),
                   Center(

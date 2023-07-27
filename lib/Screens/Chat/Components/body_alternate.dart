@@ -173,7 +173,10 @@ class Body extends StatelessWidget {
             ),
           ],
         ),
-        TextfieldBar(),
+        TextfieldBar(
+          controller: TextEditingController(),
+          screen: () {},
+        ),
       ],
     );
   }

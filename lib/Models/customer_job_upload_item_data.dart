@@ -17,6 +17,10 @@ class CustomerJobUploadItemData {
   final bool portfolioOption;
   final bool referenceOption;
   final String jobUploadId;
+  String? uploadDate;
+  String? name;
+  String? uploadTime;
+  String? pic;
   CustomerJobUploadItemData({
     this.expertise,
     this.portfolio,
@@ -36,5 +40,9 @@ class CustomerJobUploadItemData {
     required this.street,
     required this.portfolioOption,
     required this.referenceOption,
+    this.uploadDate,
+    this.uploadTime,
+    this.name,
+    this.pic,
   });
 }

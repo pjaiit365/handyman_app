@@ -1,10 +1,19 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
 class ReceivedMessage extends StatelessWidget {
+  final String pic;
+  final String message;
+  final String timeStamp;
   const ReceivedMessage({
     Key? key,
+    required this.message,
+    required this.pic,
+    required this.timeStamp,
   }) : super(key: key);
 
   @override
@@ -21,17 +30,27 @@ class ReceivedMessage extends StatelessWidget {
               height: 36,
               width: 36,
               decoration: BoxDecoration(
+                border: pic == '' ? Border.all(color: sectionColor) : null,
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                    image: AssetImage('assets/images/profile_pic.jpeg'),
-                    fit: BoxFit.fill),
+                image:
+                    DecorationImage(image: NetworkImage(pic), fit: BoxFit.fill),
               ),
+              child: pic == ''
+                  ? Center(
+                      child: Icon(
+                        Icons.person,
+                        color: sectionColor,
+                      ),
+                    )
+                  : null,
             ),
             Padding(
               padding: EdgeInsets.only(
                   top: screenHeight * 10.0, left: 13 * screenWidth),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 280 * screenWidth),
+                constraints: BoxConstraints(
+                  maxWidth: 280 * screenWidth,
+                ),
                 child: Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: 12 * screenWidth,
@@ -51,7 +70,7 @@ class ReceivedMessage extends StatelessWidget {
                     children: <Widget>[
                       Flexible(
                         child: Text(
-                          'Reminder! Complete your task by the 15th. Please make sure to lock the door. Thank you',
+                          message,
                           overflow: TextOverflow.visible,
                           softWrap: true,
                           textHeightBehavior: TextHeightBehavior(
@@ -78,7 +97,7 @@ class ReceivedMessage extends StatelessWidget {
               bottom: 10 * screenHeight,
               top: 8 * screenHeight),
           child: Text(
-            '12:00 AM',
+            timeStamp,
             style: TextStyle(
                 color: chatTimeColor,
                 fontSize: 14,

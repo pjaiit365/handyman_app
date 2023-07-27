@@ -3,8 +3,20 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class AppointmentJobDetails extends StatelessWidget {
+  final String jobType;
+  final String date;
+  final String houseNum;
+  final String street;
+  final String town;
+  final String region;
   const AppointmentJobDetails({
     Key? key,
+    required this.jobType,
+    required this.date,
+    required this.houseNum,
+    required this.street,
+    required this.town,
+    required this.region,
   }) : super(key: key);
 
   @override
@@ -66,7 +78,7 @@ class AppointmentJobDetails extends StatelessWidget {
             ),
             SizedBox(height: 4 * screenHeight),
             Text(
-              'Plumbing',
+              jobType,
               style: TextStyle(
                 color: black,
                 fontSize: 16,
@@ -84,7 +96,7 @@ class AppointmentJobDetails extends StatelessWidget {
             ),
             SizedBox(height: 4 * screenHeight),
             Text(
-              '22-05-2023',
+              date,
               style: TextStyle(
                 color: black,
                 fontSize: 16,
@@ -102,16 +114,8 @@ class AppointmentJobDetails extends StatelessWidget {
             ),
             SizedBox(height: 4 * screenHeight),
             Text(
-              'M9A'.toUpperCase() +
-                  ', ' +
-                  'LOWER SADELMI'.toUpperCase() +
-                  ',\n'
-                          'Akosombo'
-                      .toUpperCase() +
-                  ',\n' +
-                  'E/R'.toUpperCase() +
-                  ', ' +
-                  'Ghana'.toUpperCase(),
+              '${houseNum.toUpperCase()}, ${street.toUpperCase()}${',\n'
+                  '$town'.toUpperCase()},\n${region.toUpperCase()}, ${'Ghana'.toUpperCase()}',
               style: TextStyle(
                 color: black,
                 fontSize: 16,

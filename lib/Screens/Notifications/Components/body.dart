@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Components/search_bar_item.dart';
 import '../../../Components/earlier_notifications.dart';
 import '../../../Components/new_notifications.dart';
 import '../../../constants.dart';
@@ -21,7 +22,7 @@ class Body extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(left: screenWidth * 6.0),
-              child: SearchBar(hintText: 'Search activity...'),
+              child: SearchBarItem(hintText: 'Search activity...'),
             ),
             SizedBox(height: 37 * screenHeight),
             NewNotifications(),

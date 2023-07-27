@@ -41,6 +41,27 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
+  void popDialog() {
+    Navigator.pop(
+      context,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'One or more required fields has an error. Check them again.',
+                style: TextStyle(height: 1.3),
+                textAlign: TextAlign.center,
+              ),
+            )),
+      ),
+    );
+  }
+
   void _showSummaryDialog() {
     showDialog(
       context: context,
@@ -64,25 +85,7 @@ class _BodyState extends State<Body> {
                               apppointmentTown == '' ||
                               apppointmentHouseNum == '' ||
                               apppointmentStreet == '')
-                          ? () {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    duration: Duration(seconds: 2),
-                                    backgroundColor: Colors.black45,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    content: Center(
-                                      child: Text(
-                                        'One or more required fields has an error. Check them again.',
-                                        style: TextStyle(height: 1.3),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    )),
-                              );
-                            }
+                          ? popDialog
                           : applyJob,
                       child: Container(
                         height: 49 * screenHeight,
@@ -122,12 +125,16 @@ class _BodyState extends State<Body> {
             .collection('Job Application')
             .doc(docID)
             .update({
-          'Jobs Applied': [allJobItemList[0].jobID]
+          'Jobs Applied': {
+            'Handyman': [allJobItemList[0].jobID]
+          }
         });
       } else {
         final document =
             await FirebaseFirestore.instance.collection('Job Application').add({
-          'Jobs Applied': [allJobItemList[0].jobID],
+          'Jobs Applied': {
+            'Handyman': [allJobItemList[0].jobID]
+          },
           'Jobs Upcoming': [],
           'Jobs Completed': [],
           'Job Offers': [],
@@ -142,18 +149,27 @@ class _BodyState extends State<Body> {
             .update({'Job Application ID': docID});
       }
 
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Customer Job Upload')
+          .where('Job ID', isEqualTo: allJobItemList[0].jobID)
+          .get();
+
+      final customerID = querySnapshot.docs.single.get('Customer ID');
+
       final docOffers = await FirebaseFirestore.instance
           .collection('Job Application')
-          .where('Customer ID', isEqualTo: allJobItemList[0].jobID)
+          .where('Customer ID', isEqualTo: customerID)
           .get();
 
       if (docOffers.docs.isNotEmpty) {
-        final docID = document.docs.single.id;
+        final docID = docOffers.docs.single.id;
         await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
             .update({
-          'Job Offers': [loggedInUserId]
+          'Job Offers': {
+            'Customer': [allJobItemList[0].jobID]
+          },
         });
       } else {
         final document =
@@ -161,8 +177,10 @@ class _BodyState extends State<Body> {
           'Jobs Applied': [],
           'Jobs Upcoming': [],
           'Jobs Completed': [],
-          'Job Offers': [loggedInUserId],
-          'Customer ID': allJobItemList[0].jobID,
+          'Job Offers': {
+            'Customer': [allJobItemList[0].jobID]
+          },
+          'Customer ID': customerID,
         });
 
         final docID = document.id;

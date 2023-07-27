@@ -3,7 +3,6 @@ import 'package:handyman_app/Components/schedule_day_tab.dart';
 import 'package:handyman_app/Components/schedule_time_tab.dart';
 import 'package:handyman_app/Components/summary_element.dart';
 
-import '../Read Data/get_user_first_name.dart';
 import '../Services/read_data.dart';
 import '../constants.dart';
 

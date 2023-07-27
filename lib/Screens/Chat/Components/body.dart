@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -33,12 +34,22 @@ class Body extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 13 * screenHeight),
-              ReceivedMessage(),
-              SentMessage(),
+              ReceivedMessage(
+                pic: '',
+                timeStamp: '',
+                message: '',
+              ),
+              SentMessage(
+                message: '',
+                timeStamp: '',
+              ),
             ],
           ),
         ),
-        TextfieldBar(),
+        TextfieldBar(
+          controller: TextEditingController(),
+          screen: () {},
+        ),
       ],
     );
   }

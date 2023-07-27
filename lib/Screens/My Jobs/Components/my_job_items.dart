@@ -4,6 +4,7 @@ import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobOffer/job_offer_scr
 import '../../../constants.dart';
 
 class MyJobItems extends StatelessWidget {
+  final int index;
   final Widget screen;
   final String name;
   final String imageLocation;
@@ -20,6 +21,7 @@ class MyJobItems extends StatelessWidget {
     required this.time,
     required this.orderStatus,
     required this.screen,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class MyJobItems extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
+          selectedJob = index;
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -44,7 +47,7 @@ class MyJobItems extends StatelessWidget {
             left: 20 * screenWidth,
             top: 16 * screenHeight,
             bottom: 17 * screenHeight,
-            right: 10 * screenWidth,
+            right: 20 * screenWidth,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,11 +57,21 @@ class MyJobItems extends StatelessWidget {
                 height: 58 * screenHeight,
                 width: 55.26 * screenWidth,
                 decoration: BoxDecoration(
+                    color: white,
                     borderRadius: BorderRadius.circular(6.3),
+                    border: Border.all(color: appointmentTimeColor, width: 1),
                     image: DecorationImage(
-                      image: AssetImage(imageLocation),
-                      fit: BoxFit.fill,
+                      image: NetworkImage(imageLocation),
+                      fit: BoxFit.cover,
                     )),
+                child: imageLocation == ''
+                    ? Center(
+                        child: Icon(
+                          Icons.person,
+                          color: grey,
+                        ),
+                      )
+                    : null,
               ),
               SizedBox(width: 17.74 * screenWidth),
               Padding(
@@ -68,7 +81,7 @@ class MyJobItems extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      width: 120 * screenWidth,
+                      width: 140 * screenWidth,
                       child: Text(
                         name,
                         style: TextStyle(
@@ -82,7 +95,7 @@ class MyJobItems extends StatelessWidget {
                     ),
                     SizedBox(height: 3 * screenHeight),
                     SizedBox(
-                      width: 120 * screenWidth,
+                      width: 140 * screenWidth,
                       child: Text(
                         serviceCat,
                         style: TextStyle(
@@ -106,25 +119,30 @@ class MyJobItems extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      width: 120 * screenWidth,
+                      width: 110 * screenWidth,
                       child: Text(
-                        date + '||' + time,
+                        '$date || $time',
                         style: TextStyle(
                           color: black,
                           fontSize: 12,
                           fontWeight: FontWeight.w200,
                         ),
+                        textAlign: TextAlign.right,
                         overflow: TextOverflow.fade,
                         softWrap: false,
                       ),
                     ),
                     SizedBox(height: 8 * screenHeight),
-                    Text(
-                      orderStatus,
-                      style: TextStyle(
-                        color: primary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    SizedBox(
+                      width: 110 * screenWidth,
+                      child: Text(
+                        orderStatus,
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.right,
                       ),
                     ),
                   ],

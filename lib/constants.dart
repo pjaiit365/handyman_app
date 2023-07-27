@@ -130,6 +130,7 @@ final expertiseList = [
 List selectedExpertiseList = [];
 
 final momoListOptions = [
+  'N/A',
   'MTN Mobile Money',
   'Vodafone Cash',
   'Airtel/Tigo Money',
@@ -205,6 +206,8 @@ late String roleSelected = 'Regular Customer';
 bool isJobUpcomingClicked = true;
 bool isJobOffersClicked = false;
 bool isJobCompletedClicked = false;
+
+int selectedJob = 3;
 
 final upcomingOrderStatusList = [
   'View Order',

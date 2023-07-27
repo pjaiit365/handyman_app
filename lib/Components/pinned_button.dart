@@ -4,6 +4,7 @@ import 'package:handyman_app/Screens/Successful/Booking%20Successful/booking_suc
 import '../constants.dart';
 
 class PinnedButton extends StatelessWidget {
+  Function? function;
   IconData icon;
   Widget screen;
   String buttonText;
@@ -14,6 +15,7 @@ class PinnedButton extends StatelessWidget {
     this.buttonText = 'Proceed',
     this.isIconPresent = false,
     this.screen = const BookingSuccessfulScreen(),
+    this.function,
   }) : super(key: key);
 
   @override
@@ -22,11 +24,12 @@ class PinnedButton extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => screen,
-              ));
+          function!();
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => screen,
+          //     ));
         },
         child: Container(
           height: 56 * screenHeight,

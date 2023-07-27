@@ -8,6 +8,17 @@ import 'appointment_job_details.dart';
 import 'appointment_job_status.dart';
 
 class JobDetailsAndStatus extends StatelessWidget {
+  final String name;
+  final String charge;
+  final String chargeRate;
+  final String imageLocation;
+  final String jobType;
+  final String date;
+  final String houseNum;
+  final String street;
+  final String town;
+  final String region;
+
   bool isJobPendingActive;
   bool isJobInProgressActive;
   bool isJobCompletedAcitve;
@@ -15,6 +26,7 @@ class JobDetailsAndStatus extends StatelessWidget {
   String statusText;
   bool isJobOfferScreen;
   bool isJobInProgessScreen;
+  bool isJobAppliedScreen;
   String buttonText;
   JobDetailsAndStatus({
     Key? key,
@@ -24,8 +36,19 @@ class JobDetailsAndStatus extends StatelessWidget {
     this.isJobInProgessScreen = false,
     this.isJobPendingActive = false,
     this.isJobCompletedAcitve = false,
+    this.isJobAppliedScreen = false,
     this.isJobInProgressActive = false,
     required this.screen,
+    required this.name,
+    required this.charge,
+    required this.chargeRate,
+    required this.imageLocation,
+    required this.jobType,
+    required this.date,
+    required this.houseNum,
+    required this.street,
+    required this.town,
+    required this.region,
   }) : super(key: key);
 
   @override
@@ -51,11 +74,21 @@ class JobDetailsAndStatus extends StatelessWidget {
                   width: 87.65 * screenWidth,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    border: imageLocation == ''
+                        ? Border.all(color: sectionColor, width: 1)
+                        : null,
                     image: DecorationImage(
-                      image: AssetImage('assets/images/profile_pic.jpeg'),
-                      fit: BoxFit.fill,
+                      image: NetworkImage(imageLocation),
+                      fit: BoxFit.cover,
                     ),
                   ),
+                  child: imageLocation == ''
+                      ? Center(
+                          child: Icon(
+                          Icons.person,
+                          color: sectionColor,
+                        ))
+                      : null,
                 ),
                 SizedBox(width: 19.35 * screenWidth),
                 Column(
@@ -69,21 +102,26 @@ class JobDetailsAndStatus extends StatelessWidget {
                         constraints: BoxConstraints(
                             minHeight: 40 * screenHeight,
                             maxHeight: 170 * screenHeight),
-                        child: Text(
-                          'Harry Garret',
-                          style: TextStyle(
-                            color: black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+                        child: Container(
+                          constraints: BoxConstraints(
+                              minWidth: 5 * screenWidth,
+                              maxWidth: 180 * screenWidth),
+                          child: Text(
+                            name,
+                            style: TextStyle(
+                              color: black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            overflow: TextOverflow.visible,
+                            softWrap: true,
                           ),
-                          overflow: TextOverflow.visible,
-                          softWrap: true,
                         ),
                       ),
                     ),
                     // SizedBox(height: 17 * screenHeight),
                     Text(
-                      '\$' + '15/hr',
+                      '\$ $charge/$chargeRate',
                       style: TextStyle(
                         color: black,
                         fontSize: 27.64,
@@ -103,8 +141,16 @@ class JobDetailsAndStatus extends StatelessWidget {
             ),
           ),
           SizedBox(height: 19 * screenHeight),
-          AppointmentJobDetails(),
+          AppointmentJobDetails(
+            jobType: jobType,
+            date: date,
+            houseNum: houseNum,
+            street: street,
+            town: town,
+            region: region,
+          ),
           isJobOfferScreen ? SizedBox(height: 28 * screenHeight) : SizedBox(),
+          isJobAppliedScreen ? SizedBox(height: 28 * screenHeight) : SizedBox(),
           isJobInProgessScreen
               ? SizedBox(height: 28 * screenHeight)
               : SizedBox(),
@@ -200,6 +246,48 @@ class JobDetailsAndStatus extends StatelessWidget {
                             SizedBox(width: 9 * screenWidth),
                             Text(
                               buttonText,
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox(),
+          isJobAppliedScreen
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyJobsScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 44 * screenHeight,
+                        width: 365 * screenWidth,
+                        decoration: BoxDecoration(
+                          color: Color(0xffFF1600),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Image.asset('assets/icons/cancel.png'),
+                            SizedBox(width: 9 * screenWidth),
+                            Text(
+                              'Cancel',
                               style: TextStyle(
                                 color: white,
                                 fontSize: 15,

@@ -18,9 +18,10 @@ class Body extends StatelessWidget {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: JobDetailsAndStatus(
+        isJobAppliedScreen: true,
+        buttonText: 'Edit',
         isJobPendingActive: true,
         screen: JobUpcomingScreen(),
-        isJobOfferScreen: true,
         imageLocation: allJobApplied[selectedJob].pic,
         name: allJobApplied[selectedJob].name,
         region: allJobApplied[selectedJob].region,

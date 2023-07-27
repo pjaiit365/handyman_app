@@ -3,6 +3,8 @@ import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_scre
 
 import '../../../../../Components/job_details_and_status.dart';
 import '../../../../../Components/pinned_button.dart';
+import '../../../../../Services/read_data.dart';
+import '../../../../../constants.dart';
 import '../../JobInProgress/job_in_progress_screen.dart';
 
 class Body extends StatelessWidget {
@@ -26,6 +28,16 @@ class Body extends StatelessWidget {
                 screen: JobInProgressScreen(),
                 isJobOfferScreen: false,
                 statusText: 'Job Accepted',
+                imageLocation: allJobCompleted[selectedJob].pic,
+                name: allJobCompleted[selectedJob].name,
+                region: allJobCompleted[selectedJob].region,
+                chargeRate: allJobCompleted[selectedJob].chargeRate,
+                charge: allJobCompleted[selectedJob].charge,
+                street: allJobCompleted[selectedJob].street,
+                town: allJobCompleted[selectedJob].town,
+                houseNum: allJobCompleted[selectedJob].houseNum,
+                jobType: allJobCompleted[selectedJob].serviceProvided,
+                date: allJobCompleted[selectedJob].date,
               );
             },
           ),

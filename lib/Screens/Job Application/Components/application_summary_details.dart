@@ -7,7 +7,6 @@ import 'package:handyman_app/Screens/Job%20Application/Components/application_po
 import 'package:handyman_app/Screens/Job%20Application/Components/appointment_charge_details.dart';
 
 import '../../../Components/summary_element.dart';
-import '../../../Read Data/get_user_first_name.dart';
 import '../../../Services/read_data.dart';
 import '../../../constants.dart';
 

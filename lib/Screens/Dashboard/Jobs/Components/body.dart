@@ -29,6 +29,7 @@ Future selectedHandymanCategoryData(String categoryName) async {
   final documents = await FirebaseFirestore.instance
       .collection('Customer Job Upload')
       .where('Service Information.Service Category', isEqualTo: categoryName)
+      .where('Customer ID', isNotEqualTo: loggedInUserId)
       .get();
 
   if (documents.docs.isNotEmpty) {

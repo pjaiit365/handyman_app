@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +14,7 @@ import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
 import '../../../Models/users.dart';
-import '../../../Read Data/get_user_first_name.dart';
+import '../../../Services/read_data.dart';
 import '../../../constants.dart';
 
 class Body extends StatefulWidget {
@@ -46,6 +45,32 @@ class _BodyState extends State<Body> {
 
   Future<void> signUp() async {
     try {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                (Platform.isIOS)
+                    ? const CupertinoActivityIndicator(
+                        radius: 20,
+                        color: Color(0xff32B5BD),
+                      )
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
+              ],
+            ),
+          );
+        },
+      );
+
       if (confirmPassword() &&
           firstName() &&
           lastName() &&
@@ -108,33 +133,7 @@ class _BodyState extends State<Body> {
           return;
         }
 
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  (Platform.isIOS)
-                      ? const CupertinoActivityIndicator(
-                          radius: 20,
-                          color: Color(0xff32B5BD),
-                        )
-                      : const CircularProgressIndicator(
-                          color: Color(0xff32B5BD),
-                        ),
-                ],
-              ),
-            );
-          },
-        );
-
-        await Future.delayed(Duration(seconds: 3), () {
+        await Future.delayed(Duration(seconds: 1), () {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -145,8 +144,59 @@ class _BodyState extends State<Body> {
           );
         });
       }
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+
+      print(e.code.toString());
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                e.code.toString().toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${e.message}\nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
+    } catch (err) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Error'.toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${err.toString()} \nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 

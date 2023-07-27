@@ -1,33 +1,149 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:handyman_app/Models/bookmark.dart';
 import 'package:handyman_app/Models/customer_job_upload_item_data.dart';
 import 'package:handyman_app/Models/job_item_data.dart';
+import 'package:handyman_app/Screens/Chat/Sub%20Screen/chat_page.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
 import 'package:handyman_app/Screens/Job%20Upload/Sub%20Screen/Customer/customer_job_upload_list.dart';
 import 'package:handyman_app/Screens/Job%20Upload/Sub%20Screen/Handyman/Components/body.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../Components/job_upload_optionals_info.dart';
 import '../Models/customer_category_data.dart';
 import '../Models/handyman_category_data.dart';
 import '../Models/handyman_job_upload_item_data.dart';
+import '../Models/users.dart';
 import '../Screens/Job Upload/Sub Screen/Customer/Components/body.dart';
 import '../constants.dart';
 
 List<dynamic> allJobItemList = [];
 List<dynamic> jobUploadItemData = [];
+List<dynamic> allJobUpcoming = [];
+List jobCustomerUpcomingIDs = [];
+List jobHandymanUpcomingIDs = [];
+List<dynamic> allJobApplied = [];
+List jobCustomerAppliedIDs = [];
+List jobHandymanAppliedIDs = [];
+List<dynamic> allJobCompleted = [];
+List jobHandymanCompletedIDs = [];
+List jobCustomerCompletedIDs = [];
+List<dynamic> allJobOffers = [];
+List jobCustomerOffersIDs = [];
+List jobHandymanOffersIDs = [];
+List allUsers = [];
+List allProfile = [];
+
 late CustomerJobUploadItemData jobUploadData;
 late HandymanJobUploadItemData handymanJobUploadData;
 String appointmentChargeRate = '';
 
 class ReadData {
+  Future getPhoneNumber(
+      String type, BuildContext context, bool phoneNumber) async {
+    if (phoneNumber) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                (Platform.isIOS)
+                    ? const CupertinoActivityIndicator(
+                        radius: 20,
+                        color: Color(0xff32B5BD),
+                      )
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
+    late final document;
+    if (type == 'Customer') {
+      document = await FirebaseFirestore.instance
+          .collection('Handyman Job Upload')
+          .doc(handymanDashboardID[handymanSelectedIndex])
+          .get();
+    } else {
+      document = await FirebaseFirestore.instance
+          .collection('Customer Job Upload')
+          .doc(jobDashboardID[jobSelectedIndex])
+          .get();
+    }
+
+    final userID = document.get('Customer ID');
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('User ID', isEqualTo: userID)
+        .get();
+    if (phoneNumber) {
+      final number = querySnapshot.docs.single.get('Mobile Number');
+
+      final phoneNumber = 'tel: +233$number';
+
+      if (await canLaunchUrlString(phoneNumber)) {
+        launchUrlString(phoneNumber);
+      }
+      Navigator.pop(context);
+    } else {
+      final firstName = querySnapshot.docs.single.get('First Name');
+      final lastName = querySnapshot.docs.single.get('Last Name');
+      final name = '$firstName $lastName';
+      final id = querySnapshot.docs.single.get('User ID');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatPage(userName: name, receiverUserID: id),
+        ),
+      );
+    }
+  }
+
+  Future getFirstName() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('User ID', isEqualTo: loggedInUserId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final userData = querySnapshot.docs.first.data();
+      final user = UserData(
+        userId: userData['User ID'],
+        firstName: userData['First Name'],
+        lastName: userData['Last Name'],
+        number: userData['Mobile Number'],
+        email: userData['Email Address'],
+        role: userData['Role'],
+      );
+      allUsers.add(user);
+    } else {
+      return 'User Not Found';
+    }
+  }
+
   Future getHandymanJobItemData(String jobId) async {
     allJobItemList.clear();
 
@@ -191,21 +307,21 @@ class ReadData {
         final documentData = querySnapshot.data()!;
 
         //TODO: MODIFY SUCH THAT IT DISPLAYS HOW MANY DAYS MORE TILL JOB BECOMES INVALID
-        // final expiry = documentData['Job Details']['Deadline'];
-        // final day = expiry[0].toString() + expiry[1].toString();
-        // final month = expiry[3].toString() + expiry[4].toString();
-        // final year = expiry[6].toString() +
-        //     expiry[7].toString() +
-        //     expiry[8].toString() +
-        //     expiry[9].toString();
+        final expiry = documentData['Deadline'];
+        final day = expiry[0].toString() + expiry[1].toString();
+        final month = expiry[3].toString() + expiry[4].toString();
+        final year = expiry[6].toString() +
+            expiry[7].toString() +
+            expiry[8].toString() +
+            expiry[9].toString();
         handymanJobUploadData = HandymanJobUploadItemData(
           jobUploadId: documentData['Job ID'],
           serviceProvided: documentData['Service Information']
               ['Service Provided'],
           seenBy: documentData['Seen By'],
-          // deadlineDay: day,
-          // deadlineMonth: month,
-          // deadlineYear: year,
+          deadlineDay: day,
+          deadlineMonth: month,
+          deadlineYear: year,
           serviceCat: documentData['Service Information']['Service Category'],
           charge: documentData['Service Information']['Charge'].toString(),
           chargeRate: documentData['Service Information']['Charge Rate'],
@@ -214,7 +330,6 @@ class ReadData {
           region: documentData['Address Information']['Region'],
           town: documentData['Address Information']['Town'],
           street: documentData['Address Information']['Street'],
-
           expertise: documentData['Service Information']['Expertise'],
           portfolio: documentData['Work Experience & Certification']
               ['Portfolio'],
@@ -227,9 +342,9 @@ class ReadData {
         );
 
         seenByHintText = handymanJobUploadData.seenBy;
-        // deadlineDay = handymanJobUploadData.deadlineDay;
-        // deadlineMonth = handymanJobUploadData.deadlineMonth;
-        // deadlineYear = handymanJobUploadData.deadlineYear;
+        deadlineDay = handymanJobUploadData.deadlineDay;
+        deadlineMonth = handymanJobUploadData.deadlineMonth;
+        deadlineYear = handymanJobUploadData.deadlineYear;
         serviceCatHintText = handymanJobUploadData.serviceCat;
         serviceProvHintText = handymanJobUploadData.serviceProvided;
         charge.text = handymanJobUploadData.charge.toString();
@@ -534,6 +649,198 @@ class ReadData {
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future getHandymanJobApplicationData(String tabName, String role) async {
+    allJobUpcoming.clear();
+    jobCustomerUpcomingIDs.clear();
+    allJobApplied.clear();
+    jobCustomerAppliedIDs.clear();
+    allJobCompleted.clear();
+    jobCustomerCompletedIDs.clear();
+    allJobOffers.clear();
+    jobCustomerOffersIDs.clear();
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Job Application')
+        .where('Customer ID', isEqualTo: loggedInUserId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      try {
+        final docID = querySnapshot.docs.single.id;
+
+        final document = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .get();
+        final docData = document.data()!;
+        List<dynamic> documentIDs = docData[tabName][role];
+
+        if (documentIDs.isNotEmpty) {
+          for (var id in documentIDs) {
+            final document = await FirebaseFirestore.instance
+                .collection('Customer Job Upload')
+                .doc(id)
+                .get();
+
+            final documentData = document.data()!;
+            final expiry = documentData['Job Details']['Deadline'];
+            String day = expiry[0].toString() + expiry[1].toString();
+            String month = expiry[3].toString() + expiry[4].toString();
+            String year = expiry[6].toString() +
+                expiry[7].toString() +
+                expiry[8].toString() +
+                expiry[9].toString();
+            final jobData = CustomerJobUploadItemData(
+                uploadDate: documentData['Upload Date'],
+                name: documentData['Name'],
+                pic: documentData['User Pic'] == ''
+                    ? ''
+                    : documentData['User Pic'],
+                uploadTime: documentData['Upload Time'],
+                jobUploadId: documentData['Job ID'],
+                serviceProvided: documentData['Service Information']
+                    ['Service Provided'],
+                seenBy: documentData['Seen By'],
+                deadlineDay: day,
+                deadlineMonth: month,
+                deadlineYear: year,
+                serviceCat: documentData['Service Information']
+                    ['Service Category'],
+                charge:
+                    documentData['Service Information']['Charge'].toString(),
+                chargeRate: documentData['Service Information']['Charge Rate'],
+                rating: documentData['Work Detail & Rating']['Rating'],
+                houseNum: documentData['Address Information']['House Number'],
+                region: documentData['Address Information']['Region'],
+                town: documentData['Address Information']['Town'],
+                street: documentData['Address Information']['Street'],
+                portfolioOption: documentData['Optional']['Portfolio Present'],
+                referenceOption: documentData['Optional']['References Present'],
+                expertise: documentData['Service Information']['Expertise'],
+                portfolio: documentData['Work Detail & Rating']['Portfolio']);
+
+            if (tabName == 'Jobs Applied') {
+              allJobApplied.add(jobData);
+              jobCustomerAppliedIDs.add(jobData.jobUploadId);
+            } else if (tabName == 'Jobs Upcoming') {
+              allJobUpcoming.add(jobData);
+              jobCustomerUpcomingIDs.add(jobData.jobUploadId);
+            } else if (tabName == 'Job Offers') {
+              allJobOffers.add(jobData);
+              jobCustomerOffersIDs.add(jobData.jobUploadId);
+            } else {
+              allJobCompleted.add(jobData);
+              jobCustomerCompletedIDs.add(jobData.jobUploadId);
+            }
+          }
+        } else {
+          print('object');
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+  }
+
+  Future getCustomerJobApplicationData(String tabName, String role) async {
+    allJobUpcoming.clear();
+    jobHandymanUpcomingIDs.clear();
+    allJobApplied.clear();
+    jobHandymanAppliedIDs.clear();
+    allJobCompleted.clear();
+    jobHandymanCompletedIDs.clear();
+    allJobOffers.clear();
+    jobHandymanOffersIDs.clear();
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Job Application')
+        .where('Customer ID', isEqualTo: loggedInUserId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      try {
+        final docID = querySnapshot.docs.single.id;
+
+        final document = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .get();
+        final docData = document.data()!;
+        List<dynamic> documentIDs = docData[tabName][role];
+
+        if (documentIDs.isNotEmpty) {
+          for (var id in documentIDs) {
+            final document = await FirebaseFirestore.instance
+                .collection('Handyman Job Upload')
+                .doc(id)
+                .get();
+
+            final documentData = document.data()!;
+            String expiry = documentData['Deadline'];
+            String day = expiry[0].toString() + expiry[1].toString();
+            String month = expiry[3].toString() + expiry[4].toString();
+            String year = expiry[6].toString() +
+                expiry[7].toString() +
+                expiry[8].toString() +
+                expiry[9].toString();
+            final jobData = HandymanJobUploadItemData(
+              uploadDate: documentData['Upload Date'],
+              name: documentData['Name'],
+              pic: documentData['User Pic'] == ''
+                  ? ''
+                  : documentData['User Pic'],
+              uploadTime: documentData['Upload Time'],
+              jobUploadId: documentData['Job ID'],
+              serviceProvided: documentData['Service Information']
+                  ['Service Provided'],
+              seenBy: documentData['Seen By'],
+              deadlineDay: day,
+              deadlineMonth: month,
+              deadlineYear: year,
+              serviceCat: documentData['Service Information']
+                  ['Service Category'],
+              charge: documentData['Service Information']['Charge'].toString(),
+              chargeRate: documentData['Service Information']['Charge Rate'],
+              rating: documentData['Work Experience & Certification']['Rating'],
+              houseNum: documentData['Address Information']['House Number'],
+              region: documentData['Address Information']['Region'],
+              town: documentData['Address Information']['Town'],
+              street: documentData['Address Information']['Street'],
+              expertise: documentData['Service Information']['Expertise'],
+              portfolio: documentData['Work Experience & Certification']
+                  ['Portfolio'],
+              references: documentData['Work Experience & Certification']
+                  ['References'],
+              experience: documentData['Work Experience & Certification']
+                  ['Experience'],
+              certification: documentData['Work Experience & Certification']
+                  ['Certification'],
+            );
+
+            if (tabName == 'Jobs Applied') {
+              allJobApplied.add(jobData);
+              jobHandymanAppliedIDs.add(jobData.jobUploadId);
+            } else if (tabName == 'Jobs Upcoming') {
+              allJobUpcoming.add(jobData);
+              jobHandymanUpcomingIDs.add(jobData.jobUploadId);
+            } else if (tabName == 'Job Offers') {
+              allJobOffers.add(jobData);
+              jobHandymanOffersIDs.add(jobData.jobUploadId);
+            } else {
+              allJobCompleted.add(jobData);
+              jobHandymanCompletedIDs.add(jobData.jobUploadId);
+            }
+            print(jobData.jobUploadId);
+          }
+        } else {
+          print('object');
+        }
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
 

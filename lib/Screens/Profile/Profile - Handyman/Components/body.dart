@@ -11,7 +11,7 @@ import '../../../../Components/profile_payment_information.dart';
 import '../../../../Components/profile_personal_information.dart';
 import '../../../../Components/profile_work_cert_information.dart';
 import '../../../../Models/profile.dart';
-import '../../../../Read Data/get_user_first_name.dart';
+import '../../../../Services/read_data.dart';
 import '../../../../Services/storage_service.dart';
 
 class Body extends StatefulWidget {

@@ -34,6 +34,7 @@ Future selectedCategoryData(String categoryName) async {
   final documents = await FirebaseFirestore.instance
       .collection('Handyman Job Upload')
       .where('Service Information.Service Category', isEqualTo: categoryName)
+      .where('Customer ID', isNotEqualTo: loggedInUserId)
       .get();
 
   if (documents.docs.isNotEmpty) {
@@ -176,7 +177,6 @@ class _BodyState extends State<Body> {
                           );
                   }
                   return SizedBox();
-                  // return CircularProgressIndicator();
                 }),
           ],
         ),
