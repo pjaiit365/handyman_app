@@ -18,8 +18,38 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    PaystackPlugin().initialize(
+        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    final result = PaystackPlugin().sdkInitialized;
+    print(result);
+    super.initState();
+  }
 
   // This widget is the root of HomeCareX Mobile Application
   @override

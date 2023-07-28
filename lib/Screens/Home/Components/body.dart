@@ -367,6 +367,9 @@ class _BodyState extends State<Body> {
                   : CircularProgressIndicator(color: primary),
             );
           }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error:${snapshot.error}'));
+          }
           return Center(
             child: Platform.isIOS
                 ? CupertinoActivityIndicator(color: primary)
