@@ -65,7 +65,7 @@ class _JobBookingsTabState extends State<JobBookingsTab> {
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
-                  'Applied',
+                  '0 & A',
                   style: isJobOffersClicked
                       ? TextStyle(
                           color: primary,

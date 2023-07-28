@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -26,15 +28,18 @@ class _BodyState extends State<Body> {
 
   Future allData() async {
     if (isJobOffersClicked == true) {
-      await readData.getCustomerJobApplicationData('Job Offers', 'Handyman');
-      await readData.getHandymanJobApplicationData('Jobs Applied', 'Handyman');
+      await readData.getCustomerJobApplicationData(
+          'Job Offers', 'Handyman', context);
+      await readData.getHandymanJobApplicationData(
+          'Jobs Applied', 'Handyman', context);
     }
     if (isJobUpcomingClicked == true) {
-      await readData.getHandymanJobApplicationData('Jobs Upcoming', 'Handyman');
+      await readData.getHandymanJobApplicationData(
+          'Jobs Upcoming', 'Handyman', context);
     }
     if (isJobCompletedClicked == true) {
       await readData.getHandymanJobApplicationData(
-          'Jobs Completed', 'Handyman');
+          'Jobs Completed', 'Handyman', context);
     }
   }
 

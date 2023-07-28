@@ -13,6 +13,7 @@
             <data android:scheme="tel" />
         </intent>
     </queries>
+
    <application
         android:label="handyman_app"
         android:name="${applicationName}"
@@ -45,6 +46,9 @@
             android:value="2" />
         <meta-data
             android:name="com.dexterous.flutterlocalnotifications.smallIcon"
-            android:resource="@drawable/ic_notification" />
+            android:resource="@drawable/app_logo" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyBjJxgufd72ExWl-LIU_c_0GujNBKrIzzM"/>
     </application>
+
 </manifest>

@@ -682,7 +682,8 @@ class ReadData {
     }
   }
 
-  Future getHandymanJobApplicationData(String tabName, String role) async {
+  Future getHandymanJobApplicationData(
+      String tabName, String role, BuildContext context) async {
     if (tabName == 'Job Offers') {
       allJobOffers.clear();
       jobCustomerOffersIDs.clear();
@@ -772,9 +773,160 @@ class ReadData {
             }
           }
         } else {
-          print('object');
+          throw Exception('Job Upload Not Found');
         }
       } catch (e) {
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Center(
+        //         child: Text(
+        //           'Error'.toUpperCase(),
+        //           style: TextStyle(color: primary, fontSize: 17),
+        //         ),
+        //       ),
+        //       shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12)),
+        //       content: Text(
+        //         '${e.toString()}.',
+        //         style: TextStyle(
+        //           height: 1.4,
+        //           fontSize: 16,
+        //           color: black,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // );
+        print(e.toString());
+      }
+    }
+  }
+
+  Future getCustomerJobApplicationData(
+      String tabName, String role, BuildContext context) async {
+    if (tabName == 'Job Offers') {
+      allJobOffers.clear();
+      jobCustomerOffersIDs.clear();
+    } else if (tabName == 'Jobs Upcoming') {
+      allJobUpcoming.clear();
+      jobCustomerUpcomingIDs.clear();
+    } else if (tabName == 'Jobs Applied') {
+      allJobApplied.clear();
+      jobCustomerAppliedIDs.clear();
+    } else {
+      allJobCompleted.clear();
+      jobCustomerCompletedIDs.clear();
+    }
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Job Application')
+        .where('Customer ID', isEqualTo: loggedInUserId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      try {
+        final docID = querySnapshot.docs.single.id;
+
+        final document = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .get();
+        final docData = document.data()!;
+        List<dynamic> documentIDs = docData[tabName][role];
+
+        if (documentIDs.isNotEmpty) {
+          for (var id in documentIDs) {
+            final document = await FirebaseFirestore.instance
+                .collection('Handyman Job Upload')
+                .doc(id)
+                .get();
+
+            final documentData = document.data()!;
+            String expiry = documentData['Deadline'];
+            String day = expiry[0].toString() + expiry[1].toString();
+            String month = expiry[3].toString() + expiry[4].toString();
+            String year = expiry[6].toString() +
+                expiry[7].toString() +
+                expiry[8].toString() +
+                expiry[9].toString();
+            final jobData = HandymanJobUploadItemData(
+              uploadDate: documentData['Upload Date'],
+              name: documentData['Name'],
+              pic: documentData['User Pic'] == ''
+                  ? ''
+                  : documentData['User Pic'],
+              uploadTime: documentData['Upload Time'],
+              jobUploadId: documentData['Job ID'],
+              serviceProvided: documentData['Service Information']
+                  ['Service Provided'],
+              seenBy: documentData['Seen By'],
+              deadlineDay: day,
+              deadlineMonth: month,
+              deadlineYear: year,
+              serviceCat: documentData['Service Information']
+                  ['Service Category'],
+              charge: documentData['Service Information']['Charge'].toString(),
+              chargeRate: documentData['Service Information']['Charge Rate'],
+              rating: documentData['Work Experience & Certification']['Rating'],
+              houseNum: documentData['Address Information']['House Number'],
+              region: documentData['Address Information']['Region'],
+              town: documentData['Address Information']['Town'],
+              street: documentData['Address Information']['Street'],
+              expertise: documentData['Service Information']['Expertise'],
+              portfolio: documentData['Work Experience & Certification']
+                  ['Portfolio'],
+              references: documentData['Work Experience & Certification']
+                  ['References'],
+              experience: documentData['Work Experience & Certification']
+                  ['Experience'],
+              certification: documentData['Work Experience & Certification']
+                  ['Certification'],
+            );
+
+            if (tabName == 'Jobs Applied') {
+              allJobApplied.add(jobData);
+              jobHandymanAppliedIDs.add(jobData.jobUploadId);
+            } else if (tabName == 'Jobs Upcoming') {
+              allJobUpcoming.add(jobData);
+              jobHandymanUpcomingIDs.add(jobData.jobUploadId);
+            } else if (tabName == 'Job Offers') {
+              allJobOffers.add(jobData);
+              jobHandymanOffersIDs.add(jobData.jobUploadId);
+            } else {
+              allJobCompleted.add(jobData);
+              jobHandymanCompletedIDs.add(jobData.jobUploadId);
+            }
+            print(jobData.jobUploadId);
+          }
+        } else {
+          throw Exception('Job Upload Not Found');
+        }
+      } catch (e) {
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Center(
+        //         child: Text(
+        //           'Error'.toUpperCase(),
+        //           style: TextStyle(color: primary, fontSize: 17),
+        //         ),
+        //       ),
+        //       shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12)),
+        //       content: Text(
+        //         '${e.toString()}.',
+        //         style: TextStyle(
+        //           height: 1.4,
+        //           fontSize: 16,
+        //           color: black,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // );
         print(e.toString());
       }
     }
@@ -896,106 +1048,146 @@ class ReadData {
     }
   }
 
-  Future getCustomerJobApplicationData(String tabName, String role) async {
-    if (tabName == 'Job Offers') {
-      allJobOffers.clear();
-      jobCustomerOffersIDs.clear();
-    } else if (tabName == 'Jobs Upcoming') {
-      allJobUpcoming.clear();
-      jobCustomerUpcomingIDs.clear();
-    } else if (tabName == 'Jobs Applied') {
-      allJobApplied.clear();
-      jobCustomerAppliedIDs.clear();
-    } else {
-      allJobCompleted.clear();
-      jobCustomerCompletedIDs.clear();
-    }
+  Future cancelJobApplication(String type) async {
+    jobHandymanUpcomingIDs.clear();
+    jobHandymanAppliedIDs.clear();
+    jobHandymanCompletedIDs.clear();
+    jobHandymanOffersIDs.clear();
+    jobCustomerUpcomingIDs.clear();
+    jobCustomerAppliedIDs.clear();
+    jobCustomerCompletedIDs.clear();
+    jobCustomerOffersIDs.clear();
 
-    final querySnapshot = await FirebaseFirestore.instance
+    final userJobAppDoc = await FirebaseFirestore.instance
         .collection('Job Application')
         .where('Customer ID', isEqualTo: loggedInUserId)
         .get();
+    if (userJobAppDoc.docs.isNotEmpty) {
+      final docID = userJobAppDoc.docs.single.id;
+      jobCustomerOffersIDs =
+          userJobAppDoc.docs.single.get('Job Offers.Customer');
+      jobHandymanOffersIDs =
+          userJobAppDoc.docs.single.get('Job Offers.Handyman');
+      jobHandymanAppliedIDs =
+          userJobAppDoc.docs.single.get('Jobs Applied.Handyman');
+      jobCustomerAppliedIDs =
+          userJobAppDoc.docs.single.get('Jobs Applied.Customer');
+      jobHandymanCompletedIDs =
+          userJobAppDoc.docs.single.get('Jobs Completed.Handyman');
+      jobCustomerCompletedIDs =
+          userJobAppDoc.docs.single.get('Jobs Completed.Customer');
+      if (type == 'Customer Uploaded') {
+        jobCustomerOffersIDs.remove(allJobOffers[selectedJob].jobUploadId);
+      } else {
+        jobHandymanOffersIDs.remove(allJobOffers[selectedJob].jobUploadId);
+      }
 
-    if (querySnapshot.docs.isNotEmpty) {
-      try {
-        final docID = querySnapshot.docs.single.id;
+      await FirebaseFirestore.instance
+          .collection('Job Application')
+          .doc(docID)
+          .update({
+        'Jobs Applied': {
+          'Handyman': jobHandymanAppliedIDs,
+          'Customer': jobCustomerAppliedIDs,
+        },
+        'Jobs Completed': {
+          'Handyman': jobHandymanCompletedIDs,
+          'Customer': jobCustomerCompletedIDs,
+        },
+        'Job Offers': {
+          'Handyman': jobHandymanOffersIDs,
+          'Customer': jobCustomerOffersIDs,
+        },
+        'Jobs Upcoming': {
+          'Handyman': jobHandymanUpcomingIDs,
+          'Customer': jobCustomerUpcomingIDs,
+        },
+      });
+    }
 
-        final document = await FirebaseFirestore.instance
-            .collection('Job Application')
+    if (type == 'Customer Uploaded') {
+      final uploadJob = await FirebaseFirestore.instance
+          .collection('Customer Job Upload')
+          .where('Job ID', isEqualTo: allJobOffers[selectedJob].jobUploadId)
+          .get();
+      if (uploadJob.docs.isNotEmpty) {
+        final uploadJobCustID = uploadJob.docs.single.get('Customer ID');
+        List applierIDs = uploadJob.docs.single.get('Job Details.Applier IDs');
+        applierIDs.remove(loggedInUserId);
+        var deadlineP = uploadJob.docs.single.get('Job Details.Deadline');
+        final docID = uploadJob.docs.single.id;
+        await FirebaseFirestore.instance
+            .collection('Customer Job Upload')
             .doc(docID)
-            .get();
-        final docData = document.data()!;
-        List<dynamic> documentIDs = docData[tabName][role];
-
-        if (documentIDs.isNotEmpty) {
-          for (var id in documentIDs) {
-            final document = await FirebaseFirestore.instance
-                .collection('Handyman Job Upload')
-                .doc(id)
-                .get();
-
-            final documentData = document.data()!;
-            String expiry = documentData['Deadline'];
-            String day = expiry[0].toString() + expiry[1].toString();
-            String month = expiry[3].toString() + expiry[4].toString();
-            String year = expiry[6].toString() +
-                expiry[7].toString() +
-                expiry[8].toString() +
-                expiry[9].toString();
-            final jobData = HandymanJobUploadItemData(
-              uploadDate: documentData['Upload Date'],
-              name: documentData['Name'],
-              pic: documentData['User Pic'] == ''
-                  ? ''
-                  : documentData['User Pic'],
-              uploadTime: documentData['Upload Time'],
-              jobUploadId: documentData['Job ID'],
-              serviceProvided: documentData['Service Information']
-                  ['Service Provided'],
-              seenBy: documentData['Seen By'],
-              deadlineDay: day,
-              deadlineMonth: month,
-              deadlineYear: year,
-              serviceCat: documentData['Service Information']
-                  ['Service Category'],
-              charge: documentData['Service Information']['Charge'].toString(),
-              chargeRate: documentData['Service Information']['Charge Rate'],
-              rating: documentData['Work Experience & Certification']['Rating'],
-              houseNum: documentData['Address Information']['House Number'],
-              region: documentData['Address Information']['Region'],
-              town: documentData['Address Information']['Town'],
-              street: documentData['Address Information']['Street'],
-              expertise: documentData['Service Information']['Expertise'],
-              portfolio: documentData['Work Experience & Certification']
-                  ['Portfolio'],
-              references: documentData['Work Experience & Certification']
-                  ['References'],
-              experience: documentData['Work Experience & Certification']
-                  ['Experience'],
-              certification: documentData['Work Experience & Certification']
-                  ['Certification'],
-            );
-
-            if (tabName == 'Jobs Applied') {
-              allJobApplied.add(jobData);
-              jobHandymanAppliedIDs.add(jobData.jobUploadId);
-            } else if (tabName == 'Jobs Upcoming') {
-              allJobUpcoming.add(jobData);
-              jobHandymanUpcomingIDs.add(jobData.jobUploadId);
-            } else if (tabName == 'Job Offers') {
-              allJobOffers.add(jobData);
-              jobHandymanOffersIDs.add(jobData.jobUploadId);
-            } else {
-              allJobCompleted.add(jobData);
-              jobHandymanCompletedIDs.add(jobData.jobUploadId);
+            .update(
+          {
+            'Job Details': {
+              'Applier IDs': applierIDs,
+              'People Applied': applierIDs.isEmpty ? 0 : applierIDs.length,
+              'Deadline': deadlineP,
             }
-            print(jobData.jobUploadId);
-          }
-        } else {
-          print('object');
+          },
+        );
+
+        final uploadJobAppDoc = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .where('Customer ID', isEqualTo: uploadJobCustID)
+            .get();
+        if (uploadJobAppDoc.docs.isNotEmpty) {
+          final docID = uploadJobAppDoc.docs.single.id;
+          List offersID =
+              uploadJobAppDoc.docs.single.get('Job Applied.Handyman');
+          offersID.remove(allJobOffers[selectedJob].jobUploadId);
+          await FirebaseFirestore.instance
+              .collection('Job Application')
+              .doc(docID)
+              .update({
+            'Jobs Applied': {
+              'Handyman': offersID,
+            }
+          });
         }
-      } catch (e) {
-        print(e.toString());
+      }
+    } else {
+      final uploadJob = await FirebaseFirestore.instance
+          .collection('Handyman Job Upload')
+          .where('Job ID', isEqualTo: allJobOffers[selectedJob].jobUploadId)
+          .get();
+      if (uploadJob.docs.isNotEmpty) {
+        final uploadJobCustID = uploadJob.docs.single.get('Customer ID');
+        List applierIDs = uploadJob.docs.single.get('Job Details.Applier IDs');
+        applierIDs.remove(loggedInUserId);
+        final docID = uploadJob.docs.single.id;
+        await FirebaseFirestore.instance
+            .collection('Handyman Job Upload')
+            .doc(docID)
+            .update(
+          {
+            'Job Details': {
+              'Applier IDs': applierIDs,
+              'People Applied': applierIDs.isEmpty ? 0 : applierIDs.length,
+            }
+          },
+        );
+
+        final uploadJobAppDoc = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .where('Customer ID', isEqualTo: uploadJobCustID)
+            .get();
+        if (uploadJobAppDoc.docs.isNotEmpty) {
+          final docID = uploadJobAppDoc.docs.single.id;
+          List offersID =
+              uploadJobAppDoc.docs.single.get('Job Applied.Customer');
+          offersID.remove(allJobOffers[selectedJob].jobUploadId);
+          await FirebaseFirestore.instance
+              .collection('Job Application')
+              .doc(docID)
+              .update({
+            'Job Applied': {
+              'Customer': offersID,
+            }
+          });
+        }
       }
     }
   }

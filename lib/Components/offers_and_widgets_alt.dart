@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Screens/My Jobs/Components/my_job_items.dart';
 import '../Screens/My Jobs/SubScreens/JobAppliedHandyman/job_applied_screen.dart';
-import '../Screens/My Jobs/SubScreens/JobOffer/job_offer_screen.dart';
+import '../Screens/My Jobs/SubScreens/JobOfferHandyman/job_offer_screen.dart';
 import '../Services/read_data.dart';
 import '../constants.dart';
 

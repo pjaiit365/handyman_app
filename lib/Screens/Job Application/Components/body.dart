@@ -232,6 +232,7 @@ class _BodyState extends State<Body> {
         final docID = jobUploadDoc.docs.single.id;
         List applierIDs =
             jobUploadDoc.docs.single.get('Job Details.Applier IDs');
+        var deadlineP = jobUploadDoc.docs.single.get('Job Details.Deadline');
 
         applierIDs.add(loggedInUserId);
         await FirebaseFirestore.instance
@@ -241,6 +242,7 @@ class _BodyState extends State<Body> {
           'Job Details': {
             'Applier IDs': applierIDs,
             'People Applied': applierIDs.length,
+            'Deadline': deadlineP,
           }
         });
       } else {

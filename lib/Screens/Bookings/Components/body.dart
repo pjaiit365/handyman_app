@@ -3,15 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Bookings/Components/job_bookings_tabs.dart';
-import 'package:handyman_app/Screens/My%20Jobs/Components/body.dart';
-import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobApplied/job_applied_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
-
 import '../../../Components/offers_and_widgets.dart';
 import '../../../constants.dart';
 import '../../My Jobs/Components/my_job_items.dart';
 import '../../My Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
-import '../../My Jobs/SubScreens/JobOffer/job_offer_screen.dart';
 import '../../My Jobs/SubScreens/JobUpcoming/job_upcoming.dart';
 
 class Body extends StatefulWidget {
@@ -26,15 +22,18 @@ class _BodyState extends State<Body> {
 
   Future allData() async {
     if (isJobOffersClicked == true) {
-      await readData.getHandymanJobApplicationData('Job Offers', 'Customer');
-      await readData.getCustomerJobApplicationData('Jobs Applied', 'Customer');
+      await readData.getHandymanJobApplicationData(
+          'Job Offers', 'Customer', context);
+      await readData.getCustomerJobApplicationData(
+          'Jobs Applied', 'Customer', context);
     }
     if (isJobUpcomingClicked == true) {
-      await readData.getCustomerJobApplicationData('Jobs Upcoming', 'Customer');
+      await readData.getCustomerJobApplicationData(
+          'Jobs Upcoming', 'Customer', context);
     }
     if (isJobCompletedClicked == true) {
       await readData.getCustomerJobApplicationData(
-          'Jobs Completed', 'Customer');
+          'Jobs Completed', 'Customer', context);
     }
   }
 

@@ -9,6 +9,7 @@ import 'appointment_job_status.dart';
 
 class JobDetailsAndStatus extends StatelessWidget {
   VoidCallback? function;
+  VoidCallback? declineFunction;
   final String name;
   final String charge;
   final String chargeRate;
@@ -31,6 +32,7 @@ class JobDetailsAndStatus extends StatelessWidget {
   String buttonText;
   JobDetailsAndStatus({
     this.function,
+    this.declineFunction,
     Key? key,
     this.buttonText = 'Accept',
     this.statusText = 'Job Pending',
@@ -191,14 +193,7 @@ class JobDetailsAndStatus extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyJobsScreen(),
-                          ),
-                        );
-                      },
+                      onTap: declineFunction,
                       child: Container(
                         height: 44 * screenHeight,
                         width: 181 * screenWidth,
@@ -226,14 +221,7 @@ class JobDetailsAndStatus extends StatelessWidget {
                     ),
                     SizedBox(width: 3 * screenWidth),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => screen,
-                          ),
-                        );
-                      },
+                      onTap: function,
                       child: Container(
                         height: 44 * screenHeight,
                         width: 181 * screenWidth,
