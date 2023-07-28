@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Bookings/Components/job_bookings_tabs.dart';
+import 'package:handyman_app/Screens/My%20Jobs/Components/body.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobApplied/job_applied_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
 
+import '../../../Components/offers_and_widgets.dart';
 import '../../../constants.dart';
 import '../../My Jobs/Components/my_job_items.dart';
 import '../../My Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
@@ -132,57 +134,7 @@ class _BodyState extends State<Body> {
                               ),
                             ),
                           )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ListView.separated(
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return MyJobItems(
-                                      index: index,
-                                      screen: JobOfferScreen(),
-                                      name: allJobOffers[index].name,
-                                      imageLocation: allJobOffers[index].pic,
-                                      serviceCat:
-                                          allJobOffers[index].serviceProvided,
-                                      date: allJobOffers[index].uploadDate,
-                                      time: allJobOffers[index].uploadTime,
-                                      orderStatus: offerOrderStatusList[index],
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: 20 * screenHeight,
-                                    );
-                                  },
-                                  itemCount: allJobOffers.length),
-                              allJobOffers.isEmpty
-                                  ? SizedBox()
-                                  : SizedBox(height: 20 * screenHeight),
-                              ListView.separated(
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return MyJobItems(
-                                      index: index,
-                                      screen: JobAppliedScreen(),
-                                      name: allJobApplied[index].name,
-                                      imageLocation: allJobApplied[index].pic,
-                                      serviceCat:
-                                          allJobApplied[index].serviceProvided,
-                                      date: allJobApplied[index].uploadDate,
-                                      time: allJobApplied[index].uploadTime,
-                                      orderStatus: offerOrderStatusList[index],
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: 20 * screenHeight,
-                                    );
-                                  },
-                                  itemCount: allJobApplied.length),
-                            ],
-                          ),
+                        : OffersAndAppliedWidget(),
                   if (isJobCompletedClicked == true)
                     allJobCompleted.isEmpty
                         ? Center(

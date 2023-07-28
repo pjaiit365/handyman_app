@@ -8,6 +8,7 @@ import 'appointment_job_details.dart';
 import 'appointment_job_status.dart';
 
 class JobDetailsAndStatus extends StatelessWidget {
+  VoidCallback? function;
   final String name;
   final String charge;
   final String chargeRate;
@@ -29,6 +30,7 @@ class JobDetailsAndStatus extends StatelessWidget {
   bool isJobAppliedScreen;
   String buttonText;
   JobDetailsAndStatus({
+    this.function,
     Key? key,
     this.buttonText = 'Accept',
     this.statusText = 'Job Pending',
@@ -86,7 +88,8 @@ class JobDetailsAndStatus extends StatelessWidget {
                       ? Center(
                           child: Icon(
                           Icons.person,
-                          color: sectionColor,
+                          color: grey,
+                          size: 40,
                         ))
                       : null,
                 ),
@@ -210,7 +213,7 @@ class JobDetailsAndStatus extends StatelessWidget {
                             Image.asset('assets/icons/cancel.png'),
                             SizedBox(width: 9 * screenWidth),
                             Text(
-                              'Cancel',
+                              'Decline',
                               style: TextStyle(
                                 color: white,
                                 fontSize: 15,
@@ -265,14 +268,7 @@ class JobDetailsAndStatus extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyJobsScreen(),
-                          ),
-                        );
-                      },
+                      onTap: function,
                       child: Container(
                         height: 44 * screenHeight,
                         width: 365 * screenWidth,

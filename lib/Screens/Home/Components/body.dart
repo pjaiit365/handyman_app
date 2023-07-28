@@ -217,12 +217,11 @@ class _BodyState extends State<Body> {
   }
 
   Future allData() async {
-    await readData.getFirstName();
+    readData.getFirstName();
     await getAllCategories();
     await getCategoryData(allCategoriesName[0]);
     await getCustomerCategoryData();
     await getHandymanCategoryData();
-    await getProfilePic();
     await getRatings();
     await readData.getBookmarkedData();
   }

@@ -32,14 +32,16 @@ class ReceivedMessage extends StatelessWidget {
               decoration: BoxDecoration(
                 border: pic == '' ? Border.all(color: sectionColor) : null,
                 shape: BoxShape.circle,
-                image:
-                    DecorationImage(image: NetworkImage(pic), fit: BoxFit.fill),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(pic),
+                ),
               ),
               child: pic == ''
                   ? Center(
                       child: Icon(
                         Icons.person,
-                        color: sectionColor,
+                        color: grey,
                       ),
                     )
                   : null,

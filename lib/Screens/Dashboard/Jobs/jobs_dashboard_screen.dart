@@ -47,6 +47,7 @@ class _JobsDashboardScreenState extends State<JobsDashboardScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
+                fit: BoxFit.cover,
                 image: NetworkImage(imageUrl),
               ),
             ),

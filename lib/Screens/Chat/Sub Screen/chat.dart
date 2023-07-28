@@ -77,6 +77,7 @@ class _ChatMessagingState extends State<ChatMessaging> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChatPage(
+                    pic: data['Pic'],
                     receiverUserID: data['User ID'],
                     userName: '${data['First Name']} ${data['Last Name']}',
                   ),
@@ -101,14 +102,17 @@ class _ChatMessagingState extends State<ChatMessaging> {
                   decoration: BoxDecoration(
                     border: Border.all(color: sectionColor),
                     shape: BoxShape.circle,
-                    // image: DecorationImage(image: NetworkImage(widget.pic)),
+                    image: DecorationImage(
+                        fit: BoxFit.cover, image: NetworkImage(data['Pic'])),
                   ),
-                  child: Center(
-                    child: Icon(
-                      Icons.person,
-                      color: sectionColor,
-                    ),
-                  ),
+                  child: data['Pic'] == ''
+                      ? Center(
+                          child: Icon(
+                            Icons.person,
+                            color: grey,
+                          ),
+                        )
+                      : null,
                 ),
                 SizedBox(
                   width: 12 * screenWidth,

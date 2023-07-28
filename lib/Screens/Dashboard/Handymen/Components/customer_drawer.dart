@@ -10,6 +10,7 @@ import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
 import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
+import 'package:handyman_app/Screens/dummy/dummy_screen.dart';
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
 import '../../../../Services/read_data.dart';
@@ -182,7 +183,7 @@ class CustomerDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Help/Support',
                     icon: Icons.help_rounded,
-                    screen: PaymentOptionsScreen(),
+                    screen: DummyScreen(),
                   ),
                   SizedBox(height: 27 * screenHeight),
                   Center(

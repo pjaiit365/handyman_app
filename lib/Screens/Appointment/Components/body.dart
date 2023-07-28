@@ -1,4 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -24,23 +26,23 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   void popDialog() {
-    Navigator.pop(
-      context,
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.black45,
-            behavior: SnackBarBehavior.floating,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            content: Center(
-              child: Text(
-                'One or more required fields has an error. Check them again.',
-                style: TextStyle(height: 1.3),
-                textAlign: TextAlign.center,
-              ),
-            )),
-      ),
+    print(!jobCustomerAppliedIDs.contains(allJobItemList[0].jobID));
+    print(jobCustomerAppliedIDs);
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.black45,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          content: Center(
+            child: Text(
+              'One or more required fields has an error. Check them again.',
+              style: TextStyle(height: 1.3),
+              textAlign: TextAlign.center,
+            ),
+          )),
     );
   }
 
@@ -98,6 +100,8 @@ class _BodyState extends State<Body> {
   }
 
   Future scheduleJob() async {
+    jobCustomerAppliedIDs.clear();
+    jobHandymanOffersIDs.clear();
     try {
       final document = await FirebaseFirestore.instance
           .collection('Job Application')
@@ -105,23 +109,43 @@ class _BodyState extends State<Body> {
           .get();
       if (document.docs.isNotEmpty) {
         final docID = document.docs.single.id;
-        await FirebaseFirestore.instance
-            .collection('Job Application')
-            .doc(docID)
-            .update({
-          'Jobs Applied': {
-            'Customer': [allJobItemList[0].jobID],
-          }
-        });
+        jobCustomerAppliedIDs =
+            document.docs.single.get('Jobs Applied.Customer');
+        if (!jobCustomerAppliedIDs.contains(allJobItemList[0].jobID)) {
+          jobCustomerAppliedIDs.add(allJobItemList[0].jobID);
+
+          await FirebaseFirestore.instance
+              .collection('Job Application')
+              .doc(docID)
+              .update({
+            'Jobs Applied': {
+              'Customer': jobCustomerAppliedIDs,
+            }
+          });
+        } else {
+          throw Exception();
+        }
       } else {
+        jobCustomerAppliedIDs.clear();
+        jobCustomerAppliedIDs.add(allJobItemList[0].jobID);
         final document =
             await FirebaseFirestore.instance.collection('Job Application').add({
           'Jobs Applied': {
-            'Customer': [allJobItemList[0].jobID],
+            'Customer': jobCustomerAppliedIDs,
+            'Handyman': [],
           },
-          'Jobs Upcoming': [],
-          'Jobs Completed': [],
-          'Job Offers': [],
+          'Jobs Upcoming': {
+            'Customer': [],
+            'Handyman': [],
+          },
+          'Jobs Completed': {
+            'Customer': [],
+            'Handyman': [],
+          },
+          'Job Offers': {
+            'Customer': [],
+            'Handyman': [],
+          },
           'Customer ID': loggedInUserId,
         });
 
@@ -147,22 +171,35 @@ class _BodyState extends State<Body> {
 
       if (docOffers.docs.isNotEmpty) {
         final docID = docOffers.docs.single.id;
+        jobHandymanOffersIDs = docOffers.docs.single.get('Job Offers.Handyman');
+        jobHandymanOffersIDs.add(allJobItemList[0].jobID);
         await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
             .update({
           'Job Offers': {
-            'Handyman': [allJobItemList[0].jobID],
+            'Handyman': jobHandymanOffersIDs,
           }
         });
       } else {
+        jobHandymanOffersIDs.add(allJobItemList[0].jobID);
         final document =
             await FirebaseFirestore.instance.collection('Job Application').add({
-          'Jobs Applied': [],
-          'Jobs Upcoming': [],
-          'Jobs Completed': [],
+          'Jobs Applied': {
+            'Customer': [],
+            'Handyman': [],
+          },
+          'Jobs Upcoming': {
+            'Customer': [],
+            'Handyman': [],
+          },
+          'Jobs Completed': {
+            'Customer': [],
+            'Handyman': [],
+          },
           'Job Offers': {
-            'Handyman': [allJobItemList[0].jobID],
+            'Customer': [],
+            'Handyman': jobHandymanOffersIDs,
           },
           'Customer ID': customerID,
         });
@@ -182,13 +219,19 @@ class _BodyState extends State<Body> {
 
       if (jobUploadDoc.docs.isNotEmpty) {
         final docID = jobUploadDoc.docs.single.id;
+        List applierIDs =
+            jobUploadDoc.docs.single.get('Job Details.Applier IDs');
+
+        applierIDs.add(loggedInUserId);
 
         await FirebaseFirestore.instance
             .collection('Handyman Job Upload')
             .doc(docID)
             .update({
-          'Job Details.Applier IDs': [loggedInUserId],
-          'Job Details.People Applied': 2,
+          'Job Details': {
+            'Applier IDs': applierIDs,
+            'People Applied': applierIDs.length,
+          }
         });
       } else {
         print('Job upload update failed.');
@@ -203,6 +246,22 @@ class _BodyState extends State<Body> {
     } on FirebaseException catch (err) {
       print(err.toString());
     } catch (e) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'You have already applied for this job. You cannot apply for a particular job twice',
+                style: TextStyle(height: 1.4),
+                textAlign: TextAlign.center,
+              ),
+            )),
+      );
       print(e.toString());
     }
   }

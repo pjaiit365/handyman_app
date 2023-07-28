@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,6 +85,8 @@ class _BodyState extends State<Body> {
         userId = FirebaseAuth.instance.currentUser!.uid;
         loggedInUserId = userId;
 
+        await ReadData().getFCMToken(false);
+
         addDetails(
           _firstNameController.text.trim(),
           _lastNameController.text.trim(),
@@ -91,6 +94,7 @@ class _BodyState extends State<Body> {
           0 + int.parse(_numberController.text),
           roleSelected,
           userId,
+          fcmToken,
         );
 
         addProfileDetails(
@@ -276,7 +280,7 @@ class _BodyState extends State<Body> {
   }
 
   Future addDetails(String firstName, String lastName, String email, int number,
-      String role, String id) async {
+      String role, String id, String token) async {
     FirebaseFirestore.instance.collection('users').add(
       {
         'First Name': firstName,
@@ -285,6 +289,8 @@ class _BodyState extends State<Body> {
         'Mobile Number': number,
         'Role': role,
         'User ID': id,
+        'Pic': '',
+        'FCM Token': token,
       },
     );
   }
@@ -330,6 +336,7 @@ class _BodyState extends State<Body> {
     if (querySnapshot.docs.isNotEmpty) {
       final userData = querySnapshot.docs.first.data();
       final userLogin = UserData(
+        pic: userData['Pic'],
         userId: userData['User ID'],
         firstName: userData['First Name'],
         lastName: userData['Last Name'],

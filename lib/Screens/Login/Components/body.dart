@@ -16,6 +16,7 @@ import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
 import '../../../Models/users.dart';
+import '../../Home/Components/body.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -83,16 +84,8 @@ class _BodyState extends State<Body> {
       loggedInUserId = userId;
       //getting current user's data into in-app variable for easy access
       getUserData();
-      await readData.getCustomerJobApplicationData('Job Offers', 'Customer');
-      await readData.getCustomerJobApplicationData('Jobs Applied', 'Customer');
-      await readData.getCustomerJobApplicationData('Jobs Upcoming', 'Customer');
-      await readData.getCustomerJobApplicationData(
-          'Jobs Completed', 'Customer');
-      await readData.getHandymanJobApplicationData('Job Offers', 'Handyman');
-      await readData.getHandymanJobApplicationData('Jobs Applied', 'Handyman');
-      await readData.getHandymanJobApplicationData('Jobs Upcoming', 'Handyman');
-      await readData.getHandymanJobApplicationData(
-          'Jobs Completed', 'Handyman');
+      await readData.getUserJobApplicationIDS();
+      await ReadData().getFCMToken(true);
 
       final userData = await getUserData();
 
@@ -203,6 +196,7 @@ class _BodyState extends State<Body> {
     if (querySnapshot.docs.isNotEmpty) {
       final userData = querySnapshot.docs.first.data();
       final userLogin = UserData(
+        pic: userData['Pic'],
         userId: userData['User ID'],
         firstName: userData['First Name'],
         lastName: userData['Last Name'],

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/profile_service_information.dart';
 import 'package:handyman_app/constants.dart';
@@ -119,6 +122,9 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
+  var profilePicPath = '';
+  var profilePicUrl = '';
+
   void profilePic() async {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
@@ -126,12 +132,36 @@ class _BodyState extends State<Body> {
       type: FileType.custom,
     );
 
+    var profilePicUrl = '';
     if (result != null) {
-      final fileName = result.files.single.name;
       final filePath = result.files.single.path!;
+      setState(() {
+        profilePicPath = filePath;
+      });
 
       //upload new profile pic
-      storage.uploadPic(filePath, fileName).then((value) => print('Done'));
+      File file = File(filePath);
+
+      try {
+        final pic = await FirebaseStorage.instance
+            .ref('$loggedInUserId/profile')
+            .child('profile_pic')
+            .putFile(file);
+        profilePicUrl = await pic.ref.getDownloadURL();
+
+        final document = await FirebaseFirestore.instance
+            .collection('users')
+            .where('User ID', isEqualTo: loggedInUserId)
+            .get();
+        final docID = document.docs.single.id;
+        await FirebaseFirestore.instance.collection('users').doc(docID).update(
+          {
+            "Pic": profilePicUrl,
+          },
+        );
+      } catch (e) {
+        print(e.toString());
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

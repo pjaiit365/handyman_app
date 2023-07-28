@@ -13,12 +13,14 @@ import 'package:handyman_app/constants.dart';
 import '../../../Components/text_field_bar.dart';
 
 class ChatPage extends StatefulWidget {
+  final String pic;
   final String userName;
   final String receiverUserID;
   const ChatPage({
     Key? key,
     required this.userName,
     required this.receiverUserID,
+    required this.pic,
   }) : super(key: key);
 
   @override
@@ -50,7 +52,9 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     Future.delayed(Duration(milliseconds: 100), () {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      }
     });
 
     super.initState();
@@ -131,7 +135,7 @@ class _ChatPageState extends State<ChatPage> {
                 : ReceivedMessage(
                     message: data['Message'],
                     timeStamp: time,
-                    pic: '',
+                    pic: widget.pic,
                   ),
           ],
         ),

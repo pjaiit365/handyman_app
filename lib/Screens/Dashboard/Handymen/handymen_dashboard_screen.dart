@@ -51,6 +51,7 @@ class _HandymanDashboardScreenState extends State<HandymanDashboardScreen> {
                 border: Border.all(color: sectionColor, width: 1),
                 shape: BoxShape.circle,
                 image: DecorationImage(
+                  fit: BoxFit.cover,
                   image: NetworkImage(imageUrl),
                 ),
               ),

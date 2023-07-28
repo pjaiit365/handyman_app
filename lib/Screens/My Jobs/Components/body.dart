@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Components/offers_and_widgets_alt.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobApplied/job_applied_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobOffer/job_offer_screen.dart';
@@ -9,6 +10,7 @@ import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobUpcoming/job_upcomi
 import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
 
+import '../../../Components/offers_and_widgets.dart';
 import 'my_job_items.dart';
 import 'my_jobs_tabs.dart';
 
@@ -132,59 +134,7 @@ class _BodyState extends State<Body> {
                               ),
                             ),
                           )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Offers'),
-                              ListView.separated(
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return MyJobItems(
-                                      index: index,
-                                      screen: JobOfferScreen(),
-                                      name: allJobOffers[index].name,
-                                      imageLocation: allJobOffers[index].pic,
-                                      serviceCat:
-                                          allJobOffers[index].serviceProvided,
-                                      date: allJobOffers[index].uploadDate,
-                                      time: allJobOffers[index].uploadTime,
-                                      orderStatus: offerOrderStatusList[index],
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: 20 * screenHeight,
-                                    );
-                                  },
-                                  itemCount: allJobOffers.length),
-                              allJobOffers.isEmpty
-                                  ? SizedBox()
-                                  : SizedBox(height: 20 * screenHeight),
-                              Text('Applied'),
-                              ListView.separated(
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return MyJobItems(
-                                      index: index,
-                                      screen: JobAppliedScreen(),
-                                      name: allJobApplied[index].name,
-                                      imageLocation: allJobApplied[index].pic,
-                                      serviceCat:
-                                          allJobApplied[index].serviceProvided,
-                                      date: allJobApplied[index].uploadDate,
-                                      time: allJobApplied[index].uploadTime,
-                                      orderStatus: offerOrderStatusList[index],
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: 20 * screenHeight,
-                                    );
-                                  },
-                                  itemCount: allJobApplied.length),
-                            ],
-                          ),
+                        : OffersAndAppliedWidgetAlt(),
                   if (isJobCompletedClicked == true)
                     allJobCompleted.isEmpty
                         ? Center(

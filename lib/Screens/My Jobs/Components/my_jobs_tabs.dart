@@ -65,7 +65,7 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
-                  'Offers',
+                  'O & A',
                   style: isJobOffersClicked
                       ? TextStyle(
                           color: primary,

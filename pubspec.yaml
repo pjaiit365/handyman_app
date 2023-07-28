@@ -49,7 +49,7 @@ dependencies:
   flutter_paystack: ^1.0.7
   firebase_messaging: ^14.6.5
   flutter_local_notifications: ^15.1.0+1
-  location: ^5.0.1
+#  location: ^4.3.0
 
 
 dev_dependencies:

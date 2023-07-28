@@ -15,6 +15,8 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     void deleteDialog() {
       showDialog(
         context: context,
@@ -89,8 +91,7 @@ class Body extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        await ReadData()
-                            .deleteJobApplication('Handyman Uploaded');
+                        await ReadData().deleteJobApplication('Customer Uploaded');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
