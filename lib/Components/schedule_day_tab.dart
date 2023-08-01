@@ -69,7 +69,7 @@ class _ScheduleDayTabState extends State<ScheduleDayTab> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AppointmentTabRow(tabTitle: 'Schedule Day'),
+            AppointmentTabRow(tabTitle: 'Schedule Day', isCustomVisible: false),
             SizedBox(height: 16 * screenHeight),
             Flexible(
               child: Center(

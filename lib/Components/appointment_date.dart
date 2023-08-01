@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
+int appointmentDateIndex = 0;
+
 class AppointmentDate extends StatelessWidget {
   final Function onDaySelected;
   final int selectedDay;
@@ -32,6 +34,7 @@ class AppointmentDate extends StatelessWidget {
         SizedBox(height: 11),
         GestureDetector(
           onTap: () {
+            appointmentDateIndex = index;
             if (!isDateSelected) {
               onDaySelected(index);
             }

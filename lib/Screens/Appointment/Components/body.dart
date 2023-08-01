@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Components/appointment_date.dart';
 import 'package:handyman_app/Components/appointment_static_time.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -103,6 +104,48 @@ class _BodyState extends State<Body> {
     jobCustomerAppliedIDs.clear();
     jobHandymanOffersIDs.clear();
     try {
+      // join customer id to job id to create primary key
+      List<String> ids = [loggedInUserId, allJobItemList[0].jobID];
+      ids.sort();
+      final applierID = ids.join('_');
+
+      //create customer jobs applied collection
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Customer Jobs Applied')
+          .where('Applier ID', isEqualTo: applierID)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        throw Exception(
+            'You have already applied for this job. You cannot apply for a particular job twice');
+      } else {
+        await FirebaseFirestore.instance
+            .collection('Customer Jobs Applied')
+            .doc(applierID)
+            .set({
+          'Jobs Applied ID': applierID,
+          'Job ID': allJobItemList[0].jobID,
+          'Applier ID': loggedInUserId,
+          'Receiver ID': '',
+          'Name': '${allUsers[0].firstName} ${allUsers[0].lastName}',
+          'Job Status': 'Applied',
+          'Charge': allJobItemList[0].charge,
+          'Charge Rate': allJobItemList[0].chargeRate,
+          'Street': apppointmentStreet,
+          'Town': apppointmentTown,
+          'House Number': apppointmentHouseNum,
+          'Region': apppointmentRegion,
+          'Address Type': addressValue,
+          'Note': jobApplicationNote,
+          'User Pic': allUsers[0].pic,
+          'Schedule Time': timeList[appointmentTimeIndex],
+          'Schedule Date':
+              '${dates[appointmentDateIndex].day}-${dates[appointmentDateIndex].month}-${dates[appointmentDateIndex].year}',
+        });
+      }
+
+      //add applier id to applied -> customers
+
       final document = await FirebaseFirestore.instance
           .collection('Job Application')
           .where('Customer ID', isEqualTo: loggedInUserId)
@@ -111,23 +154,27 @@ class _BodyState extends State<Body> {
         final docID = document.docs.single.id;
         jobCustomerAppliedIDs =
             document.docs.single.get('Jobs Applied.Customer');
-        if (!jobCustomerAppliedIDs.contains(allJobItemList[0].jobID)) {
-          jobCustomerAppliedIDs.add(allJobItemList[0].jobID);
 
-          await FirebaseFirestore.instance
-              .collection('Job Application')
-              .doc(docID)
-              .update({
-            'Jobs Applied': {
-              'Customer': jobCustomerAppliedIDs,
-            }
-          });
-        } else {
-          throw Exception();
-        }
+        // if (!jobCustomerAppliedIDs.contains(applierID)) {
+
+        jobCustomerAppliedIDs.add(applierID);
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Jobs Applied': {
+            'Customer': jobCustomerAppliedIDs,
+          }
+        });
+        // }
+
+        // else {
+        //   throw Exception();
+        // }
       } else {
         jobCustomerAppliedIDs.clear();
-        jobCustomerAppliedIDs.add(allJobItemList[0].jobID);
+        jobCustomerAppliedIDs.add(applierID);
         final document =
             await FirebaseFirestore.instance.collection('Job Application').add({
           'Jobs Applied': {
@@ -157,12 +204,14 @@ class _BodyState extends State<Body> {
             .update({'Job Application ID': docID});
       }
 
-      final querySnapshot = await FirebaseFirestore.instance
+      //add applier id to offers -> handyman
+
+      final handymanQuerySnapshot = await FirebaseFirestore.instance
           .collection('Handyman Job Upload')
           .where('Job ID', isEqualTo: allJobItemList[0].jobID)
           .get();
 
-      final customerID = querySnapshot.docs.single.get('Customer ID');
+      final customerID = handymanQuerySnapshot.docs.single.get('Customer ID');
 
       final docOffers = await FirebaseFirestore.instance
           .collection('Job Application')
@@ -172,7 +221,7 @@ class _BodyState extends State<Body> {
       if (docOffers.docs.isNotEmpty) {
         final docID = docOffers.docs.single.id;
         jobHandymanOffersIDs = docOffers.docs.single.get('Job Offers.Handyman');
-        jobHandymanOffersIDs.add(allJobItemList[0].jobID);
+        jobHandymanOffersIDs.add(applierID);
         await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
@@ -182,7 +231,7 @@ class _BodyState extends State<Body> {
           }
         });
       } else {
-        jobHandymanOffersIDs.add(allJobItemList[0].jobID);
+        jobHandymanOffersIDs.add(applierID);
         final document =
             await FirebaseFirestore.instance.collection('Job Application').add({
           'Jobs Applied': {
@@ -212,6 +261,8 @@ class _BodyState extends State<Body> {
             .update({'Job Application ID': docID});
       }
 
+      //add applier id to job upload applier IDs section
+
       final jobUploadDoc = await FirebaseFirestore.instance
           .collection('Handyman Job Upload')
           .where('Job ID', isEqualTo: allJobItemList[0].jobID)
@@ -222,7 +273,8 @@ class _BodyState extends State<Body> {
         List applierIDs =
             jobUploadDoc.docs.single.get('Job Details.Applier IDs');
 
-        applierIDs.add(loggedInUserId);
+        applierIDs.add(applierID);
+        final receiverID = jobUploadDoc.docs.single.get('Customer ID');
 
         await FirebaseFirestore.instance
             .collection('Handyman Job Upload')
@@ -233,10 +285,14 @@ class _BodyState extends State<Body> {
             'People Applied': applierIDs.length,
           }
         });
+
+        await FirebaseFirestore.instance
+            .collection('Customer Jobs Applied')
+            .doc(applierID)
+            .update({'Receiver ID': receiverID});
       } else {
         print('Job upload update failed.');
       }
-
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -256,7 +312,7 @@ class _BodyState extends State<Body> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             content: Center(
               child: Text(
-                'You have already applied for this job. You cannot apply for a particular job twice',
+                e.toString(),
                 style: TextStyle(height: 1.4),
                 textAlign: TextAlign.center,
               ),

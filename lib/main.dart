@@ -8,12 +8,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   PaystackPlugin().initialize(
-      publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+      publicKey: 'pk_test_73214e01e7d0c003d3e42b6a448400ab54eedb20');
+  var result = PaystackPlugin().sdkInitialized;
+  print(result);
 
   await Firebase.initializeApp();
-
-  final result = PaystackPlugin().sdkInitialized;
-  print(result);
 
   runApp(const MyApp());
 }
@@ -28,24 +27,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    try {
+      PaystackPlugin().initialize(
+          publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
+    } on PaystackSdkNotInitializedException catch (e) {
+      print(e.toString());
+    } catch (err) {
+      print(err.toString());
+    }
     final result = PaystackPlugin().sdkInitialized;
     print(result);
     super.initState();
@@ -55,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Handyman Service App',
+      title: 'HomeCareX',
       home: const SplashScreen(),
       color: Colors.white,
       debugShowCheckedModeBanner: false,

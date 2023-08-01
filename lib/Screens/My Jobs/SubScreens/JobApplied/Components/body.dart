@@ -1,6 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobUpcoming/job_upcoming.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
@@ -145,7 +149,7 @@ class Body extends StatelessWidget {
         town: allJobApplied[selectedJob].town,
         houseNum: allJobApplied[selectedJob].houseNum,
         jobType: allJobApplied[selectedJob].serviceProvided,
-        date: allJobApplied[selectedJob].uploadDate,
+        date: moreOffers[selectedJob].date,
       ),
     );
   }

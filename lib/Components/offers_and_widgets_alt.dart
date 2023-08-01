@@ -88,8 +88,8 @@ class _OffersAndAppliedWidgetState extends State<OffersAndAppliedWidgetAlt> {
                   return MyJobItems(
                     index: index,
                     screen: JobOfferScreen(),
-                    name: allJobOffers[index].name,
-                    imageLocation: allJobOffers[index].pic,
+                    name: moreOffers[index].name,
+                    imageLocation: moreOffers[index].pic,
                     serviceCat: allJobOffers[index].serviceProvided,
                     date: allJobOffers[index].uploadDate,
                     time: allJobOffers[index].uploadTime,

@@ -199,7 +199,7 @@ class _BodyState extends State<Body> {
   }
 
   bool FieldsCheck() {
-    if (chargeController.text.trim().isNotEmpty &&
+    if (chargeController.text.isNotEmpty &&
         chargePHint != 'N/A' &&
         expertHint != 'N/A' &&
         uploadRegion != '' &&

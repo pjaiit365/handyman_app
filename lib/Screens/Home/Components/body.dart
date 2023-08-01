@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:handyman_app/Models/category.dart';
 import 'package:handyman_app/Models/customer_category_data.dart';
 import 'package:handyman_app/Models/handyman_category_data.dart';
+import 'package:handyman_app/Screens/Bookings/customer_bookings_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Dashboard/Jobs/jobs_dashboard_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
@@ -302,7 +303,7 @@ class _BodyState extends State<Body> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            NotificationScreen(),
+                                            CustomerBookingsScreen(),
                                       ),
                                     );
                                   },

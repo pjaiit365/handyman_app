@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../Components/default_back_button.dart';
 import '../../../../constants.dart';
-import '../../../My Jobs/SubScreens/JobApplied/Components/body.dart';
+import '../../../My Jobs/SubScreens/JobAppliedHandyman/Components/body.dart';
 
 class JobAppliedScreen extends StatelessWidget {
   const JobAppliedScreen({Key? key}) : super(key: key);

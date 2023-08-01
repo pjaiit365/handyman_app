@@ -7,8 +7,10 @@ import '../../../constants.dart';
 import '../../../Components/appointment_tab_row.dart';
 
 class ApplicationChargeDetails extends StatefulWidget {
+  final TextEditingController chargeController;
   const ApplicationChargeDetails({
     super.key,
+    required this.chargeController,
   });
 
   @override
@@ -19,10 +21,9 @@ class ApplicationChargeDetails extends StatefulWidget {
 String jobApplicationChargeRate = 'N/A';
 
 class _ApplicationChargeDetailsState extends State<ApplicationChargeDetails> {
-  final chargeController = TextEditingController();
   @override
   void initState() {
-    chargeController.text = allJobItemList[0].charge.toString();
+    widget.chargeController.text = allJobItemList[0].charge.toString();
     if (allJobItemList[0].chargeRate == 'Hr') {
       jobApplicationChargeRate = 'Hour';
     } else if (allJobItemList[0].chargeRate == '6 Hrs') {
@@ -84,7 +85,7 @@ class _ApplicationChargeDetailsState extends State<ApplicationChargeDetails> {
                             child: Center(
                               child: TextField(
                                 autofocus: false,
-                                controller: chargeController,
+                                controller: widget.chargeController,
                                 keyboardType: TextInputType.number,
                                 cursorHeight: 16 * screenHeight,
                                 enableSuggestions: true,

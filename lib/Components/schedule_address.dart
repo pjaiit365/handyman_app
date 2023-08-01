@@ -362,14 +362,7 @@ class _ScheduleAddressState extends State<ScheduleAddress> {
                             ],
                           ),
                           Text(
-                            apppointmentHouseNum +
-                                ',\n' +
-                                apppointmentStreet +
-                                ', ' +
-                                apppointmentTown +
-                                ',\n' +
-                                apppointmentRegion +
-                                ', Ghana',
+                            '$apppointmentHouseNum,\n$apppointmentStreet, $apppointmentTown,\n$apppointmentRegion, Ghana',
                             style: TextStyle(
                               color: black,
                               fontSize: 16,

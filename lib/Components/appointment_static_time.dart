@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
+int appointmentTimeIndex = 0;
+
 class AppointmentStaticTime extends StatelessWidget {
   final int selectedTime;
   final int index;
@@ -21,6 +23,7 @@ class AppointmentStaticTime extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        appointmentTimeIndex = index;
         if (!isTimeSelected) {
           onTimeSelected(index);
         }

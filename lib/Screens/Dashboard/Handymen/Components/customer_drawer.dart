@@ -185,7 +185,7 @@ class CustomerDrawer extends StatelessWidget {
                   DrawerTile(
                     title: 'Help/Support',
                     icon: Icons.help_rounded,
-                    screen: LiveMap(),
+                    screen: LocationScreen(),
                   ),
                   SizedBox(height: 27 * screenHeight),
                   Center(

@@ -13,9 +13,10 @@
             <data android:scheme="tel" />
         </intent>
     </queries>
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
    <application
-        android:label="handyman_app"
+        android:label="HomeCareX"
         android:name="${applicationName}"
         android:icon="@drawable/app_logo">
         <activity
