@@ -13,7 +13,9 @@ class CustomerAppliedData {
   final String applierID;
   final String documentID;
   final String receiverID;
+  String? whoApplied;
   CustomerAppliedData({
+    this.whoApplied,
     required this.documentID,
     required this.receiverID,
     required this.jobID,

@@ -22,14 +22,13 @@ class _BodyState extends State<Body> {
 
   Future allData() async {
     if (isJobOffersClicked == true) {
-      await readData.getHandymanJobApplicationData(
-          'Job Offers', 'Customer', context);
       await readData.getCustomerJobApplicationData(
           'Jobs Applied', 'Customer', context);
+      await readData.getHandymanJobApplicationData(
+          'Job Offers', 'Customer', context);
     }
     if (isJobUpcomingClicked == true) {
-      await readData.getCustomerJobApplicationData(
-          'Jobs Upcoming', 'Customer', context);
+      await readData.getUpcomingJobData('Jobs Upcoming', 'Customer', context);
     }
     if (isJobCompletedClicked == true) {
       await readData.getCustomerJobApplicationData(
@@ -93,17 +92,32 @@ class _BodyState extends State<Body> {
                         ? ListView.separated(
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return MyJobItems(
-                                index: index,
-                                screen: JobUpcomingScreen(),
-                                name: allJobUpcoming[index].name,
-                                imageLocation: allJobUpcoming[index].pic,
-                                serviceCat:
-                                    allJobUpcoming[index].serviceProvided,
-                                date: allJobUpcoming[index].uploadDate,
-                                time: allJobUpcoming[index].uploadTime,
-                                orderStatus: upcomingOrderStatusList[index],
-                              );
+                              return moreOffers[selectedJob].whoApplied ==
+                                      'Customer'
+                                  ? MyJobItems(
+                                      index: index,
+                                      screen: JobUpcomingScreen(),
+                                      name: allJobUpcoming[index].name,
+                                      imageLocation: allJobUpcoming[index].pic,
+                                      serviceCat:
+                                          allJobUpcoming[index].serviceProvided,
+                                      date: allJobUpcoming[index].uploadDate,
+                                      time: allJobUpcoming[index].uploadTime,
+                                      orderStatus:
+                                          upcomingOrderStatusList[index],
+                                    )
+                                  : MyJobItems(
+                                      index: index,
+                                      screen: JobUpcomingScreen(),
+                                      name: moreOffers[index].name,
+                                      imageLocation: moreOffers[index].pic,
+                                      serviceCat:
+                                          allJobUpcoming[index].serviceProvided,
+                                      date: allJobUpcoming[index].uploadDate,
+                                      time: allJobUpcoming[index].uploadTime,
+                                      orderStatus:
+                                          upcomingOrderStatusList[index],
+                                    );
                             },
                             separatorBuilder: (context, index) {
                               return SizedBox(

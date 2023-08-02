@@ -140,7 +140,7 @@ class _BodyState extends State<Body> {
           'User Pic': allUsers[0].pic,
           'Schedule Time': timeList[appointmentTimeIndex],
           'Schedule Date':
-              '${dates[appointmentDateIndex].day}-${dates[appointmentDateIndex].month}-${dates[appointmentDateIndex].year}',
+              '${dates[appointmentDateIndex].day.toString().padLeft(2, '0')}-${dates[appointmentDateIndex].month.toString().padLeft(2, '0')}-${dates[appointmentDateIndex].year}',
         });
       }
 
@@ -154,6 +154,8 @@ class _BodyState extends State<Body> {
         final docID = document.docs.single.id;
         jobCustomerAppliedIDs =
             document.docs.single.get('Jobs Applied.Customer');
+        jobHandymanAppliedIDs =
+            document.docs.single.get('Jobs Applied.Handyman');
 
         // if (!jobCustomerAppliedIDs.contains(applierID)) {
 
@@ -165,6 +167,7 @@ class _BodyState extends State<Body> {
             .update({
           'Jobs Applied': {
             'Customer': jobCustomerAppliedIDs,
+            'Handyman': jobHandymanAppliedIDs,
           }
         });
         // }
@@ -220,6 +223,7 @@ class _BodyState extends State<Body> {
 
       if (docOffers.docs.isNotEmpty) {
         final docID = docOffers.docs.single.id;
+        jobCustomerOffersIDs = docOffers.docs.single.get('Job Offers.Handyman');
         jobHandymanOffersIDs = docOffers.docs.single.get('Job Offers.Handyman');
         jobHandymanOffersIDs.add(applierID);
         await FirebaseFirestore.instance
@@ -227,6 +231,7 @@ class _BodyState extends State<Body> {
             .doc(docID)
             .update({
           'Job Offers': {
+            'Customer': jobCustomerOffersIDs,
             'Handyman': jobHandymanOffersIDs,
           }
         });

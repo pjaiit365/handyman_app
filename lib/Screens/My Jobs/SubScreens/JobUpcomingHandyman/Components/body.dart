@@ -11,6 +11,8 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ReadData readData = ReadData();
+    // readData.getJobApplicationData();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,8 +30,8 @@ class Body extends StatelessWidget {
                       isJobOfferScreen: true,
                       buttonText: 'Reschedule',
                       statusText: 'Job Accepted',
-                      imageLocation: allJobUpcoming[selectedJob].pic,
-                      name: allJobUpcoming[selectedJob].name,
+                      imageLocation: moreOffers[selectedJob].pic,
+                      name: moreOffers[selectedJob].name,
                       region: moreOffers[selectedJob].region,
                       chargeRate: allJobUpcoming[selectedJob].chargeRate,
                       charge: allJobUpcoming[selectedJob].charge,
@@ -45,8 +47,8 @@ class Body extends StatelessWidget {
                       isJobOfferScreen: true,
                       buttonText: 'Reschedule',
                       statusText: 'Job Accepted',
-                      imageLocation: moreOffers[selectedJob].pic,
-                      name: moreOffers[selectedJob].name,
+                      imageLocation: allJobUpcoming[selectedJob].pic,
+                      name: allJobUpcoming[selectedJob].name,
                       region: allJobUpcoming[selectedJob].region,
                       chargeRate: allJobUpcoming[selectedJob].chargeRate,
                       charge: allJobUpcoming[selectedJob].charge,

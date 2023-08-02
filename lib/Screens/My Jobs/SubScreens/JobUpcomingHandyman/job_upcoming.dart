@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/default_back_button.dart';
 
 import '../../../../constants.dart';
-import '../../../My Jobs/SubScreens/JobUpcoming/Components/body.dart';
+import '../../../My Jobs/SubScreens/JobUpcomingHandyman/Components/body.dart';
 
 class JobUpcomingScreen extends StatelessWidget {
   const JobUpcomingScreen({Key? key}) : super(key: key);

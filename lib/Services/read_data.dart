@@ -839,11 +839,8 @@ class ReadData {
 
   Future getCustomerJobApplicationData(
       String tabName, String role, BuildContext context) async {
-    moreOffers.clear();
-
     if (tabName == 'Job Offers') {
       moreOffers.clear();
-
       allJobOffers.clear();
       jobCustomerOffersIDs.clear();
     } else if (tabName == 'Jobs Upcoming') {
@@ -964,6 +961,237 @@ class ReadData {
               allJobCompleted.add(jobData);
               jobHandymanCompletedIDs.add(jobData.jobUploadId);
             }
+          }
+        } else {
+          throw Exception('Job Upload Not Found');
+        }
+      } catch (e) {
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Center(
+        //         child: Text(
+        //           'Error'.toUpperCase(),
+        //           style: TextStyle(color: primary, fontSize: 17),
+        //         ),
+        //       ),
+        //       shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12)),
+        //       content: Text(
+        //         '${e.toString()}.',
+        //         style: TextStyle(
+        //           height: 1.4,
+        //           fontSize: 16,
+        //           color: black,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // );
+        print(e.toString());
+      }
+    }
+  }
+
+  Future getUpcomingJobData(
+      String tabName, String role, BuildContext context) async {
+    moreOffers.clear();
+    allJobUpcoming.clear();
+    jobCustomerUpcomingIDs.clear();
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Job Application')
+        .where('Customer ID', isEqualTo: loggedInUserId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      try {
+        final docID = querySnapshot.docs.single.id;
+
+        final document = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .get();
+        final docData = document.data()!;
+        List<dynamic> documentIDs = docData[tabName][role];
+
+        if (documentIDs.isNotEmpty) {
+          for (var id in documentIDs) {
+            late final jobData;
+            List<String> allCustomerAppliedIDs = [];
+            List<String> allHandymanAppliedIDs = [];
+            // customer job applied contains id?
+            final allCustomerAppliedDocs = await FirebaseFirestore.instance
+                .collection('Customer Jobs Applied')
+                .get();
+            final allHandymanAppliedDocs = await FirebaseFirestore.instance
+                .collection('Handyman Jobs Applied')
+                .get();
+
+            for (var doc in allCustomerAppliedDocs.docs) {
+              allCustomerAppliedIDs.add(doc.id);
+            }
+            for (var doc in allHandymanAppliedDocs.docs) {
+              allHandymanAppliedIDs.add(doc.id);
+            }
+
+            if (allCustomerAppliedIDs.contains(id)) {
+              final jobDoc = await FirebaseFirestore.instance
+                  .collection('Customer Jobs Applied')
+                  .doc(id)
+                  .get();
+
+              //
+              final docData = jobDoc.data()!;
+              final offerData = HandymanAppliedData(
+                whoApplied: 'Customer',
+                receiverID: docData['Receiver ID'],
+                referenceLinks: docData['Reference Links'],
+                documentID: docData['Jobs Applied ID'],
+                jobID: docData['Job ID'],
+                applierID: docData['Applier ID'],
+                name: docData['Name'],
+                addressType: docData['Address Type'],
+                street: docData['Street'],
+                town: docData['Town'],
+                notes: docData['Note'],
+                houseNum: docData['House Number'],
+                region: docData['Region'],
+                time: docData['Schedule Time'],
+                pic: docData['User Pic'],
+                date: docData['Schedule Date'],
+              );
+
+              moreOffers.add(offerData);
+
+              final jobID = jobDoc.get('Job ID');
+
+              final document = await FirebaseFirestore.instance
+                  .collection('Handyman Job Upload')
+                  .doc(jobID)
+                  .get();
+
+              final documentData = document.data()!;
+              String expiry = documentData['Deadline'];
+              String day = expiry[0].toString() + expiry[1].toString();
+              String month = expiry[3].toString() + expiry[4].toString();
+              String year = expiry[6].toString() +
+                  expiry[7].toString() +
+                  expiry[8].toString() +
+                  expiry[9].toString();
+              jobData = HandymanJobUploadItemData(
+                uploadDate: documentData['Upload Date'],
+                name: documentData['Name'],
+                pic: documentData['User Pic'] == ''
+                    ? ''
+                    : documentData['User Pic'],
+                uploadTime: documentData['Upload Time'],
+                jobUploadId: documentData['Job ID'],
+                serviceProvided: documentData['Service Information']
+                    ['Service Provided'],
+                seenBy: documentData['Seen By'],
+                deadlineDay: day,
+                deadlineMonth: month,
+                deadlineYear: year,
+                serviceCat: documentData['Service Information']
+                    ['Service Category'],
+                charge:
+                    documentData['Service Information']['Charge'].toString(),
+                chargeRate: documentData['Service Information']['Charge Rate'],
+                rating: documentData['Work Experience & Certification']
+                    ['Rating'],
+                houseNum: documentData['Address Information']['House Number'],
+                region: documentData['Address Information']['Region'],
+                town: documentData['Address Information']['Town'],
+                street: documentData['Address Information']['Street'],
+                expertise: documentData['Service Information']['Expertise'],
+                portfolio: documentData['Work Experience & Certification']
+                    ['Portfolio'],
+                references: documentData['Work Experience & Certification']
+                    ['References'],
+                experience: documentData['Work Experience & Certification']
+                    ['Experience'],
+                certification: documentData['Work Experience & Certification']
+                    ['Certification'],
+              );
+            } else {
+              final jobDoc = await FirebaseFirestore.instance
+                  .collection('Handyman Jobs Applied')
+                  .doc(id)
+                  .get();
+
+              //to get more info about handyman jobs applied
+              final docData = jobDoc.data()!;
+              final offerData = CustomerAppliedData(
+                receiverID: docData['Receiver ID'],
+                documentID: docData['Jobs Applied ID'],
+                jobID: docData['Job ID'],
+                applierID: docData['Applier ID'],
+                name: docData['Name'],
+                addressType: docData['Address Type'],
+                street: docData['Street'],
+                town: docData['Town'],
+                notes: docData['Note'],
+                houseNum: docData['House Number'],
+                region: docData['Region'],
+                time: docData['Schedule Time'],
+                pic: docData['User Pic'],
+                date: docData['Schedule Date'],
+                whoApplied: 'Handyman',
+              );
+
+              moreOffers.add(offerData);
+
+              final jobID = jobDoc.get('Job ID');
+
+              final document = await FirebaseFirestore.instance
+                  .collection('Customer Job Upload')
+                  .doc(jobID)
+                  .get();
+
+              final documentData = document.data()!;
+              final expiry = documentData['Job Details']['Deadline'];
+              String day = expiry[0].toString() + expiry[1].toString();
+              String month = expiry[3].toString() + expiry[4].toString();
+              String year = expiry[6].toString() +
+                  expiry[7].toString() +
+                  expiry[8].toString() +
+                  expiry[9].toString();
+              jobData = CustomerJobUploadItemData(
+                  uploadDate: documentData['Upload Date'],
+                  name: documentData['Name'],
+                  pic: documentData['User Pic'] == ''
+                      ? ''
+                      : documentData['User Pic'],
+                  uploadTime: documentData['Upload Time'],
+                  jobUploadId: documentData['Job ID'],
+                  serviceProvided: documentData['Service Information']
+                      ['Service Provided'],
+                  seenBy: documentData['Seen By'],
+                  deadlineDay: day,
+                  deadlineMonth: month,
+                  deadlineYear: year,
+                  serviceCat: documentData['Service Information']
+                      ['Service Category'],
+                  charge:
+                      documentData['Service Information']['Charge'].toString(),
+                  chargeRate: documentData['Service Information']
+                      ['Charge Rate'],
+                  rating: documentData['Work Detail & Rating']['Rating'],
+                  houseNum: documentData['Address Information']['House Number'],
+                  region: documentData['Address Information']['Region'],
+                  town: documentData['Address Information']['Town'],
+                  street: documentData['Address Information']['Street'],
+                  portfolioOption: documentData['Optional']
+                      ['Portfolio Present'],
+                  referenceOption: documentData['Optional']
+                      ['References Present'],
+                  expertise: documentData['Service Information']['Expertise'],
+                  portfolio: documentData['Work Detail & Rating']['Portfolio']);
+            }
+            allJobUpcoming.add(jobData);
+            jobHandymanUpcomingIDs.add(jobData.jobUploadId);
           }
         } else {
           throw Exception('Job Upload Not Found');
@@ -1184,146 +1412,379 @@ class ReadData {
   }
 
   Future cancelJobApplication(String type) async {
-    jobHandymanUpcomingIDs.clear();
     jobHandymanAppliedIDs.clear();
-    jobHandymanCompletedIDs.clear();
     jobHandymanOffersIDs.clear();
-    jobCustomerUpcomingIDs.clear();
     jobCustomerAppliedIDs.clear();
-    jobCustomerCompletedIDs.clear();
     jobCustomerOffersIDs.clear();
 
-    final userJobAppDoc = await FirebaseFirestore.instance
-        .collection('Job Application')
-        .where('Customer ID', isEqualTo: loggedInUserId)
-        .get();
-    if (userJobAppDoc.docs.isNotEmpty) {
-      final docID = userJobAppDoc.docs.single.id;
-      jobCustomerOffersIDs =
-          userJobAppDoc.docs.single.get('Job Offers.Customer');
-      jobHandymanOffersIDs =
-          userJobAppDoc.docs.single.get('Job Offers.Handyman');
-      jobHandymanAppliedIDs =
-          userJobAppDoc.docs.single.get('Jobs Applied.Handyman');
-      jobCustomerAppliedIDs =
-          userJobAppDoc.docs.single.get('Jobs Applied.Customer');
-      jobHandymanCompletedIDs =
-          userJobAppDoc.docs.single.get('Jobs Completed.Handyman');
-      jobCustomerCompletedIDs =
-          userJobAppDoc.docs.single.get('Jobs Completed.Customer');
-      if (type == 'Customer Uploaded') {
-        jobCustomerOffersIDs.remove(allJobOffers[selectedJob].jobUploadId);
-      } else {
-        jobHandymanOffersIDs.remove(allJobOffers[selectedJob].jobUploadId);
+    // get jobsAppliedID, receiverID, applierID, jobID
+    final jobsAppliedID = moreOffers[selectedJob].documentID;
+    final applierID = moreOffers[selectedJob].applierID;
+    final receiverID = moreOffers[selectedJob].receiverID;
+    final jobUploadID = moreOffers[selectedJob].jobID;
+
+    //delete Customer Jobs Applied with jobs applied ID
+    if (type == 'Handyman Uploaded') {
+      await FirebaseFirestore.instance
+          .collection('Customer Jobs Applied')
+          .doc(jobsAppliedID)
+          .delete();
+      // delete jobsAppliedID from applierID's Job Application -> Jobs Applied -> customer
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Job Application')
+          .where('Customer ID', isEqualTo: applierID)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docID = querySnapshot.docs.single.id;
+        jobCustomerAppliedIDs =
+            querySnapshot.docs.single.get('Jobs Applied.Customer');
+        jobHandymanAppliedIDs =
+            querySnapshot.docs.single.get('Jobs Applied.Handyman');
+
+        jobCustomerAppliedIDs.remove(jobsAppliedID);
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Jobs Applied': {
+            'Customer': jobCustomerAppliedIDs,
+            'Handyman': jobHandymanAppliedIDs,
+          }
+        });
+      }
+      // delete jobsAppliedID from receiverID's Job Application -> Job Offers -> Handyman
+      final offersDocs = await FirebaseFirestore.instance
+          .collection('Job Application')
+          .where('Customer ID', isEqualTo: receiverID)
+          .get();
+      if (offersDocs.docs.isNotEmpty) {
+        final docID = offersDocs.docs.single.id;
+        jobCustomerOffersIDs =
+            offersDocs.docs.single.get('Job Offers.Customer');
+        jobHandymanOffersIDs =
+            offersDocs.docs.single.get('Job Offers.Handyman');
+
+        print(jobCustomerOffersIDs);
+        print(jobHandymanOffersIDs);
+
+        jobHandymanOffersIDs.remove(jobsAppliedID);
+        print(jobHandymanOffersIDs);
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Job Offers': {
+            'Customer': jobCustomerOffersIDs,
+            'Handyman': jobHandymanOffersIDs,
+          }
+        });
+      }
+      // delete jobsApplied from jobUpload( jobID ) -> Applier IDs
+
+      final jobUploadDoc = await FirebaseFirestore.instance
+          .collection('Handyman Job Upload')
+          .where('Job ID', isEqualTo: jobUploadID)
+          .get();
+      if (jobUploadDoc.docs.isNotEmpty) {
+        final docID = jobUploadDoc.docs.single.id;
+        List applierIDs =
+            jobUploadDoc.docs.single.get('Job Details.Applier IDs');
+
+        print(applierIDs);
+        applierIDs.remove(jobsAppliedID);
+
+        await FirebaseFirestore.instance
+            .collection('Handyman Job Upload')
+            .doc(docID)
+            .update({
+          'Job Details': {
+            'Applier IDs': applierIDs,
+            'People Applied': applierIDs.length,
+          }
+        });
+      }
+    } else {
+      // delete document at Customer Jobs Applied
+      await FirebaseFirestore.instance
+          .collection('Handyman Jobs Applied')
+          .doc(jobsAppliedID)
+          .delete();
+
+      // delete applier id at Job application -> Jobs Applied -> Handyman
+
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Job Application')
+          .where('Customer ID', isEqualTo: loggedInUserId)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docID = querySnapshot.docs.single.id;
+        jobCustomerAppliedIDs =
+            querySnapshot.docs.single.get('Jobs Applied.Customer');
+        jobHandymanAppliedIDs =
+            querySnapshot.docs.single.get('Jobs Applied.Handyman');
+
+        jobHandymanAppliedIDs.remove(jobsAppliedID);
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Jobs Applied': {
+            'Customer': jobCustomerAppliedIDs,
+            'Handyman': jobHandymanAppliedIDs,
+          }
+        });
       }
 
-      await FirebaseFirestore.instance
-          .collection('Job Application')
-          .doc(docID)
-          .update({
-        'Jobs Applied': {
-          'Handyman': jobHandymanAppliedIDs,
-          'Customer': jobCustomerAppliedIDs,
-        },
-        'Jobs Completed': {
-          'Handyman': jobHandymanCompletedIDs,
-          'Customer': jobCustomerCompletedIDs,
-        },
-        'Job Offers': {
-          'Handyman': jobHandymanOffersIDs,
-          'Customer': jobCustomerOffersIDs,
-        },
-        'Jobs Upcoming': {
-          'Handyman': jobHandymanUpcomingIDs,
-          'Customer': jobCustomerUpcomingIDs,
-        },
-      });
-    }
+      // delete applier id at Job application -> Jobs Offers -> Customer
 
-    if (type == 'Customer Uploaded') {
-      final uploadJob = await FirebaseFirestore.instance
-          .collection('Customer Job Upload')
-          .where('Job ID', isEqualTo: allJobOffers[selectedJob].jobUploadId)
+      final offersDocs = await FirebaseFirestore.instance
+          .collection('Job Application')
+          .where('Customer ID', isEqualTo: receiverID)
           .get();
-      if (uploadJob.docs.isNotEmpty) {
-        final uploadJobCustID = uploadJob.docs.single.get('Customer ID');
-        List applierIDs = uploadJob.docs.single.get('Job Details.Applier IDs');
-        applierIDs.remove(loggedInUserId);
-        var deadlineP = uploadJob.docs.single.get('Job Details.Deadline');
-        final docID = uploadJob.docs.single.id;
+      if (offersDocs.docs.isNotEmpty) {
+        final docID = offersDocs.docs.single.id;
+        jobCustomerOffersIDs =
+            offersDocs.docs.single.get('Job Offers.Customer');
+        jobHandymanOffersIDs =
+            offersDocs.docs.single.get('Job Offers.Handyman');
+
+        jobCustomerOffersIDs.remove(jobsAppliedID);
+
+        await FirebaseFirestore.instance
+            .collection('Job Application')
+            .doc(docID)
+            .update({
+          'Job Offers': {
+            'Customer': jobCustomerOffersIDs,
+            'Handyman': jobHandymanOffersIDs,
+          }
+        });
+      }
+
+      // delete applier id at job upload -> Job Details -> applier ids
+
+      final jobUploadDoc = await FirebaseFirestore.instance
+          .collection('Customer Job Upload')
+          .where('Job ID', isEqualTo: jobUploadID)
+          .get();
+      if (jobUploadDoc.docs.isNotEmpty) {
+        final docID = jobUploadDoc.docs.single.id;
+        List applierIDs =
+            jobUploadDoc.docs.single.get('Job Details.Applier IDs');
+        final jobStatusApplication =
+            jobUploadDoc.docs.single.get('Job Details.Job Status');
+        final deadlineApplication =
+            jobUploadDoc.docs.single.get('Job Details.Deadline');
+
+        applierIDs.remove(jobsAppliedID);
+
         await FirebaseFirestore.instance
             .collection('Customer Job Upload')
             .doc(docID)
-            .update(
-          {
-            'Job Details': {
-              'Applier IDs': applierIDs,
-              'People Applied': applierIDs.isEmpty ? 0 : applierIDs.length,
-              'Deadline': deadlineP,
-            }
-          },
-        );
+            .update({
+          'Job Details': {
+            'Applier IDs': applierIDs,
+            'People Applied': applierIDs.length,
+            'Job Status': jobStatusApplication,
+            'Deadline': deadlineApplication
+          }
+        });
+      }
+    }
+  }
 
-        final uploadJobAppDoc = await FirebaseFirestore.instance
+  Future acceptOffer(String type) async {
+    jobCustomerAppliedIDs.clear();
+    jobHandymanAppliedIDs.clear();
+    jobCustomerUpcomingIDs.clear();
+    jobHandymanUpcomingIDs.clear();
+    jobCustomerOffersIDs.clear();
+    jobHandymanOffersIDs.clear();
+
+    //get jobsAppliedID, applierID, receiverID
+    final jobsAppliedID = moreOffers[selectedJob].documentID;
+    final applierID = moreOffers[selectedJob].applierID;
+    final receiverID = moreOffers[selectedJob].receiverID;
+
+    try {
+      if (type == 'Handyman Uploaded') {
+        // change job status in Customer Jobs Applied to Accepted
+
+        await FirebaseFirestore.instance
+            .collection('Customer Jobs Applied')
+            .doc(jobsAppliedID)
+            .update({'Job Status': 'Accepted'});
+
+        // remove jobsAppliedID from Jobs Application (applierID) -> Applied -> Customer
+        // add jobsAppliedID from Jobs Application (applierID) -> Upcoming -> Customer
+
+        final appliedDocs = await FirebaseFirestore.instance
             .collection('Job Application')
-            .where('Customer ID', isEqualTo: uploadJobCustID)
+            .where('Customer ID', isEqualTo: applierID)
             .get();
-        if (uploadJobAppDoc.docs.isNotEmpty) {
-          final docID = uploadJobAppDoc.docs.single.id;
-          List offersID =
-              uploadJobAppDoc.docs.single.get('Job Applied.Handyman');
-          offersID.remove(allJobOffers[selectedJob].jobUploadId);
+        if (appliedDocs.docs.isNotEmpty) {
+          final docID = appliedDocs.docs.single.id;
+          jobCustomerAppliedIDs =
+              appliedDocs.docs.single.get('Jobs Applied.Customer');
+          jobHandymanAppliedIDs =
+              appliedDocs.docs.single.get('Jobs Applied.Handyman');
+          jobCustomerUpcomingIDs =
+              appliedDocs.docs.single.get('Jobs Upcoming.Customer');
+          jobHandymanUpcomingIDs =
+              appliedDocs.docs.single.get('Jobs Upcoming.Handyman');
+
+          jobCustomerAppliedIDs.remove(jobsAppliedID);
+          jobCustomerUpcomingIDs.add(jobsAppliedID);
+
           await FirebaseFirestore.instance
               .collection('Job Application')
               .doc(docID)
               .update({
             'Jobs Applied': {
-              'Handyman': offersID,
-            }
+              'Customer': jobCustomerAppliedIDs,
+              'Handyman': jobHandymanAppliedIDs,
+            },
+            'Jobs Upcoming': {
+              'Customer': jobCustomerUpcomingIDs,
+              'Handyman': jobHandymanUpcomingIDs,
+            },
           });
         }
-      }
-    } else {
-      final uploadJob = await FirebaseFirestore.instance
-          .collection('Handyman Job Upload')
-          .where('Job ID', isEqualTo: allJobOffers[selectedJob].jobUploadId)
-          .get();
-      if (uploadJob.docs.isNotEmpty) {
-        final uploadJobCustID = uploadJob.docs.single.get('Customer ID');
-        List applierIDs = uploadJob.docs.single.get('Job Details.Applier IDs');
-        applierIDs.remove(loggedInUserId);
-        final docID = uploadJob.docs.single.id;
-        await FirebaseFirestore.instance
-            .collection('Handyman Job Upload')
-            .doc(docID)
-            .update(
-          {
-            'Job Details': {
-              'Applier IDs': applierIDs,
-              'People Applied': applierIDs.isEmpty ? 0 : applierIDs.length,
-            }
-          },
-        );
 
-        final uploadJobAppDoc = await FirebaseFirestore.instance
+        // clear all variables used for reuse
+        jobCustomerAppliedIDs.clear();
+        jobHandymanAppliedIDs.clear();
+        jobCustomerUpcomingIDs.clear();
+        jobHandymanUpcomingIDs.clear();
+
+        // remove jobsAppliedID from Jobs Application (receiverID) -> Offer -> Handyman
+        // add jobsAppliedID from Jobs Application (receiverID) -> Upcoming -> Handyman}
+
+        final offerDocs = await FirebaseFirestore.instance
             .collection('Job Application')
-            .where('Customer ID', isEqualTo: uploadJobCustID)
+            .where('Customer ID', isEqualTo: receiverID)
             .get();
-        if (uploadJobAppDoc.docs.isNotEmpty) {
-          final docID = uploadJobAppDoc.docs.single.id;
-          List offersID =
-              uploadJobAppDoc.docs.single.get('Job Applied.Customer');
-          offersID.remove(allJobOffers[selectedJob].jobUploadId);
+        if (offerDocs.docs.isNotEmpty) {
+          final docID = offerDocs.docs.single.id;
+          jobCustomerOffersIDs =
+              offerDocs.docs.single.get('Job Offers.Customer');
+          jobHandymanOffersIDs =
+              offerDocs.docs.single.get('Job Offers.Handyman');
+          jobCustomerUpcomingIDs =
+              offerDocs.docs.single.get('Jobs Upcoming.Customer');
+          jobHandymanUpcomingIDs =
+              offerDocs.docs.single.get('Jobs Upcoming.Handyman');
+
+          jobHandymanOffersIDs.remove(jobsAppliedID);
+          jobHandymanUpcomingIDs.add(jobsAppliedID);
+
           await FirebaseFirestore.instance
               .collection('Job Application')
               .doc(docID)
               .update({
-            'Job Applied': {
-              'Customer': offersID,
-            }
+            'Job Offers': {
+              'Customer': jobCustomerOffersIDs,
+              'Handyman': jobHandymanOffersIDs,
+            },
+            'Jobs Upcoming': {
+              'Customer': jobCustomerUpcomingIDs,
+              'Handyman': jobHandymanUpcomingIDs,
+            },
+          });
+        }
+      } else {
+        // change job status in Customer Jobs Applied to Accepted
+
+        await FirebaseFirestore.instance
+            .collection('Handyman Jobs Applied')
+            .doc(jobsAppliedID)
+            .update({'Job Status': 'Accepted'});
+
+        // remove jobsAppliedID from Jobs Application (applierID) -> Applied -> Customer
+        // add jobsAppliedID from Jobs Application (applierID) -> Upcoming -> Customer
+
+        final appliedDocs = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .where('Customer ID', isEqualTo: applierID)
+            .get();
+        if (appliedDocs.docs.isNotEmpty) {
+          final docID = appliedDocs.docs.single.id;
+          jobCustomerAppliedIDs =
+              appliedDocs.docs.single.get('Jobs Applied.Customer');
+          jobHandymanAppliedIDs =
+              appliedDocs.docs.single.get('Jobs Applied.Handyman');
+          jobCustomerUpcomingIDs =
+              appliedDocs.docs.single.get('Jobs Upcoming.Customer');
+          jobHandymanUpcomingIDs =
+              appliedDocs.docs.single.get('Jobs Upcoming.Handyman');
+
+          jobHandymanAppliedIDs.remove(jobsAppliedID);
+          jobHandymanUpcomingIDs.add(jobsAppliedID);
+
+          await FirebaseFirestore.instance
+              .collection('Job Application')
+              .doc(docID)
+              .update({
+            'Jobs Applied': {
+              'Customer': jobCustomerAppliedIDs,
+              'Handyman': jobHandymanAppliedIDs,
+            },
+            'Jobs Upcoming': {
+              'Customer': jobCustomerUpcomingIDs,
+              'Handyman': jobHandymanUpcomingIDs,
+            },
+          });
+        }
+
+        // clear all variables used for reuse
+        jobCustomerAppliedIDs.clear();
+        jobHandymanAppliedIDs.clear();
+        jobCustomerUpcomingIDs.clear();
+        jobHandymanUpcomingIDs.clear();
+
+        // remove jobsAppliedID from Jobs Application (receiverID) -> Offer -> Handyman
+        // add jobsAppliedID from Jobs Application (receiverID) -> Upcoming -> Handyman}
+
+        final offerDocs = await FirebaseFirestore.instance
+            .collection('Job Application')
+            .where('Customer ID', isEqualTo: receiverID)
+            .get();
+        if (offerDocs.docs.isNotEmpty) {
+          final docID = offerDocs.docs.single.id;
+          jobCustomerOffersIDs =
+              offerDocs.docs.single.get('Job Offers.Customer');
+          jobHandymanOffersIDs =
+              offerDocs.docs.single.get('Job Offers.Handyman');
+          jobCustomerUpcomingIDs =
+              offerDocs.docs.single.get('Jobs Upcoming.Customer');
+          jobHandymanUpcomingIDs =
+              offerDocs.docs.single.get('Jobs Upcoming.Handyman');
+
+          jobCustomerOffersIDs.remove(jobsAppliedID);
+          jobCustomerUpcomingIDs.add(jobsAppliedID);
+
+          await FirebaseFirestore.instance
+              .collection('Job Application')
+              .doc(docID)
+              .update({
+            'Job Offers': {
+              'Customer': jobCustomerOffersIDs,
+              'Handyman': jobHandymanOffersIDs,
+            },
+            'Jobs Upcoming': {
+              'Customer': jobCustomerUpcomingIDs,
+              'Handyman': jobHandymanUpcomingIDs,
+            },
           });
         }
       }
+    } on FirebaseException catch (error) {
+      print(error.toString());
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -1398,119 +1859,3 @@ class ReadData {
     }
   }
 }
-
-// Future deleteJobApplication(String type) async {
-//   jobCustomerAppliedIDs.remove(allJobApplied[selectedJob].jobUploadId);
-//   final userJobAppDoc = await FirebaseFirestore.instance
-//       .collection('Job Application')
-//       .where('Customer ID', isEqualTo: loggedInUserId)
-//       .get();
-//   if (userJobAppDoc.docs.isNotEmpty) {
-//     final docID = userJobAppDoc.docs.single.id;
-//     await FirebaseFirestore.instance
-//         .collection('Job Application')
-//         .doc(docID)
-//         .update({
-//       'Jobs Applied': {
-//         'Handyman': jobHandymanAppliedIDs,
-//         'Customer': jobCustomerAppliedIDs,
-//       },
-//       'Jobs Completed': {
-//         'Handyman': jobHandymanCompletedIDs,
-//         'Customer': jobCustomerCompletedIDs,
-//       },
-//       'Job Offers': {
-//         'Handyman': jobHandymanOffersIDs,
-//         'Customer': jobCustomerOffersIDs,
-//       },
-//       'Jobs Upcoming': {
-//         'Handyman': jobHandymanUpcomingIDs,
-//         'Customer': jobCustomerUpcomingIDs,
-//       },
-//     });
-//   }
-//
-//   if (type == 'Customer Uploaded') {
-//     final uploadJob = await FirebaseFirestore.instance
-//         .collection('Customer Job Upload')
-//         .where('Job ID', isEqualTo: allJobApplied[selectedJob].jobUploadId)
-//         .get();
-//     if (uploadJob.docs.isNotEmpty) {
-//       final uploadJobCustID = uploadJob.docs.single.get('Customer ID');
-//       List applierIDs = uploadJob.docs.single.get('Job Details.Applier IDs');
-//       applierIDs.remove(loggedInUserId);
-//       final docID = uploadJob.docs.single.id;
-//       await FirebaseFirestore.instance
-//           .collection('Customer Job Upload')
-//           .doc(docID)
-//           .update(
-//         {
-//           'Job Details': {
-//             'Applier IDs': applierIDs,
-//             'People Applied': applierIDs.isEmpty ? 0 : applierIDs.length,
-//           }
-//         },
-//       );
-//
-//       final uploadJobAppDoc = await FirebaseFirestore.instance
-//           .collection('Job Application')
-//           .where('Customer ID', isEqualTo: uploadJobCustID)
-//           .get();
-//       if (uploadJobAppDoc.docs.isNotEmpty) {
-//         final docID = uploadJobAppDoc.docs.single.id;
-//         List offersID =
-//         uploadJobAppDoc.docs.single.get('Job Offers.Customer');
-//         offersID.remove(allJobApplied[selectedJob].jobUploadId);
-//         await FirebaseFirestore.instance
-//             .collection('Job Application')
-//             .doc(docID)
-//             .update({
-//           'Job Offers': {
-//             'Customer': offersID,
-//           }
-//         });
-//       }
-//     }
-//   } else {
-//     final uploadJob = await FirebaseFirestore.instance
-//         .collection('Handyman Job Upload')
-//         .where('Job ID', isEqualTo: allJobApplied[selectedJob].jobUploadId)
-//         .get();
-//     if (uploadJob.docs.isNotEmpty) {
-//       final uploadJobCustID = uploadJob.docs.single.get('Customer ID');
-//       List applierIDs = uploadJob.docs.single.get('Job Details.Applier IDs');
-//       applierIDs.remove(loggedInUserId);
-//       final docID = uploadJob.docs.single.id;
-//       await FirebaseFirestore.instance
-//           .collection('Handyman Job Upload')
-//           .doc(docID)
-//           .update(
-//         {
-//           'Job Details': {
-//             'Applier IDs': applierIDs,
-//             'People Applied': applierIDs.isEmpty ? 0 : applierIDs.length,
-//           }
-//         },
-//       );
-//
-//       final uploadJobAppDoc = await FirebaseFirestore.instance
-//           .collection('Job Application')
-//           .where('Customer ID', isEqualTo: uploadJobCustID)
-//           .get();
-//       if (uploadJobAppDoc.docs.isNotEmpty) {
-//         final docID = uploadJobAppDoc.docs.single.id;
-//         List offersID =
-//         uploadJobAppDoc.docs.single.get('Job Offers.Handyman');
-//         offersID.remove(allJobApplied[selectedJob].jobUploadId);
-//         await FirebaseFirestore.instance
-//             .collection('Job Application')
-//             .doc(docID)
-//             .update({
-//           'Job Offers': {
-//             'Handyman': offersID,
-//           }
-//         });
-//       }
-//     }
-//   }
-// }

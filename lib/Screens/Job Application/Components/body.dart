@@ -162,7 +162,7 @@ class _BodyState extends State<Body> {
           'User Pic': allUsers[0].pic,
           'Schedule Time': timeList[appointmentTimeIndex],
           'Schedule Date':
-              '${dates[appointmentDateIndex].day}-${dates[appointmentDateIndex].month}-${dates[appointmentDateIndex].year}',
+              '${dates[appointmentDateIndex].day.toString().padLeft(2, '0')}-${dates[appointmentDateIndex].month.toString().padLeft(2, '0')}-${dates[appointmentDateIndex].year}',
         });
       }
 
@@ -174,6 +174,8 @@ class _BodyState extends State<Body> {
           .get();
       if (document.docs.isNotEmpty) {
         final docID = document.docs.single.id;
+        jobCustomerAppliedIDs =
+            document.docs.single.get('Jobs Applied.Customer');
         jobHandymanAppliedIDs =
             document.docs.single.get('Jobs Applied.Handyman');
 
@@ -184,7 +186,10 @@ class _BodyState extends State<Body> {
             .collection('Job Application')
             .doc(docID)
             .update({
-          'Jobs Applied': {'Handyman': jobHandymanAppliedIDs}
+          'Jobs Applied': {
+            'Customer': jobCustomerAppliedIDs,
+            'Handyman': jobHandymanAppliedIDs,
+          }
         });
         // } else {
         //   throw Exception();
@@ -237,12 +242,16 @@ class _BodyState extends State<Body> {
       if (docOffers.docs.isNotEmpty) {
         final docID = docOffers.docs.single.id;
         jobCustomerOffersIDs = docOffers.docs.single.get('Job Offers.Customer');
+        jobHandymanOffersIDs = docOffers.docs.single.get('Job Offers.Handyman');
 
         await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
             .update({
-          'Job Offers': {'Customer': jobCustomerOffersIDs},
+          'Job Offers': {
+            'Customer': jobCustomerOffersIDs,
+            'Handyman': jobHandymanOffersIDs,
+          },
         });
       } else {
         jobCustomerOffersIDs.clear();
