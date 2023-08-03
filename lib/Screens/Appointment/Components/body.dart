@@ -56,12 +56,12 @@ class _BodyState extends State<Body> {
         return AlertDialog(
           insetPadding: EdgeInsets.all(10),
           backgroundColor: Colors.transparent,
-          scrollable: true,
           content: isSummaryClicked
               ? SummaryDetails()
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     SummaryDetails(),
                     SizedBox(height: 24 * screenHeight),

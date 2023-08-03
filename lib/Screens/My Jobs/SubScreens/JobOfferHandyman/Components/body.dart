@@ -1,6 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobUpcoming/job_upcoming.dart';
 import 'package:handyman_app/Services/read_data.dart';
@@ -136,6 +139,32 @@ class Body extends StatelessWidget {
       physics: BouncingScrollPhysics(),
       child: JobDetailsAndStatus(
         function: () async {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                insetPadding:
+                    EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    (Platform.isIOS)
+                        ? const CupertinoActivityIndicator(
+                            radius: 20,
+                            color: Color(0xff32B5BD),
+                          )
+                        : const CircularProgressIndicator(
+                            color: Color(0xff32B5BD),
+                          ),
+                  ],
+                ),
+              );
+            },
+          );
           await ReadData().acceptOffer('Handyman Uploaded');
           Navigator.push(
             context,

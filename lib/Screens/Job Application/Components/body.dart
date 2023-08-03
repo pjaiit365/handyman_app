@@ -80,6 +80,7 @@ class _BodyState extends State<Body> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ApplicationSummaryDetails(),
                     SizedBox(height: 24 * screenHeight),
@@ -122,7 +123,9 @@ class _BodyState extends State<Body> {
 
   Future applyJob() async {
     jobHandymanAppliedIDs.clear();
+    jobCustomerAppliedIDs.clear();
     jobCustomerOffersIDs.clear();
+    jobHandymanOffersIDs.clear();
 
     try {
       // join customer id to job id to create primary key
@@ -244,6 +247,8 @@ class _BodyState extends State<Body> {
         jobCustomerOffersIDs = docOffers.docs.single.get('Job Offers.Customer');
         jobHandymanOffersIDs = docOffers.docs.single.get('Job Offers.Handyman');
 
+        jobCustomerOffersIDs.add(applierID);
+
         await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
@@ -254,8 +259,10 @@ class _BodyState extends State<Body> {
           },
         });
       } else {
-        jobCustomerOffersIDs.clear();
+        print(jobCustomerOffersIDs);
+
         jobCustomerOffersIDs.add(applierID);
+        print(jobCustomerOffersIDs);
         final document =
             await FirebaseFirestore.instance.collection('Job Application').add({
           'Jobs Applied': {

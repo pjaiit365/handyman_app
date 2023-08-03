@@ -1,18 +1,39 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/pinned_button.dart';
-import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobInProgress/job_in_progress_screen.dart';
+import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobInProgressHandyman/job_in_progress_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
 
 import '../../../../../Components/job_details_and_status.dart';
 import '../../../../../constants.dart';
+import '../../../my_jobs_screen.dart';
 
 class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // ReadData readData = ReadData();
-    // readData.getJobApplicationData();
+    Future startJob() async {
+      final jobsAppliedID = moreOffers[selectedJob].documentID;
+      if (moreOffers[selectedJob].whoApplied == 'Customer') {
+        await FirebaseFirestore.instance
+            .collection('Customer Jobs Applied')
+            .doc(jobsAppliedID)
+            .update(
+          {'Job Status': 'Ongoing'},
+        );
+      } else {
+        await FirebaseFirestore.instance
+            .collection('Handyman Jobs Applied')
+            .doc(jobsAppliedID)
+            .update(
+          {'Job Status': 'Ongoing'},
+        );
+      }
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,8 +44,17 @@ class Body extends StatelessWidget {
             shrinkWrap: true,
             itemCount: 1,
             itemBuilder: (context, index) {
-              return moreOffers[selectedJob].whoApplied == 'Customer '
+              return moreOffers[selectedJob].whoApplied == 'Customer'
                   ? JobDetailsAndStatus(
+                      declineFunction: () async {
+                        await ReadData().deleteJobUpcoming('Handyman Uploaded');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyJobsScreen(),
+                          ),
+                        );
+                      },
                       isJobPendingActive: true,
                       screen: JobInProgressScreen(),
                       isJobOfferScreen: true,
@@ -42,6 +72,15 @@ class Body extends StatelessWidget {
                       date: moreOffers[selectedJob].date,
                     )
                   : JobDetailsAndStatus(
+                      declineFunction: () async {
+                        await ReadData().deleteJobUpcoming('Customer Uploaded');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyJobsScreen(),
+                          ),
+                        );
+                      },
                       isJobPendingActive: true,
                       screen: JobInProgressScreen(),
                       isJobOfferScreen: true,
@@ -62,7 +101,15 @@ class Body extends StatelessWidget {
           ),
         ),
         PinnedButton(
-          screen: JobInProgressScreen(),
+          function: () async {
+            await startJob();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => JobInProgressScreen(),
+              ),
+            );
+          },
           buttonText: 'Start',
           isIconPresent: true,
         ),

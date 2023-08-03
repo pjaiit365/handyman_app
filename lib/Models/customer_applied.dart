@@ -13,10 +13,12 @@ class CustomerAppliedData {
   final String applierID;
   final String documentID;
   final String receiverID;
+  final String jobStatus;
   String? whoApplied;
   CustomerAppliedData({
     this.whoApplied,
     required this.documentID,
+    required this.jobStatus,
     required this.receiverID,
     required this.jobID,
     required this.applierID,

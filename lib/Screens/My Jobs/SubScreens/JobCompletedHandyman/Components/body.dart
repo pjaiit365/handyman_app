@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
 
 import '../../../../../Components/job_details_and_status.dart';
@@ -28,9 +31,9 @@ class Body extends StatelessWidget {
                       isJobPendingActive: false,
                       screen: JobInProgressScreen(),
                       isJobOfferScreen: false,
-                      statusText: 'Job Completed',
-                      imageLocation: allJobCompleted[selectedJob].pic,
-                      name: allJobCompleted[selectedJob].name,
+                      statusText: 'Job Accepted',
+                      imageLocation: moreOffers[selectedJob].pic,
+                      name: moreOffers[selectedJob].name,
                       region: moreOffers[selectedJob].region,
                       chargeRate: allJobCompleted[selectedJob].chargeRate,
                       charge: allJobCompleted[selectedJob].charge,
@@ -45,13 +48,13 @@ class Body extends StatelessWidget {
                       isJobPendingActive: false,
                       screen: JobInProgressScreen(),
                       isJobOfferScreen: false,
-                      statusText: 'Job Completed',
-                      imageLocation: moreOffers[selectedJob].pic,
-                      name: moreOffers[selectedJob].name,
+                      statusText: 'Job Accepted',
+                      imageLocation: allJobCompleted[selectedJob].pic,
+                      name: allJobCompleted[selectedJob].name,
                       region: allJobCompleted[selectedJob].region,
                       chargeRate: allJobCompleted[selectedJob].chargeRate,
                       charge: allJobCompleted[selectedJob].charge,
-                      street: moreOffers[selectedJob].street,
+                      street: allJobCompleted[selectedJob].street,
                       town: allJobCompleted[selectedJob].town,
                       houseNum: allJobCompleted[selectedJob].houseNum,
                       jobType: allJobCompleted[selectedJob].serviceProvided,
@@ -61,8 +64,48 @@ class Body extends StatelessWidget {
           ),
         ),
         PinnedButton(
-          screen: PaymentOptionsScreen(),
-          buttonText: 'Make Payment',
+          function: () async {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  insetPadding:
+                      EdgeInsets.symmetric(horizontal: 10 * screenWidth),
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Image(
+                          image: AssetImage(
+                              'assets/images/notification_sent.gif')),
+                      SizedBox(height: 15 * screenHeight),
+                      Text(
+                        'Notification Sent!',
+                        style: TextStyle(
+                          color: black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
+
+            await Future.delayed(Duration(seconds: 3), () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyJobsScreen(),
+                ),
+              );
+            });
+          },
+          buttonText: 'Request Payment',
           isIconPresent: true,
         ),
       ],

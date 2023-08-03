@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 
 import '../../Components/default_back_button.dart';
 import '../../constants.dart';
@@ -11,7 +12,10 @@ class CustomerBookingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: DefaultBackButton(),
+        leading: DefaultBackButton(
+          isNormalBackButton: false,
+          screen: HandymanDashboardScreen(),
+        ),
         title: Text(
           'Bookings',
           style: TextStyle(

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
@@ -24,6 +26,7 @@ class HandymanDrawer extends StatelessWidget {
     Future signOut() async {
       await FirebaseAuth.instance.signOut();
       allUsers.clear();
+      imageUrl = '';
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(

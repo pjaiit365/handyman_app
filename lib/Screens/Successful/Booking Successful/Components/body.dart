@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:handyman_app/Screens/Dashboard/Handymen/handymen_dashboard_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
 import 'package:handyman_app/constants.dart';
 
@@ -43,7 +44,7 @@ class Body extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HandymanProfileScreen(),
+                  builder: (context) => HandymanDashboardScreen(),
                 ));
           },
           child: Container(

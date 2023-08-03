@@ -13,12 +13,14 @@ class HandymanAppliedData {
   final String applierID;
   final String documentID;
   final String receiverID;
+  final String jobStatus;
   String? whoApplied;
   List? referenceLinks;
   // final List portfolio;
   HandymanAppliedData({
     this.whoApplied,
     required this.documentID,
+    required this.jobStatus,
     required this.jobID,
     required this.receiverID,
     required this.applierID,

@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/pinned_button.dart';
-import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
+import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompletedHandyman/job_completed_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
 
 import '../../../../../Components/job_details_and_status.dart';
@@ -15,6 +14,13 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future completeJob() async {
+      //get jobsAppliedID, receiverID, applierID, jobID
+      // change job status of Customer/Handyman Jobs Applied
+
+      // remove jobsAppliedID from Job Application ()
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

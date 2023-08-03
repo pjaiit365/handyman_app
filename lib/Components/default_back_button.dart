@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Notifications/notification_screen.dart';
 
 import '../constants.dart';
 
 class DefaultBackButton extends StatelessWidget {
-  const DefaultBackButton({
+  bool isNormalBackButton;
+  Widget screen;
+  DefaultBackButton({
     Key? key,
+    this.isNormalBackButton = true,
+    this.screen = const NotificationScreen(),
   }) : super(key: key);
 
   @override
@@ -12,7 +17,13 @@ class DefaultBackButton extends StatelessWidget {
     return IconButton(
       highlightColor: tabLight,
       onPressed: () {
-        Navigator.pop(context);
+        isNormalBackButton
+            ? Navigator.pop(context)
+            : Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => screen,
+                ));
       },
       icon: Padding(
         padding: EdgeInsets.only(left: screenWidth * 12.0),

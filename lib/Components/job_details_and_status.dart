@@ -161,28 +161,31 @@ class JobDetailsAndStatus extends StatelessWidget {
               : SizedBox(),
           isJobInProgessScreen
               ? Center(
-                  child: Container(
-                    height: 44 * screenHeight,
-                    width: 365 * screenWidth,
-                    decoration: BoxDecoration(
-                      color: Color(0xff96C2CC),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset('assets/icons/location.png'),
-                        SizedBox(width: 9 * screenWidth),
-                        Text(
-                          buttonText,
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
+                  child: GestureDetector(
+                    onTap: function,
+                    child: Container(
+                      height: 44 * screenHeight,
+                      width: 365 * screenWidth,
+                      decoration: BoxDecoration(
+                        color: Color(0xff96C2CC),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset('assets/icons/location.png'),
+                          SizedBox(width: 9 * screenWidth),
+                          Text(
+                            buttonText,
+                            style: TextStyle(
+                              color: white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )

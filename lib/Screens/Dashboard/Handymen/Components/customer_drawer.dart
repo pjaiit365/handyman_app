@@ -32,6 +32,7 @@ class CustomerDrawer extends StatelessWidget {
       await FirebaseAuth.instance.signOut();
       allUsers.clear();
       imageUrl = '';
+
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(

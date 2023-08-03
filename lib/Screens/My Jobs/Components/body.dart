@@ -5,10 +5,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/offers_and_widgets_alt.dart';
-import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
+import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompletedHandyman/job_completed_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
 
+import '../SubScreens/JobInProgressHandyman/job_in_progress_screen.dart';
 import '../SubScreens/JobUpcomingHandyman/job_upcoming.dart';
 import 'my_job_items.dart';
 import 'my_jobs_tabs.dart';
@@ -99,7 +100,10 @@ class _BodyState extends State<Body> {
                                       'Customer'
                                   ? MyJobItems(
                                       index: index,
-                                      screen: JobUpcomingScreen(),
+                                      screen: moreOffers[index].jobStatus ==
+                                              'Accepted'
+                                          ? JobUpcomingScreen()
+                                          : JobInProgressScreen(),
                                       name: moreOffers[index].name,
                                       imageLocation: moreOffers[index].pic,
                                       serviceCat:
@@ -107,11 +111,17 @@ class _BodyState extends State<Body> {
                                       date: allJobUpcoming[index].uploadDate,
                                       time: allJobUpcoming[index].uploadTime,
                                       orderStatus:
-                                          upcomingOrderStatusList[index],
+                                          moreOffers[index].jobStatus ==
+                                                  'Accepted'
+                                              ? 'View Order'
+                                              : 'Ongoing',
                                     )
                                   : MyJobItems(
                                       index: index,
-                                      screen: JobUpcomingScreen(),
+                                      screen: moreOffers[index].jobStatus ==
+                                              'Accepted'
+                                          ? JobUpcomingScreen()
+                                          : JobInProgressScreen(),
                                       name: allJobUpcoming[index].name,
                                       imageLocation: allJobUpcoming[index].pic,
                                       serviceCat:
@@ -119,7 +129,10 @@ class _BodyState extends State<Body> {
                                       date: allJobUpcoming[index].uploadDate,
                                       time: allJobUpcoming[index].uploadTime,
                                       orderStatus:
-                                          upcomingOrderStatusList[index],
+                                          moreOffers[index].jobStatus ==
+                                                  'Accepted'
+                                              ? 'View Order'
+                                              : 'Ongoing',
                                     );
                             },
                             separatorBuilder: (context, index) {
@@ -166,17 +179,30 @@ class _BodyState extends State<Body> {
                         : ListView.separated(
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return MyJobItems(
-                                index: index,
-                                screen: JobCompletedScreen(),
-                                name: allJobCompleted[index].name,
-                                imageLocation: allJobCompleted[index].pic,
-                                serviceCat:
-                                    allJobCompleted[index].serviceProvided,
-                                date: allJobCompleted[index].uploadDate,
-                                time: allJobCompleted[index].uploadTime,
-                                orderStatus: completedOrderStatusList[index],
-                              );
+                              return moreOffers[selectedJob].whoApplied ==
+                                      'Customer'
+                                  ? MyJobItems(
+                                      index: index,
+                                      screen: JobCompletedScreen(),
+                                      name: moreOffers[index].name,
+                                      imageLocation: moreOffers[index].pic,
+                                      serviceCat: allJobCompleted[index]
+                                          .serviceProvided,
+                                      date: allJobCompleted[index].uploadDate,
+                                      time: allJobCompleted[index].uploadTime,
+                                      orderStatus: moreOffers[index].jobStatus,
+                                    )
+                                  : MyJobItems(
+                                      index: index,
+                                      screen: JobCompletedScreen(),
+                                      name: allJobCompleted[index].name,
+                                      imageLocation: allJobCompleted[index].pic,
+                                      serviceCat: allJobCompleted[index]
+                                          .serviceProvided,
+                                      date: allJobCompleted[index].uploadDate,
+                                      time: allJobCompleted[index].uploadTime,
+                                      orderStatus: moreOffers[index].jobStatus,
+                                    );
                             },
                             separatorBuilder: (context, index) {
                               return SizedBox(
