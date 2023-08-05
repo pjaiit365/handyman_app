@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, curly_braces_in_flow_control_structures
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -220,7 +222,7 @@ class _ProfileLocationInformationState
                             )),
                       );
                     }
-                    //if address entered in pop up is NOT present in previous addresses, then add adrress
+                    //if address entered in pop up is NOT present in previous addresses, then add address
                     else {
                       setState(() {
                         addressStreetName.add(streetNameController.text);
@@ -299,7 +301,7 @@ class _ProfileLocationInformationState
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    'Address ' + (index + 1).toString(),
+                                    'Address ${index + 1}',
                                     style: TextStyle(
                                       color: primary,
                                       fontSize: 16,

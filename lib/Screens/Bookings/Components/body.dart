@@ -23,10 +23,10 @@ class _BodyState extends State<Body> {
 
   Future allData() async {
     if (isJobOffersClicked == true) {
-      await readData.getCustomerJobApplicationData(
-          'Jobs Applied', 'Customer', context);
       await readData.getHandymanJobApplicationData(
           'Job Offers', 'Customer', context);
+      await readData.getCustomerJobApplicationData(
+          'Jobs Applied', 'Customer', context);
     }
     if (isJobUpcomingClicked == true) {
       await readData.getUpcomingJobData('Jobs Upcoming', 'Customer', context);

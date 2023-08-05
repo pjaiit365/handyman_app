@@ -8,11 +8,13 @@ import '../constants.dart';
 import 'add_file_item.dart';
 
 class JobUploadWorkCertInfo extends StatefulWidget {
+  bool isRegistration;
   bool isReadOnly;
   bool isHandyManUpload;
   JobUploadWorkCertInfo({
     Key? key,
     this.isHandyManUpload = false,
+    this.isRegistration = false,
     this.isReadOnly = false,
   }) : super(key: key);
 
@@ -29,33 +31,35 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
       type: FileType.media,
     );
 
-    setState(() {
-      resultList = result!;
-      result.files.forEach((file) {
-        final fileName = file!.name;
-        if (!uploadPortfolioList.contains(fileName)) {
-          uploadPortfolioList.add(fileName);
-        } else {
-          setState(() {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  duration: Duration(seconds: 2),
-                  backgroundColor: Colors.black45,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  content: Center(
-                    child: Text(
-                      '$fileName has already been added.',
-                      style: TextStyle(height: 1.3),
-                      textAlign: TextAlign.center,
-                    ),
-                  )),
-            );
-          });
-        }
+    if (result != null) {
+      setState(() {
+        resultList = result;
+        result.files.forEach((file) {
+          final fileName = file.name;
+          if (!uploadPortfolioList.contains(fileName)) {
+            uploadPortfolioList.add(fileName);
+          } else {
+            setState(() {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Colors.black45,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    content: Center(
+                      child: Text(
+                        '$fileName has already been added.',
+                        style: TextStyle(height: 1.3),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+              );
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   Future addCertification() async {
@@ -65,33 +69,35 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
       allowedExtensions: ['pdf', 'doc', 'docx'],
     );
 
-    setState(() {
-      resultCertList = result!;
-      result.files.forEach((file) {
-        final fileName = file!.name;
-        if (!uploadCertList.contains(fileName)) {
-          uploadCertList.add(fileName);
-        } else {
-          setState(() {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  duration: Duration(seconds: 2),
-                  backgroundColor: Colors.black45,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  content: Center(
-                    child: Text(
-                      '$fileName has already been added.',
-                      style: TextStyle(height: 1.3),
-                      textAlign: TextAlign.center,
-                    ),
-                  )),
-            );
-          });
-        }
+    if (result != null) {
+      setState(() {
+        resultCertList = result;
+        result.files.forEach((file) {
+          final fileName = file.name;
+          if (!uploadCertList.contains(fileName)) {
+            uploadCertList.add(fileName);
+          } else {
+            setState(() {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Colors.black45,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    content: Center(
+                      child: Text(
+                        '$fileName has already been added.',
+                        style: TextStyle(height: 1.3),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+              );
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   Future addExperience() async {
@@ -101,33 +107,35 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
       allowedExtensions: ['pdf', 'doc', 'docx'],
     );
 
-    setState(() {
-      resultExperienceList = result!;
-      result.files.forEach((file) {
-        final fileName = file!.name;
-        if (!uploadExperienceList.contains(fileName)) {
-          uploadExperienceList.add(fileName);
-        } else {
-          setState(() {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  duration: Duration(seconds: 2),
-                  backgroundColor: Colors.black45,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  content: Center(
-                    child: Text(
-                      '$fileName has already been added.',
-                      style: TextStyle(height: 1.3),
-                      textAlign: TextAlign.center,
-                    ),
-                  )),
-            );
-          });
-        }
+    if (result != null) {
+      setState(() {
+        resultExperienceList = result!;
+        result.files.forEach((file) {
+          final fileName = file!.name;
+          if (!uploadExperienceList.contains(fileName)) {
+            uploadExperienceList.add(fileName);
+          } else {
+            setState(() {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Colors.black45,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    content: Center(
+                      child: Text(
+                        '$fileName has already been added.',
+                        style: TextStyle(height: 1.3),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+              );
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   @override
@@ -233,32 +241,40 @@ class _JobUploadWorkCertInfoState extends State<JobUploadWorkCertInfo> {
                 ],
               ),
               widget.isHandyManUpload
-                  ? SizedBox(height: 20 * screenHeight)
+                  ? widget.isRegistration
+                      ? SizedBox()
+                      : SizedBox(height: 20 * screenHeight)
                   : SizedBox(),
               widget.isHandyManUpload
-                  ? AddFileItem(
-                      directory: 'References',
-                      isReadOnly: widget.isReadOnly,
-                      selectedOptions: uploadReferenceList,
-                      screen: () {
-                        setState(() {});
-                      },
-                      title: 'References',
-                      hintText: 'Add any references here...',
-                    )
+                  ? widget.isRegistration
+                      ? SizedBox()
+                      : AddFileItem(
+                          directory: 'References',
+                          isReadOnly: widget.isReadOnly,
+                          selectedOptions: uploadReferenceList,
+                          screen: () {
+                            setState(() {});
+                          },
+                          title: 'References',
+                          hintText: 'Add any references here...',
+                        )
                   : SizedBox(),
               widget.isHandyManUpload
-                  ? SizedBox(height: 20 * screenHeight)
+                  ? widget.isRegistration
+                      ? SizedBox()
+                      : SizedBox(height: 20 * screenHeight)
                   : SizedBox(),
               widget.isHandyManUpload
-                  ? AddFileItem(
-                      directory: 'Portfolio',
-                      isReadOnly: widget.isReadOnly,
-                      selectedOptions: uploadPortfolioList,
-                      screen: addPortfolio,
-                      title: 'Portfolio',
-                      hintText: 'Add portfolio here...',
-                    )
+                  ? widget.isRegistration
+                      ? SizedBox()
+                      : AddFileItem(
+                          directory: 'Portfolio',
+                          isReadOnly: widget.isReadOnly,
+                          selectedOptions: uploadPortfolioList,
+                          screen: addPortfolio,
+                          title: 'Portfolio',
+                          hintText: 'Add portfolio here...',
+                        )
                   : SizedBox(),
               SizedBox(height: 10 * screenHeight),
             ],

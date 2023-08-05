@@ -917,7 +917,9 @@ class ReadData {
                 expiry[8].toString() +
                 expiry[9].toString();
             final jobData = HandymanJobUploadItemData(
-              uploadDate: documentData['Upload Date'],
+              uploadDate: tabName == 'Jobs Applied'
+                  ? offerData.date
+                  : documentData['Upload Date'],
               name: documentData['Name'],
               pic: documentData['User Pic'] == ''
                   ? ''

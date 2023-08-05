@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -76,7 +78,27 @@ class Body extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => JobCompletedScreen(),
+                builder: (context) => FutureBuilder(
+                  future: ReadData().getUpcomingJobData(
+                      'Jobs Completed', 'Customer', context),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return JobCompletedScreen();
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Platform.isIOS
+                            ? CupertinoActivityIndicator(color: primary)
+                            : CircularProgressIndicator(color: primary),
+                      );
+                    }
+                    return Center(
+                      child: Platform.isIOS
+                          ? CupertinoActivityIndicator(color: primary)
+                          : CircularProgressIndicator(color: primary),
+                    );
+                  },
+                ),
               ),
             );
           },

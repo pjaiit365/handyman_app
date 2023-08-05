@@ -149,7 +149,7 @@ class Body extends StatelessWidget {
         town: allJobApplied[selectedJob].town,
         houseNum: allJobApplied[selectedJob].houseNum,
         jobType: allJobApplied[selectedJob].serviceProvided,
-        date: moreOffers[selectedJob].date,
+        date: allJobApplied[selectedJob].uploadDate,
       ),
     );
   }

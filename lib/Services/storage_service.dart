@@ -91,6 +91,20 @@ class Storage {
     }
   }
 
+  Future profileMediaUpload(
+      String directory, String filePath, String fileName) async {
+    File file = File(filePath);
+
+    try {
+      await FirebaseStorage.instance
+          .ref('$loggedInUserId/profile/$directory')
+          .child(fileName)
+          .putFile(file);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future getPortfolioDownloadUrl(String jobId, String type) async {
     jobPortfolioUrls.clear();
     try {

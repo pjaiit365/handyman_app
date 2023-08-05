@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/services_tab.dart';
+import 'package:handyman_app/Services/read_data.dart';
 
 import '../constants.dart';
 
@@ -18,21 +19,16 @@ class AboutTab extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(
-                left: screenWidth * 5.0, bottom: 10 * screenHeight),
+                left: screenWidth * 5.0, bottom: 20 * screenHeight),
             child: Text(
-              'Services',
+              'Category',
               style: TextStyle(
                   color: black, fontWeight: FontWeight.w600, fontSize: 18),
             ),
           ),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: servicesList.length,
-            itemBuilder: (context, index) {
-              return ServicesTab(text: servicesList[index]);
-            },
-          )
+          ServicesTab(text: allJobItemList[0].jobCategory),
+          SizedBox(height: 5 * screenHeight),
+          AdditionalInfo(text: 'Experience')
         ],
       ),
     );
