@@ -237,7 +237,18 @@ class ReadData {
         appointmentChargeRate =
             documentData['Service Information']['Charge Rate'];
         final jobItemData = JobItemData(
+          jobsDone: documentData['Work Experience & Certification']
+              ["Job's Completed"],
+          references: documentData['Work Experience & Certification']
+                  ['References'] ??
+              [],
           rating: documentData['Work Experience & Certification']['Rating'],
+          certification: documentData['Work Experience & Certification']
+                  ['Certification'] ??
+              [],
+          experience: documentData['Work Experience & Certification']
+                  ['Experience'] ??
+              [],
           pic: documentData['User Pic'],
           jobID: documentData['Job ID'],
           seenBy: documentData['Seen By'],

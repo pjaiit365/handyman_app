@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -44,9 +46,11 @@ class ServicesTab extends StatelessWidget {
 
 class AdditionalInfo extends StatefulWidget {
   final String text;
+  final List fileName;
   const AdditionalInfo({
     Key? key,
     required this.text,
+    required this.fileName,
   }) : super(key: key);
 
   @override
@@ -70,17 +74,6 @@ class _AdditionalInfoState extends State<AdditionalInfo> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(
-                left: screenWidth * 5.0,
-                bottom: 20 * screenHeight,
-                top: 10 * screenHeight),
-            child: Text(
-              'Work Experience & Certification',
-              style: TextStyle(
-                  color: black, fontWeight: FontWeight.w600, fontSize: 18),
-            ),
-          ),
           GestureDetector(
             onTap: () {
               setState(() {
@@ -92,7 +85,7 @@ class _AdditionalInfoState extends State<AdditionalInfo> {
                 left: 30 * screenWidth,
                 right: 12 * screenWidth,
                 top: isMinimized ? 0 : 20 * screenHeight,
-                bottom: isMinimized ? 0 : 20 * screenHeight,
+                bottom: isMinimized ? 0 : 30 * screenHeight,
               ),
               constraints: BoxConstraints(
                 minHeight: 78 * screenHeight,
@@ -135,29 +128,47 @@ class _AdditionalInfoState extends State<AdditionalInfo> {
                         ),
                   isMinimized
                       ? SizedBox()
-                      : ListView.separated(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  height: 7 * screenHeight,
-                                  width: 7 * screenWidth,
-                                  decoration: BoxDecoration(
-                                    color: black,
-                                    shape: BoxShape.circle,
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(height: 25 * screenHeight);
-                          },
-                          itemCount: 3),
+                      : widget.fileName.isEmpty
+                          ? Center(
+                              child: Text('No files added'),
+                            )
+                          : ListView.separated(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      height: 20 * screenHeight,
+                                      width: 20 * screenWidth,
+                                      decoration: BoxDecoration(
+                                          // color: black,
+                                          ),
+                                      child: Icon(
+                                        Icons.picture_as_pdf_rounded,
+                                        color: primary,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10 * screenWidth),
+                                    SizedBox(
+                                      width: 278 * screenWidth,
+                                      child: Text(
+                                        widget.fileName[index],
+                                        style: TextStyle(
+                                            color: black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: 25 * screenHeight);
+                              },
+                              itemCount: widget.fileName.length),
                 ],
               ),
             ),

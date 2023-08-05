@@ -14,6 +14,10 @@ class JobItemData {
   List? portfolio;
   bool? isReferencesPresent;
   bool? isPortfolioPresent;
+  List? certification;
+  List? experience;
+  int? jobsDone;
+  List? references;
   JobItemData({
     required this.pic,
     this.peopleApplied,
@@ -30,6 +34,10 @@ class JobItemData {
     this.deadline,
     this.portfolio,
     this.rating,
+    this.certification,
+    this.experience,
+    this.references,
+    this.jobsDone,
   });
 }
 

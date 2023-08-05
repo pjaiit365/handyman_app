@@ -132,7 +132,7 @@ class _BodyState extends State<Body> {
             },
           ),
           SizedBox(height: screenHeight * 23),
-          if (aboutSelected == true) AboutTab(),
+          if (aboutSelected == true) AboutTab(isCustomerSection: true),
           if (reviewsSelected == true) ReviewsTab(),
           if (portfolioSelected == true) PortfolioTab(),
         ],
