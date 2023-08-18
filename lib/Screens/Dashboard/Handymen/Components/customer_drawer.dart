@@ -178,8 +178,8 @@ class CustomerDrawer extends StatelessWidget {
                   ),
                   SizedBox(height: 27 * screenHeight),
                   DrawerTile(
-                    title: 'Contact Us',
-                    icon: Icons.call,
+                    title: 'Chats',
+                    icon: Icons.textsms_rounded,
                     screen: ChatMessaging(),
                   ),
                   SizedBox(height: 20 * screenHeight),

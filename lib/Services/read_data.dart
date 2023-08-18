@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, avoid_function_literals_in_foreach_calls, avoid_print
 
 import 'dart:io';
 
@@ -444,7 +444,6 @@ class ReadData {
       } catch (e) {
         print(e.toString());
       }
-
       showDialog(
         context: context,
         builder: (context) {
@@ -685,7 +684,7 @@ class ReadData {
           } else if (categoryData.chargeRate == '6 Hours') {
             handymanFavouritesChargeRateList.add('6 Hrs');
           } else if (categoryData.chargeRate == '12 Hours') {
-            customerFavouritesChargeRateList.add('12 Hrs');
+            handymanFavouritesChargeRateList.add('12 Hrs');
           } else {
             handymanFavouritesChargeRateList.add('Day');
           }

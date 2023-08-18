@@ -10,6 +10,7 @@ import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
 import '../../../../Services/read_data.dart';
 import '../../../../constants.dart';
+import '../../../Chat/Sub Screen/chat.dart';
 import '../../../Favourites/Handyman/handyman_favourites_screen.dart';
 import '../../../Home/home_screen.dart';
 import '../../../Job Upload/Handyman/handyman_job_upload_screen.dart';
@@ -171,10 +172,15 @@ class HandymanDrawer extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 27 * screenHeight),
+                  // DrawerTile(
+                  //   title: 'Contact Us',
+                  //   icon: Icons.call,
+                  //   screen: NotificationScreen(),
+                  // ),
                   DrawerTile(
-                    title: 'Contact Us',
-                    icon: Icons.call,
-                    screen: NotificationScreen(),
+                    title: 'Chats',
+                    icon: Icons.textsms_rounded,
+                    screen: ChatMessaging(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(

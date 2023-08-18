@@ -59,7 +59,7 @@ class _ScheduleAddressState extends State<ScheduleAddress> {
                     ProfileAddressItem(
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(RegExp(
-                              "[a-zA-Z\\s]")), // Only allow letters and spaces
+                              "[a-zA-Z0-9\\s]")), // Only allow letters and spaces
                           LengthLimitingTextInputFormatter(18),
                         ],
                         textEditingController: streetController,
@@ -87,7 +87,7 @@ class _ScheduleAddressState extends State<ScheduleAddress> {
                         ProfileAddressItem(
                             inputFormatter: [
                               FilteringTextInputFormatter.allow(RegExp(
-                                  "[a-zA-Z\\s]")), // Only allow letters and spaces
+                                  "[a-zA-Z0-9\\s]")), // Only allow letters and spaces
                               LengthLimitingTextInputFormatter(10),
                             ],
                             textEditingController: houseNumController,
