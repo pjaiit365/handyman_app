@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
 
@@ -60,11 +62,21 @@ class Body extends StatelessWidget {
             },
           ),
         ),
-        PinnedButton(
-          screen: PaymentOptionsScreen(),
-          buttonText: 'Make Payment',
-          isIconPresent: true,
-        ),
+        moreOffers[selectedJob].jobStatus == 'Paid'
+            ? SizedBox()
+            : PinnedButton(
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentOptionsScreen(),
+                    ),
+                  );
+                },
+                screen: PaymentOptionsScreen(),
+                buttonText: 'Make Payment',
+                isIconPresent: true,
+              ),
       ],
     );
   }

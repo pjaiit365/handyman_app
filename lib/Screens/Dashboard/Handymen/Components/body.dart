@@ -9,6 +9,7 @@ import 'package:handyman_app/constants.dart';
 import '../../../../Components/category_item.dart';
 import '../../../../Components/dashboard_tab.dart';
 import '../../../../Models/customer_category_data.dart';
+import '../../../Custom Search Delegate/handyman_search_delegate.dart';
 import '../../../Home/Components/body.dart';
 
 class Body extends StatefulWidget {
@@ -92,7 +93,16 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SearchBarItem(hintText: 'Search personnel: painters, etc.'),
+            SearchBarItem(
+              hintText: 'Search personnel: painters, etc.',
+              onSearchTap: () {
+                showSearch(
+                  context: context,
+                  delegate: HandymanSearchDelegate(
+                      itemsToSearch: handymanDashboardJobType),
+                );
+              },
+            ),
             SizedBox(height: screenHeight * 30),
             CarouselSliderItem(),
             Row(

@@ -9,6 +9,8 @@ import 'package:handyman_app/Screens/Home/Components/body.dart';
 
 import '../../../../Components/dashboard_tab.dart';
 import '../../../../constants.dart';
+import '../../../Custom Search Delegate/handyman_search_delegate.dart';
+import '../../../Custom Search Delegate/job_search_delegate.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -86,7 +88,16 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SearchBarItem(hintText: 'Search personnel: painters, etc.'),
+            SearchBarItem(
+              hintText: 'Search personnel: painters, etc.',
+              onSearchTap: () {
+                showSearch(
+                  context: context,
+                  delegate:
+                      JobSearchDelegate(itemsToSearch: jobDashboardJobType),
+                );
+              },
+            ),
             SizedBox(height: screenHeight * 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,

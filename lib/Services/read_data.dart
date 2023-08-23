@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, avoid_function_literals_in_foreach_calls, avoid_print
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,8 +27,10 @@ import '../Components/job_upload_optionals_info.dart';
 import '../Models/customer_category_data.dart';
 import '../Models/handyman_category_data.dart';
 import '../Models/handyman_job_upload_item_data.dart';
+import '../Models/review.dart';
 import '../Models/users.dart';
 import '../Screens/Job Upload/Sub Screen/Customer/Components/body.dart';
+import '../Screens/My Jobs/SubScreens/JobUpcoming/Components/body.dart';
 import '../constants.dart';
 
 List<dynamic> allJobItemList = [];
@@ -43,6 +46,7 @@ List jobHandymanCompletedIDs = [];
 List jobCustomerCompletedIDs = [];
 List<dynamic> allJobOffers = [];
 List<dynamic> moreOffers = [];
+List<dynamic> allReviews = [];
 List jobCustomerOffersIDs = [];
 List jobHandymanOffersIDs = [];
 List allUsers = [];
@@ -51,10 +55,16 @@ var fcmToken = '';
 late CustomerJobUploadItemData jobUploadData;
 late HandymanJobUploadItemData handymanJobUploadData;
 String appointmentChargeRate = '';
+double ratingTotal = 0;
 
 class ReadData {
   Future getFCMToken(bool isLogin) async {
-    final token = await FirebaseMessaging.instance.getToken();
+    final token = await FirebaseMessaging.instance.getToken().timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
     if (token != null) {
       fcmToken = token;
     }
@@ -110,12 +120,24 @@ class ReadData {
       document = await FirebaseFirestore.instance
           .collection('Handyman Job Upload')
           .doc(handymanDashboardID[handymanSelectedIndex])
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
     } else {
       document = await FirebaseFirestore.instance
           .collection('Customer Job Upload')
           .doc(jobDashboardID[jobSelectedIndex])
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
     }
 
     final userID = document.get('Customer ID');
@@ -157,7 +179,13 @@ class ReadData {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('User ID', isEqualTo: loggedInUserId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       final userData = querySnapshot.docs.first.data();
@@ -177,6 +205,122 @@ class ReadData {
     }
   }
 
+  Future getReviews(BuildContext context) async {
+    allReviews.clear();
+    ratingTotal = 0.0;
+    List starsCount = [0, 0, 0, 0, 0];
+
+    try {
+      final documents = await FirebaseFirestore.instance
+          .collection('Reviews')
+          .where('User ID', isEqualTo: allJobItemList[0].customerID)
+          .orderBy('Stars', descending: true)
+          .get()
+          .timeout(
+        Duration(seconds: 2), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
+
+      if (documents.docs.isNotEmpty) {
+        for (var document in documents.docs) {
+          final documentData = document.data();
+          final userID = documentData['User ID'];
+          final reviewerDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .where('User ID', isEqualTo: userID)
+              .get();
+          final reviewerName = reviewerDoc.docs.single.get('First Name');
+          final review = ReviewData(
+            name: reviewerName,
+            reviewDate: documentData['Review Date'],
+            userID: documentData['User ID'],
+            replies: documentData['Replies'],
+            reviewID: documentData['Review ID'],
+            jobID: documentData['Job ID'],
+            stars: documentData['Stars'],
+            comment: documentData['Comment'],
+            likes: documentData['Likes'],
+          );
+
+          ratingTotal += review.stars;
+          if (review.stars == 1) {
+            starsCount[0] = starsCount[0] + 1;
+          } else if (review.stars == 2) {
+            starsCount[1] = starsCount[1] + 1;
+          } else if (review.stars == 3) {
+            starsCount[2] = starsCount[2] + 1;
+          } else if (review.stars == 4) {
+            starsCount[3] = starsCount[3] + 1;
+          } else {
+            starsCount[4] = starsCount[4] + 1;
+          }
+
+          allReviews.add(review);
+        }
+        ratingTotal = ratingTotal / allReviews.length;
+
+        ratingsWidth = [
+          starsCount[0] / allReviews.length * 159,
+          starsCount[1] / allReviews.length * 159,
+          starsCount[2] / allReviews.length * 159,
+          starsCount[3] / allReviews.length * 159,
+          starsCount[4] / allReviews.length * 159,
+        ];
+        print(ratingTotal);
+      }
+    } on FirebaseException catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Error'.toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '$error\nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Error'.toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '$e\nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
   Future getHandymanJobItemData(String jobId) async {
     allJobItemList.clear();
 
@@ -184,7 +328,13 @@ class ReadData {
       final document = await FirebaseFirestore.instance
           .collection('Customer Job Upload')
           .where('Job ID', isEqualTo: jobId)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
 
       if (document.docs.isNotEmpty) {
         currentJobClickedUserId = document.docs.single.get('Customer ID');
@@ -192,6 +342,7 @@ class ReadData {
         final documentData = document.docs.single.data();
 
         final jobItemData = JobItemData(
+          customerID: documentData['Customer ID'],
           pic: documentData['User Pic'] == '' ? '' : documentData['User Pic'],
           deadline: documentData['Job Details']['Deadline'],
           peopleApplied: documentData['Job Details']['People Applied'],
@@ -228,7 +379,13 @@ class ReadData {
       final document = await FirebaseFirestore.instance
           .collection('Handyman Job Upload')
           .where('Job ID', isEqualTo: jobId)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
 
       if (document.docs.isNotEmpty) {
         currentJobClickedUserId = document.docs.single.get('Customer ID');
@@ -237,6 +394,7 @@ class ReadData {
         appointmentChargeRate =
             documentData['Service Information']['Charge Rate'];
         final jobItemData = JobItemData(
+          customerID: documentData['Customer ID'],
           jobsDone: documentData['Work Experience & Certification']
               ["Job's Completed"],
           references: documentData['Work Experience & Certification']
@@ -279,7 +437,13 @@ class ReadData {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Customer Job Upload')
           .doc(jobID)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
 
       if (querySnapshot.exists) {
         final documentData = querySnapshot.data()!;
@@ -345,7 +509,13 @@ class ReadData {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Handyman Job Upload')
           .doc(jobID)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
 
       if (querySnapshot.exists) {
         final documentData = querySnapshot.data()!;
@@ -565,7 +735,13 @@ class ReadData {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Bookmark')
           .where('User ID', isEqualTo: loggedInUserId)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
 
       if (querySnapshot.docs.isNotEmpty) {
         final documentData = querySnapshot.docs.single.data();
@@ -606,7 +782,13 @@ class ReadData {
           final querySnapshot = await FirebaseFirestore.instance
               .collection('Handyman Job Upload')
               .doc(document)
-              .get();
+              .get()
+              .timeout(
+            Duration(seconds: 30), // Set your desired timeout duration
+            onTimeout: () {
+              throw TimeoutException("Unable to communicate with server.");
+            },
+          );
           final documentData = querySnapshot.data()!;
           final categoryData = CustomerCategoryData(
             pic: documentData['User Pic'],
@@ -658,7 +840,13 @@ class ReadData {
           final querySnapshot = await FirebaseFirestore.instance
               .collection('Customer Job Upload')
               .doc(document)
-              .get();
+              .get()
+              .timeout(
+            Duration(seconds: 30), // Set your desired timeout duration
+            onTimeout: () {
+              throw TimeoutException("Unable to communicate with server.");
+            },
+          );
           final documentData = querySnapshot.data()!;
           final categoryData = HandymanCategoryData(
               pic: documentData['User Pic'],
@@ -716,7 +904,13 @@ class ReadData {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Job Application')
         .where('Customer ID', isEqualTo: loggedInUserId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       try {
@@ -868,7 +1062,13 @@ class ReadData {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Job Application')
         .where('Customer ID', isEqualTo: loggedInUserId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       try {
@@ -1232,7 +1432,13 @@ class ReadData {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Job Application')
         .where('Customer ID', isEqualTo: loggedInUserId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       try {
@@ -1504,7 +1710,13 @@ class ReadData {
       final offersDocs = await FirebaseFirestore.instance
           .collection('Job Application')
           .where('Customer ID', isEqualTo: receiverID)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
       if (offersDocs.docs.isNotEmpty) {
         final docID = offersDocs.docs.single.id;
         jobCustomerOffersIDs =
@@ -1565,7 +1777,13 @@ class ReadData {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Job Application')
           .where('Customer ID', isEqualTo: loggedInUserId)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
       if (querySnapshot.docs.isNotEmpty) {
         final docID = querySnapshot.docs.single.id;
         jobCustomerAppliedIDs =
@@ -1694,7 +1912,13 @@ class ReadData {
       final offersDocs = await FirebaseFirestore.instance
           .collection('Job Application')
           .where('Customer ID', isEqualTo: receiverID)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
       if (offersDocs.docs.isNotEmpty) {
         final docID = offersDocs.docs.single.id;
         jobCustomerUpcomingIDs =
@@ -1755,7 +1979,13 @@ class ReadData {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Job Application')
           .where('Customer ID', isEqualTo: applierID)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
       if (querySnapshot.docs.isNotEmpty) {
         final docID = querySnapshot.docs.single.id;
         jobCustomerUpcomingIDs =
@@ -1859,7 +2089,13 @@ class ReadData {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Job Application')
           .where('Customer ID', isEqualTo: applierID)
-          .get();
+          .get()
+          .timeout(
+        Duration(seconds: 30), // Set your desired timeout duration
+        onTimeout: () {
+          throw TimeoutException("Unable to communicate with server.");
+        },
+      );
       if (querySnapshot.docs.isNotEmpty) {
         final docID = querySnapshot.docs.single.id;
         jobCustomerAppliedIDs =
@@ -2050,7 +2286,13 @@ class ReadData {
         final appliedDocs = await FirebaseFirestore.instance
             .collection('Job Application')
             .where('Customer ID', isEqualTo: applierID)
-            .get();
+            .get()
+            .timeout(
+          Duration(seconds: 30), // Set your desired timeout duration
+          onTimeout: () {
+            throw TimeoutException("Unable to communicate with server.");
+          },
+        );
         if (appliedDocs.docs.isNotEmpty) {
           final docID = appliedDocs.docs.single.id;
           jobCustomerAppliedIDs =
@@ -2236,7 +2478,13 @@ class ReadData {
         final document = await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
-            .get();
+            .get()
+            .timeout(
+          Duration(seconds: 30), // Set your desired timeout duration
+          onTimeout: () {
+            throw TimeoutException("Unable to communicate with server.");
+          },
+        );
 
         final docData = document.data()!;
         jobHandymanUpcomingIDs = docData['Jobs Upcoming']['Handyman'];
@@ -2250,6 +2498,34 @@ class ReadData {
       } catch (e) {
         print(e.toString());
       }
+    }
+  }
+
+  Future rescheduleJob(String type) async {
+    try {
+      if (type == 'Handyman Uploaded') {
+        await FirebaseFirestore.instance
+            .collection('Customer Jobs Applied')
+            .doc(moreOffers[selectedJob].documentID)
+            .update({
+          'Schedule Date': rescheduleDate,
+          'Schedule Time': rescheduleTime,
+          'Job Status': 'Rescheduled',
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection('Handyman Jobs Applied')
+            .doc(moreOffers[selectedJob].documentID)
+            .update({
+          'Schedule Date': rescheduleDate,
+          'Schedule Time': rescheduleTime,
+          'Job Status': 'Rescheduled',
+        });
+      }
+    } on FirebaseException catch (error) {
+      print(error.toString());
+    } catch (e) {
+      print(e.toString());
     }
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/default_back_button.dart';
 
 import 'package:handyman_app/Screens/Appointment/Components/body.dart';
-import 'package:handyman_app/Screens/Chat/chat_alternate_screen.dart';
+import 'package:handyman_app/Screens/Chat/Components/chat_alternate_screen.dart';
 
 import '../../Components/schedule_day_tab.dart';
 import '../../Components/schedule_time_tab.dart';

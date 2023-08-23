@@ -56,7 +56,7 @@ List<String> ratingComment = [
 ];
 List<bool> isCommentLiked = [true, false, true];
 
-List<double> ratingsWidth = [140, 100, 35, 12, 0];
+List<double> ratingsWidth = [];
 
 List jobStatusOptions = [
   false,
@@ -174,6 +174,14 @@ final creditCardList = [
   'Visa Card',
   'American Express',
   'Discover Card',
+];
+
+final bankList = [
+  'N/A',
+  'GCB',
+  'Zenith Bank',
+  'Standard Chartered',
+  'ADB Bank',
 ];
 
 String dropdownvalue = 'N/A';

@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Chat/chat_alternate_screen.dart';
-import 'package:handyman_app/Screens/Chat/chat_screen.dart';
+import 'package:handyman_app/Screens/Chat/Components/chat_alternate_screen.dart';
+import 'package:handyman_app/Screens/Chat/Components/chat_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,6 +39,7 @@ class _BodyState extends State<Body> {
   Future<void> loadData() async {
     await readData
         .getCustomerJobItemData(handymanDashboardID[handymanSelectedIndex]);
+    await readData.getReviews(context);
     setState(() {
       isDataLoaded = true;
     });
@@ -69,25 +70,12 @@ class _BodyState extends State<Body> {
                 call: true,
                 press: () {
                   readData.getPhoneNumber('Customer', context, true);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => ChatAlternateScreen(),
-                  //   ),
-                  // );
                 },
               ),
               ContactPersonnelButton(
                 call: false,
                 press: () {
                   readData.getPhoneNumber('Customer', context, false);
-
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => ChatScreen(),
-                  //   ),
-                  // );
                 },
               ),
             ],

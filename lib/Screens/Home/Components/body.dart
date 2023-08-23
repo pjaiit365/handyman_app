@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,7 +42,12 @@ List<dynamic> allHandymanCategoryData = [];
 
 Future getAllCategories() async {
   final documents =
-      await FirebaseFirestore.instance.collection('Category').get();
+      await FirebaseFirestore.instance.collection('Category').get().timeout(
+    Duration(seconds: 30), // Set your desired timeout duration
+    onTimeout: () {
+      throw TimeoutException("Unable to communicate with server.");
+    },
+  );
 
   documents.docs.forEach((document) {
     final data = document.get('Category Name');
@@ -55,7 +63,13 @@ Future getCategoryData(String categoryName) async {
   final document = await FirebaseFirestore.instance
       .collection('Category')
       .where('Category Name', isEqualTo: categoryName)
-      .get();
+      .get()
+      .timeout(
+    Duration(seconds: 30), // Set your desired timeout duration
+    onTimeout: () {
+      throw TimeoutException("Unable to communicate with server.");
+    },
+  );
 
   if (document.docs.isNotEmpty) {
     final category = document.docs.single.data();
@@ -86,7 +100,13 @@ Future getCustomerCategoryData() async {
       .where('Seen By', isEqualTo: 'All')
       .where('Customer ID', isNotEqualTo: loggedInUserId)
       .orderBy('Customer ID')
-      .get();
+      .get()
+      .timeout(
+    Duration(seconds: 30), // Set your desired timeout duration
+    onTimeout: () {
+      throw TimeoutException("Unable to communicate with server.");
+    },
+  );
 
   if (documents.docs.isNotEmpty) {
     documents.docs.forEach((document) {
@@ -143,7 +163,13 @@ Future getHandymanCategoryData() async {
       .where('Seen By', isEqualTo: 'All')
       .where('Customer ID', isNotEqualTo: loggedInUserId)
       .orderBy('Customer ID')
-      .get();
+      .get()
+      .timeout(
+    Duration(seconds: 30), // Set your desired timeout duration
+    onTimeout: () {
+      throw TimeoutException("Unable to communicate with server.");
+    },
+  );
 
   if (documents.docs.isNotEmpty) {
     documents.docs.forEach((document) {
@@ -188,7 +214,13 @@ Future getRatings() async {
   final result = await FirebaseFirestore.instance
       .collection('profile')
       .where('User ID', isEqualTo: loggedInUserId)
-      .get();
+      .get()
+      .timeout(
+    Duration(seconds: 30), // Set your desired timeout duration
+    onTimeout: () {
+      throw TimeoutException("Unable to communicate with server.");
+    },
+  );
   if (result.docs.isNotEmpty) {
     final querySnapshot =
         result.docs.first.get('Work Experience & Certification.Rating');
@@ -362,11 +394,120 @@ class _BodyState extends State<Body> {
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: Platform.isIOS
-                  ? CupertinoActivityIndicator(color: primary)
-                  : CircularProgressIndicator(color: primary),
-            );
+            return Stack(children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Hi ',
+                      style: TextStyle(
+                          fontFamily: 'Habibi',
+                          fontSize: 30,
+                          color: Colors.black),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: screenHeight * 26),
+                      child: Text(
+                        'What services do you need?',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                          color: primary,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: screenHeight * 40.0),
+                      child: Center(
+                        child: HomeScreenTabs(
+                          title: 'HANDYMEN',
+                          screen: HandymanDashboardScreen(),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: screenHeight * 30.0),
+                      child: HorizontalDivider(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: screenHeight * 50.0),
+                      child: Center(
+                        child: HomeScreenTabs(
+                          title: 'JOBS',
+                          screen: JobsDashboardScreen(),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        HomeButtons(
+                            press: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CustomerBookingsScreen(),
+                                ),
+                              );
+                            },
+                            title: 'N/A'),
+                        Container(
+                          height: size.height * 40 / 820.5714,
+                          width: size.width * 2 / 411.4285,
+                          color: grey,
+                        ),
+                        HomeButtons(
+                            press: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileCustomer(),
+                                ),
+                              );
+                            },
+                            title: 'Profile'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Stack(
+                children: [
+                  ModalBarrier(
+                    color: black.withOpacity(0.3),
+                    dismissible: false,
+                  ),
+                  AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    insetPadding:
+                        EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        (Platform.isIOS)
+                            ? const CupertinoActivityIndicator(
+                                radius: 20,
+                                color: Color(0xff32B5BD),
+                              )
+                            : const CircularProgressIndicator(
+                                color: Color(0xff32B5BD),
+                              ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ]);
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error:${snapshot.error}'));

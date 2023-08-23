@@ -9,15 +9,12 @@ import 'package:handyman_app/Screens/Job%20Upload/Customer/customer_job_upload_s
 import 'package:handyman_app/Screens/Location/location_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Payment/Payment%20And%20Cards/Sub%20Screens/P%20&%20C/payment_and_cards.dart';
-import 'package:handyman_app/Screens/Payment/PaymentOptions/payment_options_screen.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
-import 'package:handyman_app/Screens/dummy/dummy_screen.dart';
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
 import '../../../../Services/read_data.dart';
 import '../../../../constants.dart';
 import '../../../Home/home_screen.dart';
-import '../../../Location/alt.dart';
 import '../../../Notifications/notification_screen.dart';
 import '../../../Profile/Profile - Customer/profile_customer.dart';
 

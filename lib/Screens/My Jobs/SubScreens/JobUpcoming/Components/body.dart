@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/pinned_button.dart';
 import 'package:handyman_app/Screens/Bookings/customer_bookings_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobInProgress/job_in_progress_screen.dart';
@@ -9,32 +10,239 @@ import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobUpcoming/job_upcomi
 import 'package:handyman_app/Services/read_data.dart';
 
 import '../../../../../Components/job_details_and_status.dart';
+import '../../../../../Components/profile_item.dart';
 import '../../../../../constants.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Future startJob() async {
-      final jobsAppliedID = moreOffers[selectedJob].documentID;
-      if (moreOffers[selectedJob].whoApplied == 'Customer') {
-        await FirebaseFirestore.instance
-            .collection('Customer Jobs Applied')
-            .doc(jobsAppliedID)
-            .update(
-          {'Job Status': 'Ongoing'},
-        );
-      } else {
-        await FirebaseFirestore.instance
-            .collection('Handyman Jobs Applied')
-            .doc(jobsAppliedID)
-            .update(
-          {'Job Status': 'Ongoing'},
-        );
-      }
-    }
+  State<Body> createState() => _BodyState();
+}
 
+String rescheduleDate = '';
+String rescheduleTime = '';
+
+class _BodyState extends State<Body> {
+  @override
+  void initState() {
+    rescheduleDate = '';
+    rescheduleTime = '';
+    super.initState();
+  }
+
+  Future startJob() async {
+    final jobsAppliedID = moreOffers[selectedJob].documentID;
+    if (moreOffers[selectedJob].whoApplied == 'Customer') {
+      await FirebaseFirestore.instance
+          .collection('Customer Jobs Applied')
+          .doc(jobsAppliedID)
+          .update(
+        {'Job Status': 'Ongoing'},
+      );
+    } else {
+      await FirebaseFirestore.instance
+          .collection('Handyman Jobs Applied')
+          .doc(jobsAppliedID)
+          .update(
+        {'Job Status': 'Ongoing'},
+      );
+    }
+  }
+
+  void rescheduleDialogBox(String type) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AlertDialog(
+                insetPadding: EdgeInsets.all(10),
+                backgroundColor: Colors.transparent,
+                content: Container(
+                  constraints: BoxConstraints(minWidth: 50 * screenHeight),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: white, borderRadius: BorderRadius.circular(24)),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 22 * screenWidth,
+                    horizontal: 20.5 * screenWidth,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          'Reschedule Information',
+                          style: TextStyle(
+                            color: black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10 * screenHeight),
+                      Text(
+                        'Date',
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 7 * screenHeight),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 49 * screenHeight,
+                            width: 150 * screenWidth,
+                            decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(
+                                  color: appointmentTimeColor, width: 1),
+                            ),
+                            child: Center(
+                              child: Text(
+                                rescheduleDate == ''
+                                    ? 'DD/MM/YYYY'
+                                    : rescheduleDate,
+                                style: TextStyle(
+                                    color: black,
+                                    fontSize: 16,
+                                    fontWeight: rescheduleDate == ''
+                                        ? FontWeight.w200
+                                        : FontWeight.w400),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 14 * screenWidth),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showDatePicker(
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2024),
+                                  context: context,
+                                ).then((date) {
+                                  setState(() {
+                                    rescheduleDate =
+                                        "${date!.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}";
+                                  });
+                                });
+                              });
+                            },
+                            child: Container(
+                              height: 49 * screenHeight,
+                              width: 70 * screenWidth,
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(7),
+                                border: Border.all(
+                                    color: appointmentTimeColor, width: 1),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.calendar_month_rounded,
+                                  color: primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20 * screenHeight),
+                      Text(
+                        'Time',
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 7 * screenHeight),
+                      GestureDetector(
+                        onTap: () {
+                          showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now())
+                              .then((time) {
+                            setState(() {
+                              rescheduleTime =
+                                  '${time!.hour > 12 ? (time.hour - 12).toString().padLeft(2, '0') : time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')} ${time.hour > 12 ? 'PM' : 'AM'}';
+                            });
+                          });
+                        },
+                        child: Container(
+                          height: 49 * screenHeight,
+                          width: double.infinity * screenWidth,
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(
+                                color: appointmentTimeColor, width: 1),
+                          ),
+                          child: Center(
+                            child: Text(
+                              rescheduleTime == ''
+                                  ? 'Choose Time'
+                                  : rescheduleTime,
+                              style: TextStyle(
+                                  color: primary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10 * screenHeight),
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  await ReadData().rescheduleJob(type);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CustomerBookingsScreen(),
+                      ));
+                },
+                child: Container(
+                  height: 49 * screenHeight,
+                  width: 273 * screenWidth,
+                  decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: sectionColor, width: 3)),
+                  child: Center(
+                    child: Text(
+                      'Reschedule',
+                      style: TextStyle(
+                        color: white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +256,7 @@ class Body extends StatelessWidget {
               return moreOffers[selectedJob].whoApplied == 'Customer'
                   ? JobDetailsAndStatus(
                       declineFunction: () async {
-                        await ReadData().deleteJobUpcoming('Customer Uploaded');
+                        await ReadData().deleteJobUpcoming('Handyman Uploaded');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -56,7 +264,9 @@ class Body extends StatelessWidget {
                           ),
                         );
                       },
-                      function: () {},
+                      function: () {
+                        rescheduleDialogBox('Handyman Uploaded');
+                      },
                       isJobPendingActive: true,
                       screen: JobInProgressScreen(),
                       isJobOfferScreen: true,
@@ -75,13 +285,16 @@ class Body extends StatelessWidget {
                     )
                   : JobDetailsAndStatus(
                       declineFunction: () async {
-                        await ReadData().deleteJobUpcoming('Handyman Uploaded');
+                        await ReadData().deleteJobUpcoming('Customer Uploaded');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CustomerBookingsScreen(),
                           ),
                         );
+                      },
+                      function: () {
+                        rescheduleDialogBox('Customer Uploaded');
                       },
                       isJobPendingActive: true,
                       screen: JobInProgressScreen(),

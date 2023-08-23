@@ -4,16 +4,16 @@ import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:handyman_app/Screens/Splash/splash_screen.dart';
 import 'package:handyman_app/constants.dart';
 
+var publicKey = 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63';
+final plugin = PaystackPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  PaystackPlugin().initialize(
-      publicKey: 'pk_test_73214e01e7d0c003d3e42b6a448400ab54eedb20');
-  var result = PaystackPlugin().sdkInitialized;
-  print(result);
-
+  await plugin.initialize(publicKey: publicKey);
   await Firebase.initializeApp();
 
+  var result = PaystackPlugin().sdkInitialized;
+  print(result);
   runApp(const MyApp());
 }
 
@@ -25,22 +25,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    try {
-      PaystackPlugin().initialize(
-          publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    } on PaystackSdkNotInitializedException catch (e) {
-      print(e.toString());
-    } catch (err) {
-      print(err.toString());
-    }
-    final result = PaystackPlugin().sdkInitialized;
-    print(result);
-    super.initState();
-  }
+  // Future<void> initializedPaystack() async {
+  //   await plugin.initialize(publicKey: publicKey);
+  // }
 
-  // This widget is the root of HomeCareX Mobile Application
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,7 +41,6 @@ class _MyAppState extends State<MyApp> {
         datePickerTheme: DatePickerThemeData(
           headerBackgroundColor: primary,
         ),
-        // timePickerTheme: TimePickerThemeData(),
         appBarTheme: AppBarTheme(
           color: white,
           elevation: 0.0,
@@ -62,5 +49,33 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: white,
       ),
     );
+
+    // return FutureBuilder(
+    //   future: initializedPaystack(),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.done) {
+    //       return MaterialApp(
+    //         title: 'HomeCareX',
+    //         home: const SplashScreen(),
+    //         color: Colors.white,
+    //         debugShowCheckedModeBanner: false,
+    //         theme: ThemeData(
+    //           primaryColor: primary,
+    //           datePickerTheme: DatePickerThemeData(
+    //             headerBackgroundColor: primary,
+    //           ),
+    //           appBarTheme: AppBarTheme(
+    //             color: white,
+    //             elevation: 0.0,
+    //           ),
+    //           fontFamily: 'Inter',
+    //           backgroundColor: white,
+    //         ),
+    //       );
+    //     } else {
+    //       return const CircularProgressIndicator(); // or any other loading widget
+    //     }
+    //   },
+    // );
   }
 }

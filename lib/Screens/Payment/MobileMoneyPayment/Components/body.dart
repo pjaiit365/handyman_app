@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
+// import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:handyman_app/Screens/Successful/Booking%20Successful/booking_successful_screen.dart';
 
 import '../../../../Components/pinned_button.dart';
 import '../../../../Components/profile_item.dart';
 import '../../../../Components/profile_item_dropdown.dart';
 import '../../../../constants.dart';
+import '../../../../main.dart';
 import 'momo_listView.dart';
 
 class Body extends StatefulWidget {
@@ -33,31 +35,25 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    PaystackPlugin().initialize(
-        publicKey: 'pk_test_caf898bc3a14e3b6c7bd997dd1828c8469726c63');
-    final result = PaystackPlugin().sdkInitialized;
-    print(result);
-    chargeRateHintText = 'N/A';
-    super.initState();
-  }
-
   Future momoPayment() async {
     Charge charge = Charge()
       ..amount = (int.parse(amountController.text) * 100)
       // ..phoneNumber = phoneNumberController.text
       ..email = 'pjaiitey.dev@gmail.com'
       ..reference = referenceController.text.trim()
-      ..currency = "GHS";
+      ..accessCode = ''
+      ..addParameter('Mobile Number', phoneNumberController.text)
+      ..currency = "GHS"
+      ..putCustomField("payment_type", "mobile_money");
 
-    charge.putCustomField("payment_type", "mobilemoneygh");
+    charge.putCustomField("payment_type", "mobile_money");
 
     try {
       CheckoutResponse response =
-          await PaystackPlugin().checkout(context, charge: charge);
+          await plugin.checkout(context, charge: charge);
 
       if (response.status) {
+        if (mounted) {}
         print('Payment successful');
       } else {
         print('Payment failed: ${response.message}');

@@ -5,17 +5,19 @@ import '../constants.dart';
 
 class NoteTextArea extends StatelessWidget {
   final TextEditingController controller;
+  num width;
   bool isNoteEditable;
   NoteTextArea({
     Key? key,
     required this.controller,
     this.isNoteEditable = true,
+    this.width = 11,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: screenWidth * 11.0),
+      padding: EdgeInsets.only(left: screenWidth * width),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 16 * screenWidth,

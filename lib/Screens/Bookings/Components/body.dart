@@ -95,8 +95,10 @@ class _BodyState extends State<Body> {
                               return moreOffers[index].whoApplied == 'Customer'
                                   ? MyJobItems(
                                       index: index,
-                                      screen: moreOffers[index].jobStatus ==
-                                              'Accepted'
+                                      screen: (moreOffers[index].jobStatus ==
+                                                  'Accepted' ||
+                                              moreOffers[index].jobStatus ==
+                                                  'Rescheduled')
                                           ? JobUpcomingScreen()
                                           : JobInProgressScreen(),
                                       name: allJobUpcoming[index].name,
@@ -109,12 +111,17 @@ class _BodyState extends State<Body> {
                                           moreOffers[index].jobStatus ==
                                                   'Accepted'
                                               ? 'View Order'
-                                              : 'Ongoing',
+                                              : moreOffers[index].jobStatus ==
+                                                      'Rescheduled'
+                                                  ? 'Rescheduled'
+                                                  : 'Ongoing',
                                     )
                                   : MyJobItems(
                                       index: index,
-                                      screen: moreOffers[index].jobStatus ==
-                                              'Accepted'
+                                      screen: (moreOffers[index].jobStatus ==
+                                                  'Accepted' ||
+                                              moreOffers[index].jobStatus ==
+                                                  'Rescheduled')
                                           ? JobUpcomingScreen()
                                           : JobInProgressScreen(),
                                       name: moreOffers[index].name,
@@ -127,7 +134,10 @@ class _BodyState extends State<Body> {
                                           moreOffers[index].jobStatus ==
                                                   'Accepted'
                                               ? 'View Order'
-                                              : 'Ongoing',
+                                              : moreOffers[index].jobStatus ==
+                                                      'Rescheduled'
+                                                  ? 'Rescheduled'
+                                                  : 'Ongoing',
                                     );
                             },
                             separatorBuilder: (context, index) {

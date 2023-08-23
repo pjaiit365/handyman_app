@@ -1,4 +1,5 @@
 class JobItemData {
+  final String customerID;
   final String pic;
   final String jobID;
   final String jobCategory;
@@ -20,6 +21,7 @@ class JobItemData {
   List? references;
   JobItemData({
     required this.pic,
+    required this.customerID,
     this.peopleApplied,
     required this.jobID,
     required this.seenBy,

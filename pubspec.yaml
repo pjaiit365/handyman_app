@@ -53,8 +53,11 @@ dependencies:
   location: ^4.3.0
   firebase_database: ^10.2.4
   flutter_polyline_points: ^1.0.0
-  flutter_paystack:
-  async: ^2.5.0
+  flutter_paystack: ^1.0.7
+  meta: ^1.9.1
+  http: ^0.13.5
+  async: ^2.11.0
+  intl: ^0.17.0
 
 
 dev_dependencies:

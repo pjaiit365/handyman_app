@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/default_back_button.dart';
-import '../../constants.dart';
-import '../Chat/Components/body_alternate.dart';
+import '../../../constants.dart';
+import 'body_alternate.dart';
 
 class ChatAlternateScreen extends StatelessWidget {
   const ChatAlternateScreen({Key? key}) : super(key: key);

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -191,7 +192,13 @@ class _BodyState extends State<Body> {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('User ID', isEqualTo: userId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       final userData = querySnapshot.docs.first.data();

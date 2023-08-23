@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Payment/BankPayment/bank_payment.dart';
 import 'package:handyman_app/Screens/Payment/CreditCardPayment/credit_card_payment.dart';
 import 'package:handyman_app/Screens/Payment/MobileMoneyPayment/mobile_money_payment.dart';
 import 'package:handyman_app/constants.dart';
@@ -100,7 +101,7 @@ class Body extends StatelessWidget {
               PaymentOptionItem(
                 logoLocation: 'assets/images/bank_transfer.png',
                 optionTitle: 'Bank Transfer',
-                press: MobileMoneyPayment(),
+                press: BankPayment(),
               )
             ],
           ),
