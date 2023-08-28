@@ -9,7 +9,9 @@ class AppointmentJobDetails extends StatelessWidget {
   final String street;
   final String town;
   final String region;
-  const AppointmentJobDetails({
+  String? note;
+  bool isNoteShowing;
+  AppointmentJobDetails({
     Key? key,
     required this.jobType,
     required this.date,
@@ -17,6 +19,8 @@ class AppointmentJobDetails extends StatelessWidget {
     required this.street,
     required this.town,
     required this.region,
+    this.note,
+    this.isNoteShowing = false,
   }) : super(key: key);
 
   @override
@@ -122,6 +126,28 @@ class AppointmentJobDetails extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            isNoteShowing ? SizedBox(height: 12 * screenHeight) : SizedBox(),
+            isNoteShowing
+                ? Text(
+                    'Note',
+                    style: TextStyle(
+                      color: primary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : SizedBox(),
+            isNoteShowing ? SizedBox(height: 4 * screenHeight) : SizedBox(),
+            isNoteShowing
+                ? Text(
+                    note!,
+                    style: TextStyle(
+                      color: black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

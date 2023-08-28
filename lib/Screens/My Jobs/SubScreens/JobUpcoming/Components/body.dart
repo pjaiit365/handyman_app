@@ -24,10 +24,13 @@ String rescheduleDate = '';
 String rescheduleTime = '';
 
 class _BodyState extends State<Body> {
+  late final DateTime accDate;
   @override
   void initState() {
     rescheduleDate = '';
     rescheduleTime = '';
+    Timestamp acceptedDate = moreOffers[selectedJob].acceptedDate;
+    accDate = acceptedDate.toDate();
     super.initState();
   }
 
@@ -38,14 +41,20 @@ class _BodyState extends State<Body> {
           .collection('Customer Jobs Applied')
           .doc(jobsAppliedID)
           .update(
-        {'Job Status': 'Ongoing'},
+        {
+          'Job Status': 'Ongoing',
+          'In Progress Date': Timestamp.now(),
+        },
       );
     } else {
       await FirebaseFirestore.instance
           .collection('Handyman Jobs Applied')
           .doc(jobsAppliedID)
           .update(
-        {'Job Status': 'Ongoing'},
+        {
+          'Job Status': 'Ongoing',
+          'In Progress Date': Timestamp.now(),
+        },
       );
     }
   }
@@ -253,8 +262,15 @@ class _BodyState extends State<Body> {
             shrinkWrap: true,
             itemCount: 1,
             itemBuilder: (context, index) {
+              Timestamp acceptedDate = moreOffers[selectedJob].acceptedDate;
+              final accDate = acceptedDate.toDate();
+
               return moreOffers[selectedJob].whoApplied == 'Customer'
                   ? JobDetailsAndStatus(
+                      note: moreOffers[selectedJob].note == ''
+                          ? 'N/A'
+                          : moreOffers[selectedJob].note,
+                      isNoteShowing: true,
                       declineFunction: () async {
                         await ReadData().deleteJobUpcoming('Handyman Uploaded');
                         Navigator.push(
@@ -282,8 +298,14 @@ class _BodyState extends State<Body> {
                       houseNum: moreOffers[selectedJob].houseNum,
                       jobType: allJobUpcoming[selectedJob].serviceProvided,
                       date: moreOffers[selectedJob].date,
+                      acceptedDate:
+                          '${accDate.day}-${accDate.month}-${accDate.year}',
+                      inProgressDate: 'N/A',
+                      completedDate: 'N/A',
                     )
                   : JobDetailsAndStatus(
+                      note: 'N/A',
+                      isNoteShowing: true,
                       declineFunction: () async {
                         await ReadData().deleteJobUpcoming('Customer Uploaded');
                         Navigator.push(
@@ -311,6 +333,10 @@ class _BodyState extends State<Body> {
                       houseNum: allJobUpcoming[selectedJob].houseNum,
                       jobType: allJobUpcoming[selectedJob].serviceProvided,
                       date: moreOffers[selectedJob].date,
+                      acceptedDate:
+                          '${accDate.day.toString().padLeft(2, '0')}-${accDate.month.toString().padLeft(2, '0')}-${accDate.year}',
+                      inProgressDate: 'N/A',
+                      completedDate: 'N/A',
                     );
             },
           ),
@@ -321,7 +347,7 @@ class _BodyState extends State<Body> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => JobInProgressScreen(),
+                builder: (context) => CustomerBookingsScreen(),
               ),
             );
           },

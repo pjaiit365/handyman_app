@@ -1,13 +1,18 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:handyman_app/Components/pinned_button.dart';
+import 'package:handyman_app/Screens/Bookings/customer_bookings_screen.dart';
+import 'package:handyman_app/Screens/Location/location_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobCompleted/job_completed_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../../Components/job_details_and_status.dart';
 import '../../../../../constants.dart';
@@ -17,6 +22,58 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late final DateTime accDate;
+    late final DateTime progDate;
+
+    Future<void> getUserLocationAndUpload() async {
+      final permissionStatus = await Permission.location.request();
+      if (permissionStatus.isGranted) {
+        try {
+          final Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
+
+          final document = await FirebaseFirestore.instance
+              .collection('Location')
+              .where('User ID', isEqualTo: loggedInUserId)
+              .get()
+              .timeout(Duration(seconds: 30), onTimeout: () {
+            throw TimeoutException('Unable to communicate with server');
+          });
+          if (document.docs.isNotEmpty) {
+            final docID = document.docs.single.id;
+            await FirebaseFirestore.instance
+                .collection('Location')
+                .doc(docID)
+                .update({
+              'Latitude': position.latitude,
+              'Longitude': position.longitude,
+            });
+          } else {
+            final locationDoc =
+                await FirebaseFirestore.instance.collection('Location').add({
+              'Latitude': position.latitude,
+              'Longitude': position.longitude,
+              'User ID': loggedInUserId,
+            });
+
+            final docID = locationDoc.id;
+            await FirebaseFirestore.instance
+                .collection('Location')
+                .doc(docID)
+                .update({'Location ID': docID});
+          }
+
+          // Display success message or perform any other actions
+          print('Location uploaded successfully');
+        } catch (e) {
+          print('Error getting or uploading location: $e');
+        }
+      } else {
+        print('Location permission not granted');
+      }
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +84,25 @@ class Body extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             itemCount: 1,
             itemBuilder: (context, index) {
+              Timestamp acceptedDate = moreOffers[selectedJob].acceptedDate;
+              accDate = acceptedDate.toDate();
+              Timestamp inProgressDate = moreOffers[selectedJob].inProgressDate;
+              progDate = inProgressDate.toDate();
               return JobDetailsAndStatus(
+                function: () async {
+                  await getUserLocationAndUpload();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LocationScreen(role: 'Customer'),
+                    ),
+                  );
+                },
+                statusText: 'Job Accepted',
+                note: moreOffers[selectedJob].note == ''
+                    ? 'N/A'
+                    : moreOffers[selectedJob].note,
+                isNoteShowing: true,
                 buttonText: 'See Location',
                 isJobInProgessScreen: true,
                 screen: JobCompletedScreen(),
@@ -42,6 +117,11 @@ class Body extends StatelessWidget {
                 houseNum: allJobUpcoming[selectedJob].houseNum,
                 jobType: allJobUpcoming[selectedJob].serviceProvided,
                 date: moreOffers[selectedJob].date,
+                acceptedDate:
+                    '${accDate.day.toString().padLeft(2, '0')}-${accDate.month.toString().padLeft(2, '0')}-${accDate.year}',
+                inProgressDate:
+                    '${progDate.day.toString().padLeft(2, '0')}-${progDate.month.toString().padLeft(2, '0')}-${progDate.year}',
+                completedDate: 'N/A',
               );
             },
           ),
@@ -75,30 +155,12 @@ class Body extends StatelessWidget {
               },
             );
             await ReadData().completeJob();
+            isJobUpcomingClicked = false;
+            isJobCompletedClicked = true;
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FutureBuilder(
-                  future: ReadData().getUpcomingJobData(
-                      'Jobs Completed', 'Customer', context),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return JobCompletedScreen();
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: Platform.isIOS
-                            ? CupertinoActivityIndicator(color: primary)
-                            : CircularProgressIndicator(color: primary),
-                      );
-                    }
-                    return Center(
-                      child: Platform.isIOS
-                          ? CupertinoActivityIndicator(color: primary)
-                          : CircularProgressIndicator(color: primary),
-                    );
-                  },
-                ),
+                builder: (context) => CustomerBookingsScreen(),
               ),
             );
           },

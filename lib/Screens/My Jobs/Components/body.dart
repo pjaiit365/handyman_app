@@ -35,8 +35,7 @@ class _BodyState extends State<Body> {
       await readData.getUpcomingJobData('Jobs Upcoming', 'Handyman', context);
     }
     if (isJobCompletedClicked == true) {
-      await readData.getHandymanJobApplicationData(
-          'Jobs Completed', 'Handyman', context);
+      await readData.getUpcomingJobData('Jobs Completed', 'Handyman', context);
     }
   }
 
@@ -96,8 +95,7 @@ class _BodyState extends State<Body> {
                         ? ListView.separated(
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return moreOffers[selectedJob].whoApplied ==
-                                      'Customer'
+                              return moreOffers[index].whoApplied == 'Customer'
                                   ? MyJobItems(
                                       index: index,
                                       screen: (moreOffers[index].jobStatus ==
@@ -189,8 +187,7 @@ class _BodyState extends State<Body> {
                         : ListView.separated(
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return moreOffers[selectedJob].whoApplied ==
-                                      'Customer'
+                              return moreOffers[index].whoApplied == 'Customer'
                                   ? MyJobItems(
                                       index: index,
                                       screen: JobCompletedScreen(),

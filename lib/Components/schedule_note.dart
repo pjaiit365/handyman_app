@@ -59,6 +59,7 @@ class _ScheduleNoteState extends State<ScheduleNote> {
               padding: EdgeInsets.only(left: screenWidth * 11.0),
               child: GestureDetector(
                 onTap: () {
+                  FocusScope.of(context).unfocus();
                   setState(() {
                     isNoteEditable = !isNoteEditable;
                     if (isNoteEditable == false) {

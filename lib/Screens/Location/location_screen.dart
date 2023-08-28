@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,9 +8,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math' show asin, atan2, cos, pi, sin, sqrt;
 
+import 'package:handyman_app/Services/read_data.dart';
+import 'package:handyman_app/constants.dart';
+
 class LocationScreen extends StatefulWidget {
   final LatLng? initialSelectedPostion;
-  const LocationScreen({Key? key, this.initialSelectedPostion})
+  final String role;
+  const LocationScreen(
+      {Key? key, this.initialSelectedPostion, required this.role})
       : super(key: key);
 
   @override
@@ -22,7 +29,7 @@ class _LocationScreenState extends State<LocationScreen>
   LatLng selectedPosition = LatLng(6.6745, -1.5716); // Default position
   Stream<DocumentSnapshot>? _stream;
   LatLng? currentLocation;
-  var userDocID = '';
+  String locationDocID = '';
 
   @override
   void initState() {
@@ -37,35 +44,55 @@ class _LocationScreenState extends State<LocationScreen>
       setState(() {});
     });
 
-    getLocationCoordinates();
+    getLocationDocID().then((_) {
+      _stream = FirebaseFirestore.instance
+          .collection('Location')
+          .doc(locationDocID)
+          .snapshots();
+    });
 
-    // // Start listening to the stream for location changes
-    // _stream = FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(userDocID)
-    //     .snapshots();
-
-    _stream = FirebaseFirestore.instance
-        .collection('Location')
-        .doc('Q4GIG34vEj1XinwDRavP')
-        .snapshots();
+    updateLocationPeriodically();
   }
 
-  Future getLocationCoordinates() async {
+  void updateLocation(Position newLocation) async {
     final document = await FirebaseFirestore.instance
-        .collection('Customer/Handyman Job Upload')
-        .where('Customer ID',
-            isEqualTo: 'user_id gotten from jobid job -> jobUpload ')
+        .collection('Location')
+        .where('User ID', isEqualTo: loggedInUserId)
+        .get();
+    final docID = document.docs.single.id;
+
+    await FirebaseFirestore.instance.collection('Location').doc(docID).update({
+      'Latitude': newLocation.latitude,
+      'Longitude': newLocation.longitude,
+    });
+  }
+
+  void updateLocationPeriodically() {
+    Future<void>.delayed(const Duration(seconds: 15)).then((_) async {
+      Position newLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      updateLocation(newLocation);
+      updateLocationPeriodically();
+    });
+  }
+
+  Future getLocationDocID() async {
+    final String userID;
+    if (moreOffers[selectedJob].applierID == loggedInUserId) {
+      userID = moreOffers[selectedJob].receiverID;
+    } else {
+      userID = moreOffers[selectedJob].applierID;
+    }
+
+    final document = await FirebaseFirestore.instance
+        .collection('Location')
+        .where('User ID', isEqualTo: userID)
         .get();
     if (document.docs.isNotEmpty) {
-      final docID = document.docs.single.id;
-      final customerID = document.docs.single.get('Customer ID');
-
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .where('User ID', isEqualTo: customerID)
-          .get();
-      userDocID = userDoc.docs.single.id;
+      setState(() {
+        locationDocID = document.docs.single.id;
+      });
     }
   }
 
@@ -78,28 +105,15 @@ class _LocationScreenState extends State<LocationScreen>
     }
   }
 
-  // Calculate distance between two lat & long points using Haversine formula.
-  //haversine formula is a very accurate way of computing distances between two points on the surface of a sphere using the latitude and longitude
-  double calculateDistance(LatLng point1, LatLng point2) {
-    const int earthRadius = 6371000; // Radius of the earth in meters
-    final lat1Rad = degreesToRadians(point1.latitude);
-    final lat2Rad = degreesToRadians(point2.latitude);
-    final deltaLatRad = degreesToRadians(point2.latitude - point1.latitude);
-    final deltaLonRad = degreesToRadians(point2.longitude - point1.longitude);
+  double calculateDistance(LatLng start, LatLng end) {
+    final distance = Geolocator.distanceBetween(
+      start.latitude,
+      start.longitude,
+      end.latitude,
+      end.longitude,
+    );
 
-    final a = sin(deltaLatRad / 2) * sin(deltaLatRad / 2) +
-        cos(lat1Rad) *
-            cos(lat2Rad) *
-            sin(deltaLonRad / 2) *
-            sin(deltaLonRad / 2);
-    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return earthRadius * c;
-  }
-
-  // Converting degrees to radians.
-  double degreesToRadians(double degrees) {
-    return degrees * (pi / 180);
+    return distance;
   }
 
   @override
@@ -152,7 +166,7 @@ class _LocationScreenState extends State<LocationScreen>
                       icon: BitmapDescriptor.defaultMarkerWithHue(
                           BitmapDescriptor.hueRed),
                       infoWindow: InfoWindow(
-                        title: 'Handyman/Customer',
+                        title: widget.role,
                       ),
                     ),
                   },

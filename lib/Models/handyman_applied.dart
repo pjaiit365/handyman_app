@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class HandymanAppliedData {
   final String jobID;
   final String name;
@@ -14,11 +16,16 @@ class HandymanAppliedData {
   final String documentID;
   final String receiverID;
   final String jobStatus;
+  final String note;
+  Timestamp? acceptedDate;
+  Timestamp? inProgressDate;
+  Timestamp? completedDate;
   String? whoApplied;
   List? referenceLinks;
   // final List portfolio;
   HandymanAppliedData({
     this.whoApplied,
+    required this.note,
     required this.documentID,
     required this.jobStatus,
     required this.jobID,
@@ -35,6 +42,9 @@ class HandymanAppliedData {
     required this.pic,
     required this.date,
     this.referenceLinks,
+    this.acceptedDate,
+    this.inProgressDate,
+    this.completedDate,
     // required this.portfolio,
   });
 }

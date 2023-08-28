@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CustomerAppliedData {
   final String jobID;
   final String name;
@@ -14,9 +16,16 @@ class CustomerAppliedData {
   final String documentID;
   final String receiverID;
   final String jobStatus;
+  final String note;
+  Timestamp? acceptedDate;
+  Timestamp? inProgressDate;
+  Timestamp? completedDate;
   String? whoApplied;
+  List? referenceLinks;
+  List? portfolio;
   CustomerAppliedData({
     this.whoApplied,
+    required this.note,
     required this.documentID,
     required this.jobStatus,
     required this.receiverID,
@@ -32,5 +41,10 @@ class CustomerAppliedData {
     required this.time,
     required this.pic,
     required this.date,
+    this.acceptedDate,
+    this.inProgressDate,
+    this.completedDate,
+    this.referenceLinks,
+    this.portfolio,
   });
 }

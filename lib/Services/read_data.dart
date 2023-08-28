@@ -933,6 +933,12 @@ class ReadData {
             //to get more info about handyman jobs applied
             final docData = jobDoc.data()!;
             final offerData = CustomerAppliedData(
+              note: docData['Note'],
+              referenceLinks: docData['Reference Links'],
+              portfolio: docData['Portfolio'],
+              acceptedDate: docData['Accepted Date'],
+              inProgressDate: docData['In Progress Date'],
+              completedDate: docData['Completed Date'],
               jobStatus: docData['Job Status'],
               receiverID: docData['Receiver ID'],
               documentID: docData['Jobs Applied ID'],
@@ -1011,7 +1017,7 @@ class ReadData {
             }
           }
         } else {
-          throw Exception('Job Upload Not Found');
+          throw Exception('No Jobs Available');
         }
       } catch (e) {
         // showDialog(
@@ -1091,6 +1097,10 @@ class ReadData {
             //
             final docData = jobDoc.data()!;
             final offerData = HandymanAppliedData(
+              note: docData['Note'],
+              acceptedDate: docData['Accepted Date'],
+              inProgressDate: docData['In Progress Date'],
+              completedDate: docData['Completed Date'],
               jobStatus: docData['Job Status'],
               receiverID: docData['Receiver ID'],
               referenceLinks: docData['Reference Links'],
@@ -1177,7 +1187,7 @@ class ReadData {
             }
           }
         } else {
-          throw Exception('Job Upload Not Found');
+          throw Exception('No Jobs Available');
         }
       } catch (e) {
         // showDialog(
@@ -1225,12 +1235,18 @@ class ReadData {
       await FirebaseFirestore.instance
           .collection('Customer Jobs Applied')
           .doc(jobsAppliedID)
-          .update({'Job Status': 'Completed'});
+          .update({
+        'Job Status': 'Completed',
+        'Completed Date': Timestamp.now(),
+      });
     } else {
       await FirebaseFirestore.instance
           .collection('Handyman Jobs Applied')
           .doc(jobsAppliedID)
-          .update({'Job Status': 'Completed'});
+          .update({
+        'Job Status': 'Completed',
+        'Completed Date': Timestamp.now(),
+      });
     }
 
     // remove jobsAppliedID from Job Application (id) -> Jobs Upcoming -> Customer
@@ -1428,6 +1444,8 @@ class ReadData {
     jobHandymanCompletedIDs.clear();
     List<String> allCustomerAppliedIDs = [];
     List<String> allHandymanAppliedIDs = [];
+    allCustomerAppliedIDs.clear();
+    allHandymanAppliedIDs.clear();
 
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Job Application')
@@ -1453,6 +1471,8 @@ class ReadData {
 
         if (documentIDs.isNotEmpty) {
           for (var id in documentIDs) {
+            allCustomerAppliedIDs.clear();
+            allHandymanAppliedIDs.clear();
             late final jobData;
             late final offerData;
 
@@ -1480,6 +1500,9 @@ class ReadData {
               //
               final docData = jobDoc.data()!;
               offerData = HandymanAppliedData(
+                acceptedDate: docData['Accepted Date'],
+                inProgressDate: docData['In Progress Date'],
+                completedDate: docData['Completed Date'],
                 jobStatus: docData['Job Status'],
                 whoApplied: 'Customer',
                 receiverID: docData['Receiver ID'],
@@ -1488,6 +1511,7 @@ class ReadData {
                 jobID: docData['Job ID'],
                 applierID: docData['Applier ID'],
                 name: docData['Name'],
+                note: docData['Note'],
                 addressType: docData['Address Type'],
                 street: docData['Street'],
                 town: docData['Town'],
@@ -1558,12 +1582,16 @@ class ReadData {
               //to get more info about handyman jobs applied
               final docData = jobDoc.data()!;
               offerData = CustomerAppliedData(
+                acceptedDate: docData['Accepted Date'],
+                inProgressDate: docData['In Progress Date'],
+                completedDate: docData['Completed Date'],
                 jobStatus: docData['Job Status'],
                 receiverID: docData['Receiver ID'],
                 documentID: docData['Jobs Applied ID'],
                 jobID: docData['Job ID'],
                 applierID: docData['Applier ID'],
                 name: docData['Name'],
+                note: docData['Note'],
                 addressType: docData['Address Type'],
                 street: docData['Street'],
                 town: docData['Town'],
@@ -1636,29 +1664,6 @@ class ReadData {
           throw Exception('Job Upload Not Found');
         }
       } catch (e) {
-        // showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog(
-        //       title: Center(
-        //         child: Text(
-        //           'Error'.toUpperCase(),
-        //           style: TextStyle(color: primary, fontSize: 17),
-        //         ),
-        //       ),
-        //       shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(12)),
-        //       content: Text(
-        //         '${e.toString()}.',
-        //         style: TextStyle(
-        //           height: 1.4,
-        //           fontSize: 16,
-        //           color: black,
-        //         ),
-        //       ),
-        //     );
-        //   },
-        // );
         print(e.toString());
       }
     }
@@ -2278,7 +2283,10 @@ class ReadData {
         await FirebaseFirestore.instance
             .collection('Customer Jobs Applied')
             .doc(jobsAppliedID)
-            .update({'Job Status': 'Accepted'});
+            .update({
+          'Job Status': 'Accepted',
+          'Accepted Date': Timestamp.now(),
+        });
 
         // remove jobsAppliedID from Jobs Application (applierID) -> Applied -> Customer
         // add jobsAppliedID from Jobs Application (applierID) -> Upcoming -> Customer
@@ -2369,7 +2377,10 @@ class ReadData {
         await FirebaseFirestore.instance
             .collection('Handyman Jobs Applied')
             .doc(jobsAppliedID)
-            .update({'Job Status': 'Accepted'});
+            .update({
+          'Job Status': 'Accepted',
+          'Accepted Date': Timestamp.now(),
+        });
 
         // remove jobsAppliedID from Jobs Application (applierID) -> Applied -> Customer
         // add jobsAppliedID from Jobs Application (applierID) -> Upcoming -> Customer
@@ -2469,7 +2480,13 @@ class ReadData {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Job Application')
         .where('Customer ID', isEqualTo: loggedInUserId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       try {
@@ -2478,13 +2495,7 @@ class ReadData {
         final document = await FirebaseFirestore.instance
             .collection('Job Application')
             .doc(docID)
-            .get()
-            .timeout(
-          Duration(seconds: 30), // Set your desired timeout duration
-          onTimeout: () {
-            throw TimeoutException("Unable to communicate with server.");
-          },
-        );
+            .get();
 
         final docData = document.data()!;
         jobHandymanUpcomingIDs = docData['Jobs Upcoming']['Handyman'];

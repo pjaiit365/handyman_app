@@ -112,17 +112,19 @@ class _BodyState extends State<Body> {
       //create customer jobs applied collection
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Customer Jobs Applied')
-          .where('Applier ID', isEqualTo: applierID)
+          .where('Applier ID', isEqualTo: loggedInUserId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        throw Exception(
-            'You have already applied for this job. You cannot apply for a particular job twice');
+        throw 'You have already applied for this job. You cannot apply for a particular job twice';
       } else {
         await FirebaseFirestore.instance
             .collection('Customer Jobs Applied')
             .doc(applierID)
             .set({
+          'Accepted Date': null,
+          'In Progress Date': null,
+          'Completed Date': null,
           'Jobs Applied ID': applierID,
           'Job ID': allJobItemList[0].jobID,
           'Applier ID': loggedInUserId,

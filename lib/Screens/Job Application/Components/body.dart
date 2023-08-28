@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Job%20Application/Components/application_references_tab.dart';
 import 'package:handyman_app/Screens/Job%20Application/Components/application_summary_details.dart';
@@ -27,6 +31,8 @@ class Body extends StatefulWidget {
   @override
   State<Body> createState() => _BodyState();
 }
+
+List jobApplicationPortfolioUploadList = [];
 
 class _BodyState extends State<Body> {
   final notesController = TextEditingController();
@@ -121,6 +127,25 @@ class _BodyState extends State<Body> {
     );
   }
 
+  Future uploadPortfolio() async {
+    jobApplicationPortfolioUploadList.clear();
+
+    if (resultList != null) {
+      for (final resultFile in resultList!.files) {
+        final uploadFile = File(resultFile.path!);
+        final uploadFileName = resultFile.name;
+        final file = await FirebaseStorage.instance
+            .ref(
+                'Job Application/${allJobItemList[0].jobID}/$loggedInUserId/Portfolio/')
+            .child(uploadFileName)
+            .putFile(uploadFile);
+        final downloadURL = await file.ref.getDownloadURL();
+        jobApplicationPortfolioUploadList.add(downloadURL);
+        print(downloadURL);
+      }
+    }
+  }
+
   Future applyJob() async {
     jobHandymanAppliedIDs.clear();
     jobCustomerAppliedIDs.clear();
@@ -136,17 +161,21 @@ class _BodyState extends State<Body> {
       // create handyman jobs applied collection
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Handyman Jobs Applied')
-          .where('Applier ID', isEqualTo: applierID)
+          .where('Applier ID', isEqualTo: loggedInUserId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        throw Exception(
-            'You have already applied for this job. You cannot apply for a particular job twice');
+        throw 'You have already applied for this job. You cannot apply for a particular job twice';
       } else {
+        await uploadPortfolio();
+
         await FirebaseFirestore.instance
             .collection('Handyman Jobs Applied')
             .doc(applierID)
             .set({
+          'Accepted Date': null,
+          'In Progress Date': null,
+          'Completed Date': null,
           'Jobs Applied ID': applierID,
           'Job ID': allJobItemList[0].jobID,
           'Applier ID': loggedInUserId,
@@ -162,6 +191,7 @@ class _BodyState extends State<Body> {
           'Address Type': addressValue,
           'Note': jobApplicationNote,
           'Reference Links': jobApplicationLinks,
+          'Portfolio': jobApplicationPortfolioUploadList,
           'User Pic': allUsers[0].pic,
           'Schedule Time': timeList[appointmentTimeIndex],
           'Schedule Date':
@@ -349,7 +379,7 @@ class _BodyState extends State<Body> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             content: Center(
               child: Text(
-                'You have already applied for this job. You cannot apply for a particular job twice',
+                e.toString(),
                 style: TextStyle(height: 1.4),
                 textAlign: TextAlign.center,
               ),

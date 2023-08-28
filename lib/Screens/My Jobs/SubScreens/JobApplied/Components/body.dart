@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Bookings/customer_bookings_screen.dart';
 import 'package:handyman_app/Screens/My%20Jobs/SubScreens/JobUpcoming/job_upcoming.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Services/read_data.dart';
@@ -98,7 +99,7 @@ class Body extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyJobsScreen(),
+                            builder: (context) => CustomerBookingsScreen(),
                           ),
                         );
                       },
@@ -150,6 +151,9 @@ class Body extends StatelessWidget {
         houseNum: allJobApplied[selectedJob].houseNum,
         jobType: allJobApplied[selectedJob].serviceProvided,
         date: allJobApplied[selectedJob].uploadDate,
+        acceptedDate: allJobApplied[selectedJob].uploadDate,
+        inProgressDate: 'N/A',
+        completedDate: 'N/A',
       ),
     );
   }

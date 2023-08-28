@@ -7,12 +7,18 @@ class AppointmentJobStatus extends StatefulWidget {
   bool isJobInProgressActive;
   bool isJobCompletedAcitve;
   String jobAccepted;
+  final String acceptedDate;
+  final String inProgressDate;
+  final String completedDate;
   AppointmentJobStatus({
     Key? key,
     this.jobAccepted = 'Job Pending',
     this.isJobPendingActive = false,
     this.isJobInProgressActive = false,
     this.isJobCompletedAcitve = false,
+    required this.acceptedDate,
+    required this.inProgressDate,
+    required this.completedDate,
   }) : super(key: key);
 
   @override
@@ -121,7 +127,7 @@ class _AppointmentJobStatusState extends State<AppointmentJobStatus> {
                     ),
                     SizedBox(height: 5 * screenHeight),
                     Text(
-                      '23-10-2023',
+                      widget.acceptedDate,
                       style: TextStyle(
                         fontSize: 14,
                         color: widget.isJobPendingActive ? black : grey,
@@ -139,7 +145,7 @@ class _AppointmentJobStatusState extends State<AppointmentJobStatus> {
                     ),
                     SizedBox(height: 5 * screenHeight),
                     Text(
-                      '25-10-2023',
+                      widget.inProgressDate,
                       style: TextStyle(
                         fontSize: 14,
                         color: widget.isJobInProgressActive ? black : grey,
@@ -157,7 +163,7 @@ class _AppointmentJobStatusState extends State<AppointmentJobStatus> {
                     ),
                     SizedBox(height: 5 * screenHeight),
                     Text(
-                      '25-10-2023',
+                      widget.completedDate,
                       style: TextStyle(
                         fontSize: 14,
                         color: widget.isJobCompletedAcitve ? black : grey,

@@ -13,7 +13,7 @@ class JobInProgressScreen extends StatelessWidget {
       appBar: AppBar(
         leading: DefaultBackButton(),
         title: Text(
-          'Job Offer',
+          'Job-In-Progress',
           style: TextStyle(
             color: black,
             fontSize: 18,

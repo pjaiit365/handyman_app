@@ -9,31 +9,53 @@ import 'package:handyman_app/Services/read_data.dart';
 import '../../../../../Components/job_details_and_status.dart';
 import '../../../../../constants.dart';
 import '../../../my_jobs_screen.dart';
+import '../../JobUpcoming/Components/body.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Future startJob() async {
-      final jobsAppliedID = moreOffers[selectedJob].documentID;
-      if (moreOffers[selectedJob].whoApplied == 'Customer') {
-        await FirebaseFirestore.instance
-            .collection('Customer Jobs Applied')
-            .doc(jobsAppliedID)
-            .update(
-          {'Job Status': 'Ongoing'},
-        );
-      } else {
-        await FirebaseFirestore.instance
-            .collection('Handyman Jobs Applied')
-            .doc(jobsAppliedID)
-            .update(
-          {'Job Status': 'Ongoing'},
-        );
-      }
-    }
+  State<Body> createState() => _BodyState();
+}
 
+class _BodyState extends State<Body> {
+  late final DateTime accDate;
+  Future startJob() async {
+    final jobsAppliedID = moreOffers[selectedJob].documentID;
+    if (moreOffers[selectedJob].whoApplied == 'Customer') {
+      await FirebaseFirestore.instance
+          .collection('Customer Jobs Applied')
+          .doc(jobsAppliedID)
+          .update(
+        {
+          'Job Status': 'Ongoing',
+          'In Progress Date': Timestamp.now(),
+        },
+      );
+    } else {
+      await FirebaseFirestore.instance
+          .collection('Handyman Jobs Applied')
+          .doc(jobsAppliedID)
+          .update(
+        {
+          'Job Status': 'Ongoing',
+          'In Progress Date': Timestamp.now(),
+        },
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    rescheduleDate = '';
+    rescheduleTime = '';
+    Timestamp acceptedDate = moreOffers[selectedJob].acceptedDate;
+    accDate = acceptedDate.toDate();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,6 +68,10 @@ class Body extends StatelessWidget {
             itemBuilder: (context, index) {
               return moreOffers[selectedJob].whoApplied == 'Customer'
                   ? JobDetailsAndStatus(
+                      note: moreOffers[selectedJob].note == ''
+                          ? 'N/A'
+                          : moreOffers[selectedJob].note,
+                      isNoteShowing: true,
                       declineFunction: () async {
                         await ReadData().deleteJobUpcoming('Handyman Uploaded');
                         Navigator.push(
@@ -70,8 +96,14 @@ class Body extends StatelessWidget {
                       houseNum: moreOffers[selectedJob].houseNum,
                       jobType: allJobUpcoming[selectedJob].serviceProvided,
                       date: moreOffers[selectedJob].date,
+                      acceptedDate:
+                          '${accDate.day.toString().padLeft(2, '0')}-${accDate.month.toString().padLeft(2, '0')}-${accDate.year}',
+                      inProgressDate: 'N/A',
+                      completedDate: 'N/A',
                     )
                   : JobDetailsAndStatus(
+                      note: 'N/A',
+                      isNoteShowing: true,
                       declineFunction: () async {
                         await ReadData().deleteJobUpcoming('Customer Uploaded');
                         Navigator.push(
@@ -86,8 +118,8 @@ class Body extends StatelessWidget {
                       isJobOfferScreen: true,
                       buttonText: 'Reschedule',
                       statusText: 'Job Accepted',
-                      imageLocation: allJobUpcoming[selectedJob].pic,
-                      name: allJobUpcoming[selectedJob].name,
+                      imageLocation: moreOffers[selectedJob].pic,
+                      name: moreOffers[selectedJob].name,
                       region: allJobUpcoming[selectedJob].region,
                       chargeRate: allJobUpcoming[selectedJob].chargeRate,
                       charge: allJobUpcoming[selectedJob].charge,
@@ -96,6 +128,10 @@ class Body extends StatelessWidget {
                       houseNum: allJobUpcoming[selectedJob].houseNum,
                       jobType: allJobUpcoming[selectedJob].serviceProvided,
                       date: moreOffers[selectedJob].date,
+                      acceptedDate:
+                          '${accDate.day.toString().padLeft(2, '0')}-${accDate.month.toString().padLeft(2, '0')}-${accDate.year}',
+                      inProgressDate: 'N/A',
+                      completedDate: 'N/A',
                     );
             },
           ),
@@ -106,7 +142,7 @@ class Body extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => JobInProgressScreen(),
+                builder: (context) => MyJobsScreen(),
               ),
             );
           },

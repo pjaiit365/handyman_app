@@ -58,6 +58,7 @@ dependencies:
   http: ^0.13.5
   async: ^2.11.0
   intl: ^0.17.0
+  permission_handler: ^10.4.3
 
 
 dev_dependencies:

@@ -166,6 +166,9 @@ class Body extends StatelessWidget {
             },
           );
           await ReadData().acceptOffer('Handyman Uploaded');
+          isJobOffersClicked = false;
+          isJobUpcomingClicked = true;
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -187,6 +190,9 @@ class Body extends StatelessWidget {
         houseNum: moreOffers[selectedJob].houseNum,
         jobType: allJobOffers[selectedJob].serviceProvided,
         date: moreOffers[selectedJob].date,
+        acceptedDate: moreOffers[selectedJob].date,
+        inProgressDate: 'N/A',
+        completedDate: 'N/A',
       ),
     );
   }

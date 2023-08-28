@@ -20,7 +20,11 @@ class JobDetailsAndStatus extends StatelessWidget {
   final String street;
   final String town;
   final String region;
+  final String acceptedDate;
+  final String inProgressDate;
+  final String completedDate;
 
+  bool isJobRequirementShowing;
   bool isJobPendingActive;
   bool isJobInProgressActive;
   bool isJobCompletedAcitve;
@@ -30,12 +34,19 @@ class JobDetailsAndStatus extends StatelessWidget {
   bool isJobInProgessScreen;
   bool isJobAppliedScreen;
   String buttonText;
+  List? portfolio;
+  List? referenceLinks;
+  String? note;
+  bool isNoteShowing;
   JobDetailsAndStatus({
     this.function,
     this.declineFunction,
+    this.portfolio,
+    this.referenceLinks,
     Key? key,
     this.buttonText = 'Accept',
     this.statusText = 'Job Pending',
+    this.isJobRequirementShowing = false,
     this.isJobOfferScreen = false,
     this.isJobInProgessScreen = false,
     this.isJobPendingActive = false,
@@ -53,6 +64,11 @@ class JobDetailsAndStatus extends StatelessWidget {
     required this.street,
     required this.town,
     required this.region,
+    required this.acceptedDate,
+    required this.inProgressDate,
+    required this.completedDate,
+    this.note,
+    this.isNoteShowing = false,
   }) : super(key: key);
 
   @override
@@ -153,6 +169,8 @@ class JobDetailsAndStatus extends StatelessWidget {
             street: street,
             town: town,
             region: region,
+            note: note,
+            isNoteShowing: isNoteShowing,
           ),
           isJobOfferScreen ? SizedBox(height: 28 * screenHeight) : SizedBox(),
           isJobAppliedScreen ? SizedBox(height: 28 * screenHeight) : SizedBox(),
@@ -288,8 +306,154 @@ class JobDetailsAndStatus extends StatelessWidget {
                   ],
                 )
               : SizedBox(),
+          (isJobRequirementShowing &&
+                  (referenceLinks!.isNotEmpty || portfolio!.isNotEmpty))
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 28 * screenHeight),
+                    Container(
+                      constraints: BoxConstraints(
+                        minHeight: 50 * screenHeight,
+                      ),
+                      width: 383 * screenWidth,
+                      decoration: BoxDecoration(
+                        color: sectionColor,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      padding: EdgeInsets.only(
+                        left: 30 * screenWidth,
+                        right: 26 * screenWidth,
+                        top: 23 * screenHeight,
+                        bottom: 20 * screenHeight,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Job Requirements',
+                                style: TextStyle(
+                                  color: black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Container(
+                                height: 31 * screenHeight,
+                                width: 30 * screenWidth,
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(9),
+                                  border: Border.all(color: primary, width: 2),
+                                ),
+                                child: Center(
+                                  child: Image.asset('assets/icons/i_logo.png'),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12 * screenHeight),
+                          referenceLinks!.isEmpty
+                              ? SizedBox()
+                              : Text(
+                                  'References',
+                                  style: TextStyle(
+                                    color: primary,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                          referenceLinks!.isEmpty
+                              ? SizedBox()
+                              : SizedBox(height: 4 * screenHeight),
+                          referenceLinks!.isEmpty
+                              ? SizedBox()
+                              : ListView.separated(
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    return Text(
+                                      referenceLinks![index],
+                                      style: TextStyle(
+                                          color: Colors.blueAccent,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(height: 10 * screenHeight);
+                                  },
+                                  itemCount: referenceLinks!.length),
+                          referenceLinks!.isEmpty
+                              ? SizedBox()
+                              : SizedBox(height: 12 * screenHeight),
+                          portfolio!.isEmpty
+                              ? SizedBox()
+                              : Text(
+                                  'Portfolio',
+                                  style: TextStyle(
+                                    color: primary,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                          portfolio!.isEmpty
+                              ? SizedBox()
+                              : SizedBox(height: 4 * screenHeight),
+                          portfolio!.isEmpty
+                              ? SizedBox()
+                              : SizedBox(
+                                  height: 175 * screenHeight,
+                                  child: ListView.separated(
+                                      physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () {},
+                                          child: Container(
+                                            height: 175 * screenHeight,
+                                            width: 165 * screenWidth,
+                                            decoration: BoxDecoration(
+                                              color: primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(9),
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  portfolio![index],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return SizedBox(
+                                            width: 19 * screenWidth);
+                                      },
+                                      itemCount: portfolio!.length),
+                                ),
+                          portfolio!.isEmpty
+                              ? SizedBox()
+                              : SizedBox(height: 12 * screenHeight),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox(),
           SizedBox(height: 28 * screenHeight),
           AppointmentJobStatus(
+            acceptedDate: acceptedDate,
+            inProgressDate: inProgressDate,
+            completedDate: completedDate,
             jobAccepted: statusText,
             isJobCompletedAcitve: isJobCompletedAcitve,
             isJobInProgressActive: isJobInProgressActive,
