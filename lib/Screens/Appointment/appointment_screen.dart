@@ -3,6 +3,7 @@ import 'package:handyman_app/Components/default_back_button.dart';
 
 import 'package:handyman_app/Screens/Appointment/Components/body.dart';
 import 'package:handyman_app/Screens/Chat/Components/chat_alternate_screen.dart';
+import 'package:handyman_app/Services/read_data.dart';
 
 import '../../Components/schedule_day_tab.dart';
 import '../../Components/schedule_time_tab.dart';
@@ -53,7 +54,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           InkWell(
             highlightColor: sectionColor,
             borderRadius: BorderRadius.circular(24),
-            onTap: () {},
+            onTap: () {
+              ReadData().getPhoneNumber('Customer', context, true);
+            },
             child: Image.asset('assets/icons/call.png', color: primary),
           ),
           Padding(
@@ -62,12 +65,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               borderRadius: BorderRadius.circular(24),
               highlightColor: sectionColor,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatAlternateScreen(),
-                  ),
-                );
+                ReadData().getPhoneNumber('Customer', context, false);
               },
               child: Image.asset('assets/icons/message.png', color: primary),
             ),

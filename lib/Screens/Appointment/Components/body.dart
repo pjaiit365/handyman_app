@@ -53,48 +53,55 @@ class _BodyState extends State<Body> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          insetPadding: EdgeInsets.all(10),
-          backgroundColor: Colors.transparent,
-          content: isSummaryClicked
-              ? SummaryDetails()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SummaryDetails(),
-                    SizedBox(height: 24 * screenHeight),
-                    GestureDetector(
-                      onTap: () {
-                        (apppointmentRegion == '' ||
-                                apppointmentTown == '' ||
-                                apppointmentHouseNum == '' ||
-                                apppointmentStreet == '')
-                            ? popDialog()
-                            : scheduleJob();
-                      },
-                      child: Container(
-                        height: 49 * screenHeight,
-                        width: 312 * screenWidth,
-                        decoration: BoxDecoration(
-                            color: primary,
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: sectionColor, width: 3)),
-                        child: Center(
-                          child: Text(
-                            'Schedule',
-                            style: TextStyle(
-                              color: white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AlertDialog(
+              insetPadding: EdgeInsets.all(10),
+              backgroundColor: Colors.transparent,
+              content: isSummaryClicked
+                  ? SummaryDetails()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SummaryDetails(),
+                        SizedBox(height: 24 * screenHeight),
+                        GestureDetector(
+                          onTap: () {
+                            (apppointmentRegion == '' ||
+                                    apppointmentTown == '' ||
+                                    apppointmentHouseNum == '' ||
+                                    apppointmentStreet == '')
+                                ? popDialog()
+                                : scheduleJob();
+                          },
+                          child: Container(
+                            height: 49 * screenHeight,
+                            width: 312 * screenWidth,
+                            decoration: BoxDecoration(
+                                color: primary,
+                                borderRadius: BorderRadius.circular(5),
+                                border:
+                                    Border.all(color: sectionColor, width: 3)),
+                            child: Center(
+                              child: Text(
+                                'Schedule',
+                                style: TextStyle(
+                                  color: white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+            ),
+          ],
         );
       },
     );

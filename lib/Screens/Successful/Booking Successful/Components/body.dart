@@ -24,7 +24,7 @@ class Body extends StatelessWidget {
         ),
         SizedBox(height: 23 * screenHeight),
         Text(
-          'Successful Payment!',
+          'Successful Booking!',
           style: TextStyle(
               color: white, fontSize: 30, fontWeight: FontWeight.w700),
         ),

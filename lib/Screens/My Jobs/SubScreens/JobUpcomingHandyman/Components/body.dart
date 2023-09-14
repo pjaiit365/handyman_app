@@ -45,6 +45,197 @@ class _BodyState extends State<Body> {
     }
   }
 
+  void rescheduleDialogBox(String type) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AlertDialog(
+                insetPadding: EdgeInsets.all(10),
+                backgroundColor: Colors.transparent,
+                content: Container(
+                  constraints: BoxConstraints(minWidth: 50 * screenHeight),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: white, borderRadius: BorderRadius.circular(24)),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 22 * screenWidth,
+                    horizontal: 20.5 * screenWidth,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          'Reschedule Information',
+                          style: TextStyle(
+                            color: black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10 * screenHeight),
+                      Text(
+                        'Date',
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 7 * screenHeight),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 49 * screenHeight,
+                            width: 150 * screenWidth,
+                            decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(
+                                  color: appointmentTimeColor, width: 1),
+                            ),
+                            child: Center(
+                              child: Text(
+                                rescheduleDate == ''
+                                    ? 'DD/MM/YYYY'
+                                    : rescheduleDate,
+                                style: TextStyle(
+                                    color: black,
+                                    fontSize: 16,
+                                    fontWeight: rescheduleDate == ''
+                                        ? FontWeight.w200
+                                        : FontWeight.w400),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 14 * screenWidth),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showDatePicker(
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2024),
+                                  context: context,
+                                ).then((date) {
+                                  setState(() {
+                                    rescheduleDate =
+                                        "${date!.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}";
+                                  });
+                                });
+                              });
+                            },
+                            child: Container(
+                              height: 49 * screenHeight,
+                              width: 70 * screenWidth,
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(7),
+                                border: Border.all(
+                                    color: appointmentTimeColor, width: 1),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.calendar_month_rounded,
+                                  color: primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20 * screenHeight),
+                      Text(
+                        'Time',
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 7 * screenHeight),
+                      GestureDetector(
+                        onTap: () {
+                          showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now())
+                              .then((time) {
+                            setState(() {
+                              rescheduleTime =
+                                  '${time!.hour > 12 ? (time.hour - 12).toString().padLeft(2, '0') : time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')} ${time.hour > 12 ? 'PM' : 'AM'}';
+                            });
+                          });
+                        },
+                        child: Container(
+                          height: 49 * screenHeight,
+                          width: double.infinity * screenWidth,
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(
+                                color: appointmentTimeColor, width: 1),
+                          ),
+                          child: Center(
+                            child: Text(
+                              rescheduleTime == ''
+                                  ? 'Choose Time'
+                                  : rescheduleTime,
+                              style: TextStyle(
+                                  color: primary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10 * screenHeight),
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  await ReadData().rescheduleJob(type);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyJobsScreen(),
+                      ));
+                },
+                child: Container(
+                  height: 49 * screenHeight,
+                  width: 273 * screenWidth,
+                  decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: sectionColor, width: 3)),
+                  child: Center(
+                    child: Text(
+                      'Reschedule',
+                      style: TextStyle(
+                        color: white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     rescheduleDate = '';
@@ -81,6 +272,9 @@ class _BodyState extends State<Body> {
                           ),
                         );
                       },
+                      function: () {
+                        rescheduleDialogBox('Customer Uploaded');
+                      },
                       isJobPendingActive: true,
                       screen: JobInProgressScreen(),
                       isJobOfferScreen: true,
@@ -104,6 +298,9 @@ class _BodyState extends State<Body> {
                   : JobDetailsAndStatus(
                       note: 'N/A',
                       isNoteShowing: true,
+                      function: () {
+                        rescheduleDialogBox('Customer Uploaded');
+                      },
                       declineFunction: () async {
                         await ReadData().deleteJobUpcoming('Customer Uploaded');
                         Navigator.push(
