@@ -126,11 +126,40 @@ In addition to that, is the fact that the automation of this process is yet to b
 
 ### RESULTS & UI DESIGN
 
-#### Welcome & Login Screen
-![](images/welcome.png) ![](images/login.png)
+#### UI DESIGN
 
-#### Welcome & Login Screen
-![splash_1](https://github.com/pjaiit365/handyman_app/assets/56177177/bc8fd2c7-7c74-419d-a36c-e22403e9f2eb) ![splash_2](https://github.com/pjaiit365/handyman_app/assets/56177177/25ea695d-8323-4c21-b275-af74332a7508) ![welcome](https://github.com/pjaiit365/handyman_app/assets/56177177/a4e413f1-1939-4d56-ae5a-ceaafb8771ce)
+![splash_1](https://github.com/pjaiit365/handyman_app/assets/56177177/deeda668-96ed-4dcd-9b6b-eeab217eaee7) ![splash_2](https://github.com/pjaiit365/handyman_app/assets/56177177/1f26983b-d246-4a15-a25a-363d8ff2529c) ![welcome](https://github.com/pjaiit365/handyman_app/assets/56177177/3a0bb399-dd2f-46ff-9377-6173d0313aac)
+
+![login](https://github.com/pjaiit365/handyman_app/assets/56177177/cd2f4602-837a-444f-850b-3d266e1323d3) ![sign_up](https://github.com/pjaiit365/handyman_app/assets/56177177/f60ac0df-9ef7-4cc3-b78d-866b4d455dc6) ![forgot_password](https://github.com/pjaiit365/handyman_app/assets/56177177/6a1dfb7c-3d04-41e3-931e-f3f0fe89c75e)
+
+![home](https://github.com/pjaiit365/handyman_app/assets/56177177/bcbf93a2-31e3-4ff2-8a68-7eec26e9f20c) ![handymen_dashboard](https://github.com/pjaiit365/handyman_app/assets/56177177/dea6e725-954b-4cfb-892e-fd2c18583063) ![customer_drawer](https://github.com/pjaiit365/handyman_app/assets/56177177/4e673355-c7b6-4e3d-a78d-4a2eae8dc4ae)
+
+![customer_profile](https://github.com/pjaiit365/handyman_app/assets/56177177/8677c9f0-2a96-4dd1-94c7-4ce4f1267fc3) ![notification](https://github.com/pjaiit365/handyman_app/assets/56177177/34754f01-f156-4d77-8fd3-dc10976a757d) ![settings](https://github.com/pjaiit365/handyman_app/assets/56177177/d7f7fb70-71a3-4575-85e7-ec01102ebae5)
+
+![customer_about](https://github.com/pjaiit365/handyman_app/assets/56177177/94cb6530-3bfd-4916-af47-817429fbef3a) ![customer_review](https://github.com/pjaiit365/handyman_app/assets/56177177/02a20b2f-799d-4f53-9a48-2dd1fc6b705e) ![handyman_portfolio](https://github.com/pjaiit365/handyman_app/assets/56177177/2fb0f1e0-8ca6-4634-9084-6b1a6f21558c)
+
+![appointment](https://github.com/pjaiit365/handyman_app/assets/56177177/d6dcfb36-6436-4a53-9501-cedb42940034) ![appointment_summary](https://github.com/pjaiit365/handyman_app/assets/56177177/bb0e767b-2e5c-4770-aee8-d0372f70a318) ![appointment_schedule](https://github.com/pjaiit365/handyman_app/assets/56177177/bcd060bd-5cab-44cf-9bca-bcc0e8c7d53a)
+
+![appointment_successful](https://github.com/pjaiit365/handyman_app/assets/56177177/690da1af-fd0d-40cd-93d7-c365fa09a6e8) ![all_chats](https://github.com/pjaiit365/handyman_app/assets/56177177/17c56b0e-859e-437b-b34a-44292904383c) ![handyman_chat](https://github.com/pjaiit365/handyman_app/assets/56177177/68ba7f30-1be9-4cd3-9557-33cd727a5530)
+
+![job_upload](https://github.com/pjaiit365/handyman_app/assets/56177177/5e80b723-3b0f-40b0-bb69-6e0b8f6f2bad) ![job_upload_list](https://github.com/pjaiit365/handyman_app/assets/56177177/0f2898fc-5b3f-4953-9c0c-8ccff405b62e) ![job_upload_view](https://github.com/pjaiit365/handyman_app/assets/56177177/41c848ae-a52e-4513-adb2-8f7a7eb4a0cd)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
