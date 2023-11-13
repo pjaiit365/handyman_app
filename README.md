@@ -12,11 +12,11 @@
 
 IT Category: Mobile Application Dev’t
 
-Language : Dart (Google)
+Language: Dart (Google)
 
-Framework : Flutter
+Framework: Flutter
 
-IDE : Android Studio
+IDE: Android Studio
 
 
 
@@ -128,6 +128,9 @@ In addition to that, is the fact that the automation of this process is yet to b
 
 #### Welcome & Login Screen
 ![](images/welcome.png) ![](images/login.png)
+
+#### Welcome & Login Screen
+![welcome](https://github.com/pjaiit365/handyman_app/assets/56177177/2f3fe8c9-a626-40b3-9dd3-d56c7f4893a1)
 
 
 ### IMPLEMENTATION
