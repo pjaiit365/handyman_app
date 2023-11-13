@@ -130,7 +130,11 @@ In addition to that, is the fact that the automation of this process is yet to b
 ![](images/welcome.png) ![](images/login.png)
 
 #### Welcome & Login Screen
-![welcome](https://github.com/pjaiit365/handyman_app/assets/56177177/2f3fe8c9-a626-40b3-9dd3-d56c7f4893a1)
+![splash_1](https://github.com/pjaiit365/handyman_app/assets/56177177/bc8fd2c7-7c74-419d-a36c-e22403e9f2eb) ![splash_2](https://github.com/pjaiit365/handyman_app/assets/56177177/25ea695d-8323-4c21-b275-af74332a7508) ![welcome](https://github.com/pjaiit365/handyman_app/assets/56177177/a4e413f1-1939-4d56-ae5a-ceaafb8771ce)
+
+
+
+
 
 
 ### IMPLEMENTATION
