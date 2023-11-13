@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Handyman%20Details/handyman_details_screen.dart';
-
 import '../constants.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -11,15 +10,19 @@ class CategoryItem extends StatelessWidget {
   final String rating;
   final String price;
   final String imageLocation;
+  final String chargeRate;
+  bool isFavourites;
   CategoryItem({
     Key? key,
     this.isFavouriteSelected = false,
+    this.isFavourites = false,
     required this.index,
     required this.jobType,
     required this.name,
     required this.rating,
     required this.price,
     required this.imageLocation,
+    required this.chargeRate,
   }) : super(key: key);
 
   @override
@@ -27,13 +30,20 @@ class CategoryItem extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
+          if (isFavourites == true) {
+            int jobIndex =
+                handymanDashboardID.indexOf(customerFavouritesIDList[index]);
+            handymanSelectedIndex = jobIndex;
+          } else {
+            handymanSelectedIndex = index;
+          }
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => HandymanDetailsScreen(),
             ),
           );
-          handymanSelectedIndex = index;
+          typeClicked = 'Customer';
         },
         child: Container(
           height: 123 * screenHeight,
@@ -49,16 +59,21 @@ class CategoryItem extends StatelessWidget {
               Container(
                 height: 123 * screenHeight,
                 width: 115 * screenWidth,
-                clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(
-                      imageLocation,
-                    ),
+                    image: NetworkImage(imageLocation),
                   ),
                 ),
+                child: imageLocation == ''
+                    ? Center(
+                        child: Icon(
+                        Icons.person,
+                        color: grey,
+                        size: 40,
+                      ))
+                    : null,
               ),
               VerticalDivider(thickness: 3.5, color: Colors.white),
               Padding(
@@ -147,7 +162,7 @@ class CategoryItem extends StatelessWidget {
                           ),
                           Spacer(),
                           Text(
-                            '\$' + price,
+                            '\$' + price + '/' + chargeRate,
                             style: TextStyle(
                                 fontSize: 19,
                                 color: primary,

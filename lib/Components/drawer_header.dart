@@ -17,16 +17,22 @@ class DrawerHeaderCreated extends StatelessWidget {
         DefaultBackButton(),
         SizedBox(width: 15 * screenWidth),
         Container(
-          height: 60 * screenHeight,
-          width: 60 * screenWidth,
+          height: 50 * screenHeight,
+          width: 50 * screenWidth,
           decoration: BoxDecoration(
             color: white,
             shape: BoxShape.circle,
+            border: imageUrl == ''
+                ? Border.all(color: sectionColor, width: 1)
+                : null,
             image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage('assets/images/profile_pic.jpeg'),
+              fit: BoxFit.cover,
+              image: NetworkImage(imageUrl),
             ),
           ),
+          child: imageUrl == ''
+              ? Center(child: Icon(Icons.person, color: grey))
+              : null,
         ),
         SizedBox(width: 15 * screenWidth),
         Text(

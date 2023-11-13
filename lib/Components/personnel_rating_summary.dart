@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class PersonnelRatingSummary extends StatelessWidget {
-  const PersonnelRatingSummary({
+  String rating;
+  PersonnelRatingSummary({
     Key? key,
+    this.rating = '4.7',
   }) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class PersonnelRatingSummary extends StatelessWidget {
           child: Image.asset('assets/icons/gold_star.png'),
         ),
         Text(
-          '(4.9)',
+          '($rating)',
           style: TextStyle(
               color: primary, fontWeight: FontWeight.w500, fontSize: 16),
         ),

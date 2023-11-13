@@ -43,6 +43,22 @@ dependencies:
   carousel_slider: ^4.2.1
   url_launcher: ^6.1.7
   shimmer_animation: ^2.1.0+1
+  firebase_storage: ^11.2.2
+  file_picker: ^5.3.2
+  mask_text_input_formatter: ^2.4.0
+  firebase_messaging: ^14.6.5
+  flutter_local_notifications: ^15.1.0+1
+  google_maps_flutter: ^2.4.0
+  geolocator: ^9.0.2
+  location: ^4.3.0
+  firebase_database: ^10.2.4
+  flutter_polyline_points: ^1.0.0
+  flutter_paystack: ^1.0.7
+  meta: ^1.9.1
+  http: ^0.13.5
+  async: ^2.11.0
+  intl: ^0.17.0
+  permission_handler: ^10.4.3
 
 
 dev_dependencies:

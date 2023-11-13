@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class SavedAddresses extends StatefulWidget {
+  final VoidCallback screen;
   final int index;
 
-  const SavedAddresses({Key? key, required this.index}) : super(key: key);
+  const SavedAddresses({Key? key, required this.index, required this.screen})
+      : super(key: key);
 
   @override
   State<SavedAddresses> createState() => _SavedAddressesState();
@@ -40,17 +42,10 @@ class _SavedAddressesState extends State<SavedAddresses> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    addressRegionName.removeAt(widget.index);
-                    addressTownName.removeAt(widget.index);
-                    addressStreetName.removeAt(widget.index);
-                    addressHouseNum.removeAt(widget.index);
-                  });
-                },
+                onTap: widget.screen,
                 child: Container(
-                  height: 31 * screenHeight,
-                  width: 30 * screenWidth,
+                  height: 20 * screenHeight,
+                  width: 20 * screenWidth,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(9),
                       color: white,
@@ -58,9 +53,8 @@ class _SavedAddressesState extends State<SavedAddresses> {
                         color: appointmentTimeColor,
                         width: 1,
                       )),
-                  child: Image.asset(
-                    'assets/icons/dash.png',
-                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.add, color: primary),
                 ),
               ),
             ],
@@ -74,10 +68,7 @@ class _SavedAddressesState extends State<SavedAddresses> {
                 ',\n' +
                 addressRegionName[widget.index] +
                 ', Ghana',
-            style: TextStyle(
-              color: black,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: black, fontSize: 16, height: 1.3),
           ),
           SizedBox(height: 10 * screenHeight),
         ],

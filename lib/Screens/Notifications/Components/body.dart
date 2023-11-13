@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Components/search_bar_item.dart';
+import 'package:handyman_app/Screens/Custom%20Search%20Delegate/notification_search_delegate.dart';
 import '../../../Components/earlier_notifications.dart';
 import '../../../Components/new_notifications.dart';
 import '../../../constants.dart';
+import '../../Custom Search Delegate/handyman_search_delegate.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -21,7 +24,16 @@ class Body extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(left: screenWidth * 6.0),
-              child: SearchBar(hintText: 'Search activity...'),
+              child: SearchBarItem(
+                hintText: 'Search activity...',
+                onSearchTap: () {
+                  showSearch(
+                    context: context,
+                    delegate: NotificationSearchDelegate(
+                        itemsToSearch: handymanDashboardJobType),
+                  );
+                },
+              ),
             ),
             SizedBox(height: 37 * screenHeight),
             NewNotifications(),

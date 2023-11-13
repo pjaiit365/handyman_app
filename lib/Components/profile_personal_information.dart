@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Components/profile_item.dart';
-import '../Read Data/get_user_first_name.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import '../Services/read_data.dart';
 import '../constants.dart';
 
 class ProfilePersonalInformation extends StatefulWidget {
@@ -33,43 +35,91 @@ class _ProfilePersonalInformationState
   }
 
   Future updatePersonalInfo() async {
-    isPersonalInfoReadOnly = true;
-    firstNameCheck();
-    try {
-      final String userId = FirebaseAuth.instance.currentUser!.uid;
+    setState(() {
+      isPersonalInfoReadOnly = true;
+    });
+    if (FieldsCheck()) {
+      try {
+        final String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('User ID', isEqualTo: userId)
-          .get();
-      final docId = querySnapshot.docs.first.id;
-      print(docId);
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('User ID', isEqualTo: userId)
+            .get();
+        final docId = querySnapshot.docs.first.id;
+        print(docId);
 
-      await FirebaseFirestore.instance.collection('users').doc(docId).update(
-        {
-          'First Name': _firstNameControlller.text.trim(),
-          'Last Name': _lastNameControlller.text.trim(),
-          'Email Address': _numberControlller.text.trim(),
-          'Number': _numberControlller.text.trim(),
-        },
+        await FirebaseFirestore.instance.collection('users').doc(docId).update(
+          {
+            'First Name': _firstNameControlller.text.trim(),
+            'Last Name': _lastNameControlller.text.trim(),
+            'Email Address': _emailControlller.text.trim(),
+            'Mobile Number': int.parse('0' + _numberControlller.text.trim()),
+          },
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.black45,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Center(
+                child: Text(
+                  'Personal profile successfully updated.',
+                ),
+              )),
+        );
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.black45,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Center(
+              child: Text(
+                'One or more fields has a problem. Try again',
+              ),
+            )),
       );
-    } catch (e) {
-      print(e.toString());
     }
   }
 
-  bool firstNameCheck() {
-    if (_firstNameControlller.text.trim() != allUsers[0].first_name ||
-        _firstNameControlller.text.trim().isNotEmpty) {
+  bool FieldsCheck() {
+    if (_firstNameControlller.text.trim() != allUsers[0].firstName &&
+        _firstNameControlller.text.trim().isNotEmpty &&
+        _lastNameControlller.text.trim() != allUsers[0].lastName &&
+        _lastNameControlller.text.trim().isNotEmpty &&
+        _emailControlller.text.trim() != allUsers[0].email &&
+        _emailControlller.text.trim().isNotEmpty &&
+        _numberControlller.text.trim() != allUsers[0].number &&
+        _numberControlller.text.trim().isNotEmpty) {
       print('First Name can be updated');
       return true;
     } else {
+      _firstNameControlller.clear();
+      _lastNameControlller.clear();
+      _emailControlller.clear();
+      _numberControlller.clear();
+      print("There's an error in one of the fields");
       return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var numberMask = MaskTextInputFormatter(
+        mask: '+### (#) ###-###-###',
+        filter: {
+          "#": RegExp(r'[0-9]'),
+        },
+        type: MaskAutoCompletionType.lazy);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +163,7 @@ class _ProfilePersonalInformationState
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -130,24 +180,40 @@ class _ProfilePersonalInformationState
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 controller: _firstNameControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
                 title: 'First Name',
-                hintText: allUsers[0].first_name,
+                hintText: allUsers[0].firstName,
                 keyboardType: TextInputType.name,
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 controller: _lastNameControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
                 title: 'Last Name',
-                hintText: allUsers[0].last_name,
+                hintText: allUsers[0].lastName,
                 keyboardType: TextInputType.name,
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 controller: _emailControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
@@ -157,11 +223,16 @@ class _ProfilePersonalInformationState
               ),
               SizedBox(height: 20 * screenHeight),
               ProfileItem(
+                inputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(13),
+                  numberMask,
+                ],
                 controller: _numberControlller,
                 isHintText: false,
                 isReadOnly: isPersonalInfoReadOnly,
                 title: 'Mobile Number',
-                hintText: '0' + allUsers[0].number.toString(),
+                hintText: '+233 (0) ' + allUsers[0].number.toString(),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 10 * screenHeight),

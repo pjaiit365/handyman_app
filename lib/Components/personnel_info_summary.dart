@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/personnel_rating_summary.dart';
 
+import '../Services/read_data.dart';
 import '../constants.dart';
 
 class PersonnelInfoSummary extends StatelessWidget {
@@ -14,7 +15,7 @@ class PersonnelInfoSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        PersonnelRatingSummary(),
+        PersonnelRatingSummary(rating: allJobItemList[0].rating),
         Container(
           height: 7 * screenHeight,
           width: 7 * screenWidth,
@@ -48,7 +49,7 @@ class PersonnelInfoSummary extends StatelessWidget {
           ),
         ),
         Text(
-          '\$' + '15/hr',
+          '\$' + '${allJobItemList[0].charge}/${allJobItemList[0].chargeRate}',
           style: TextStyle(
             color: black,
             fontWeight: FontWeight.w700,

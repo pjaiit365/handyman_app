@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class GridMedia extends StatelessWidget {
+  final String mediaUrl;
   const GridMedia({
     Key? key,
+    required this.mediaUrl,
   }) : super(key: key);
 
   @override
@@ -28,8 +30,8 @@ class GridMedia extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: AssetImage(
-                'assets/images/profile_pic.jpeg',
+              image: NetworkImage(
+                mediaUrl,
               ),
             ),
           ),

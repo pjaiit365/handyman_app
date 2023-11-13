@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/rating_item.dart';
+import 'package:handyman_app/Models/review.dart';
+import 'package:handyman_app/Services/read_data.dart';
 
 import '../constants.dart';
 import 'overall_rating.dart';
@@ -29,16 +32,20 @@ class ReviewsTab extends StatelessWidget {
           OverallRating(),
           SizedBox(height: 10 * screenHeight),
           ListView.separated(
-            itemCount: ratingNames.length,
+            itemCount: allReviews.length > 10 ? 10 : allReviews.length,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
+              Timestamp dateTime = allReviews[index].reviewDate;
+              DateTime date = dateTime.toDate();
+              final reviewDate =
+                  '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
               return RatingItem(
-                starsGiven: ratingStars[index],
-                name: ratingNames[index],
-                comment: ratingComment[index],
-                isCommentLiked: isCommentLiked[index],
-                timePosted: ratingTimePosted[index],
+                starsGiven: allReviews[index].stars,
+                name: allReviews[index].name,
+                comment: allReviews[index].comment,
+                isCommentLiked: true,
+                timePosted: reviewDate,
               );
             },
             separatorBuilder: (BuildContext context, int index) {

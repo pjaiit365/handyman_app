@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import 'notification_item.dart';
 
-class NewNotifications extends StatelessWidget {
-  const NewNotifications({
+class NewNotifications extends StatefulWidget {
+  NewNotifications({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<NewNotifications> createState() => _NewNotificationsState();
+}
+
+class _NewNotificationsState extends State<NewNotifications> {
+  bool isNotificationShowing = true;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,7 +36,11 @@ class NewNotifications extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    isNotificationShowing = !isNotificationShowing;
+                  });
+                },
                 child: Container(
                   height: 37 * screenHeight,
                   width: 37 * screenWidth,
@@ -58,16 +68,20 @@ class NewNotifications extends StatelessWidget {
           width: 350 * screenWidth,
           color: grey,
         ),
-        SizedBox(height: 23 * screenHeight),
-        ListView.separated(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return NotificationItem();
-            },
-            separatorBuilder: (context, index) =>
-                SizedBox(height: 10 * screenHeight),
-            itemCount: 3),
+        isNotificationShowing
+            ? SizedBox(height: 23 * screenHeight)
+            : SizedBox(),
+        isNotificationShowing
+            ? ListView.separated(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return NotificationItem();
+                },
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: 10 * screenHeight),
+                itemCount: 3)
+            : SizedBox(),
       ],
     );
   }

@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Components/rating_bar.dart';
+import 'package:handyman_app/Services/read_data.dart';
 
 import '../constants.dart';
 
@@ -35,19 +38,47 @@ class OverallRating extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    '4.9',
+                    ratingTotal.toString(),
                     style: TextStyle(
                         color: primary,
                         fontSize: 32,
                         fontWeight: FontWeight.w700),
                   ),
                   SizedBox(width: 11 * screenWidth),
-                  Image.asset('assets/icons/5-Star.png'),
+                  SizedBox(
+                    width: 76 * screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ratingTotal > 0
+                            ? Image.asset('assets/icons/gold_star.png')
+                            : Image.asset('assets/icons/gold_star.png',
+                                color: grey),
+                        ratingTotal > 1.0
+                            ? Image.asset('assets/icons/gold_star.png')
+                            : Image.asset('assets/icons/gold_star.png',
+                                color: grey),
+                        ratingTotal > 2.0
+                            ? Image.asset('assets/icons/gold_star.png')
+                            : Image.asset('assets/icons/gold_star.png',
+                                color: grey),
+                        ratingTotal > 3.0
+                            ? Image.asset('assets/icons/gold_star.png')
+                            : Image.asset('assets/icons/gold_star.png',
+                                color: grey),
+                        ratingTotal > 4.0
+                            ? Image.asset('assets/icons/gold_star.png')
+                            : Image.asset('assets/icons/gold_star.png',
+                                color: grey),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 10 * screenHeight),
               Text(
-                '(' + '444' + ' reviews)',
+                '(${allReviews.length} ${allReviews.length < 2 ? 'review' : 'reviews'})',
                 style: TextStyle(
                     color: chatTimeColor,
                     fontSize: 16,

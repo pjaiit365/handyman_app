@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:handyman_app/Components/default_back_button.dart';
@@ -21,7 +19,6 @@ class HandymanDashboardScreen extends StatefulWidget {
 
 class _HandymanDashboardScreenState extends State<HandymanDashboardScreen> {
   bool isDrawerClicked = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,11 +48,16 @@ class _HandymanDashboardScreenState extends State<HandymanDashboardScreen> {
               height: screenHeight * 40,
               width: screenWidth * 40,
               decoration: BoxDecoration(
+                border: Border.all(color: sectionColor, width: 1),
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage('assets/images/profile_pic.jpeg'),
+                  fit: BoxFit.cover,
+                  image: NetworkImage(imageUrl),
                 ),
               ),
+              child: imageUrl == ''
+                  ? Center(child: Icon(Icons.person, color: grey))
+                  : null,
             )
           ],
         ),

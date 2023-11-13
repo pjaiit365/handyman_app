@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class SummaryElement extends StatelessWidget {
+  bool isError;
   final String title;
   final String subtitle;
-  const SummaryElement({
+  SummaryElement({
     Key? key,
     required this.title,
     required this.subtitle,
+    this.isError = false,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class SummaryElement extends StatelessWidget {
         Text(
           subtitle,
           style: TextStyle(
-            color: black,
+            color: isError ? red : black,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),

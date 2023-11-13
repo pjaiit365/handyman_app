@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../Components/profile_item.dart';
 import '../../../../Components/profile_item_dropdown.dart';
@@ -81,24 +82,40 @@ class MomoListView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ProfileItem(
+                  inputFormatter: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10)
+                  ],
                   title: "Recipient's Number",
                   hintText: 'Enter number here...',
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 20 * screenHeight),
                 ProfileItem(
+                  inputFormatter: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10)
+                  ],
                   title: "Confirm Number",
                   hintText: "Re-enter recipient's number here...",
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 20 * screenHeight),
                 ProfileItem(
+                  inputFormatter: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(3)
+                  ],
                   title: "Amount",
                   hintText: "Enter amount here...",
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 20 * screenHeight),
                 ProfileItem(
+                  inputFormatter: [
+                    FilteringTextInputFormatter.deny('!@#\$%^&*()')
+                  ], // Deny specific characters
+
                   title: "Reference",
                   hintText: "Enter reference...",
                   keyboardType: TextInputType.text,

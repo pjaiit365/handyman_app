@@ -3,8 +3,24 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class AppointmentJobDetails extends StatelessWidget {
-  const AppointmentJobDetails({
+  final String jobType;
+  final String date;
+  final String houseNum;
+  final String street;
+  final String town;
+  final String region;
+  String? note;
+  bool isNoteShowing;
+  AppointmentJobDetails({
     Key? key,
+    required this.jobType,
+    required this.date,
+    required this.houseNum,
+    required this.street,
+    required this.town,
+    required this.region,
+    this.note,
+    this.isNoteShowing = false,
   }) : super(key: key);
 
   @override
@@ -66,7 +82,7 @@ class AppointmentJobDetails extends StatelessWidget {
             ),
             SizedBox(height: 4 * screenHeight),
             Text(
-              'Plumbing',
+              jobType,
               style: TextStyle(
                 color: black,
                 fontSize: 16,
@@ -84,7 +100,7 @@ class AppointmentJobDetails extends StatelessWidget {
             ),
             SizedBox(height: 4 * screenHeight),
             Text(
-              '22-05-2023',
+              date,
               style: TextStyle(
                 color: black,
                 fontSize: 16,
@@ -102,22 +118,36 @@ class AppointmentJobDetails extends StatelessWidget {
             ),
             SizedBox(height: 4 * screenHeight),
             Text(
-              'M9A'.toUpperCase() +
-                  ', ' +
-                  'LOWER SADELMI'.toUpperCase() +
-                  ',\n'
-                          'Akosombo'
-                      .toUpperCase() +
-                  ',\n' +
-                  'E/R'.toUpperCase() +
-                  ', ' +
-                  'Ghana'.toUpperCase(),
+              '${houseNum.toUpperCase()}, ${street.toUpperCase()}${',\n'
+                  '$town'.toUpperCase()},\n${region.toUpperCase()}, ${'Ghana'.toUpperCase()}',
               style: TextStyle(
                 color: black,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
+            isNoteShowing ? SizedBox(height: 12 * screenHeight) : SizedBox(),
+            isNoteShowing
+                ? Text(
+                    'Note',
+                    style: TextStyle(
+                      color: primary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : SizedBox(),
+            isNoteShowing ? SizedBox(height: 4 * screenHeight) : SizedBox(),
+            isNoteShowing
+                ? Text(
+                    note!,
+                    style: TextStyle(
+                      color: black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

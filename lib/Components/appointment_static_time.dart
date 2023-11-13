@@ -2,25 +2,31 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class AppointmentStaticTime extends StatefulWidget {
+int appointmentTimeIndex = 0;
+
+class AppointmentStaticTime extends StatelessWidget {
+  final int selectedTime;
+  final int index;
   final String time;
+  final Function onTimeSelected;
   const AppointmentStaticTime({
     Key? key,
     required this.time,
+    required this.index,
+    required this.selectedTime,
+    required this.onTimeSelected,
   }) : super(key: key);
 
   @override
-  State<AppointmentStaticTime> createState() => _AppointmentStaticTimeState();
-}
-
-class _AppointmentStaticTimeState extends State<AppointmentStaticTime> {
-  @override
   Widget build(BuildContext context) {
+    final isTimeSelected = index == selectedTime;
+
     return GestureDetector(
       onTap: () {
-        setState(() {
-          isTimeSelected = !isTimeSelected;
-        });
+        appointmentTimeIndex = index;
+        if (!isTimeSelected) {
+          onTimeSelected(index);
+        }
       },
       child: Container(
         height: 34 * screenHeight,
@@ -33,7 +39,7 @@ class _AppointmentStaticTimeState extends State<AppointmentStaticTime> {
                 : Border.all(color: chatTimeColor, width: 1)),
         child: Center(
           child: Text(
-            widget.time,
+            time,
             style: TextStyle(
               color: isTimeSelected ? white : black,
               fontSize: 14,

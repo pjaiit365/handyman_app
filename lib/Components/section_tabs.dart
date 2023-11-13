@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class SectionTabs extends StatefulWidget {
+  final VoidCallback aboutCallback;
+  final VoidCallback reviewCallback;
+  final VoidCallback portfolioCallback;
   const SectionTabs({
     Key? key,
+    required this.aboutCallback,
+    required this.reviewCallback,
+    required this.portfolioCallback,
   }) : super(key: key);
 
   @override
@@ -14,129 +20,89 @@ class SectionTabs extends StatefulWidget {
 class _SectionTabsState extends State<SectionTabs> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        InkWell(
-          highlightColor: tabLight,
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            setState(() {
-              aboutSelected = !aboutSelected;
-              if (aboutSelected == true) {
-                reviewsSelected = false;
-                portfolioSelected = false;
-              }
-              if (reviewsSelected == false && portfolioSelected == false)
-                aboutSelected = true;
-            });
-          },
-          child: Container(
-            height: 35 * screenHeight,
-            width: 90 * screenWidth,
-            decoration: BoxDecoration(
-                color: white, borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Text(
-                'About',
-                style: aboutSelected == true
-                    ? TextStyle(
-                        color: primary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      )
-                    : TextStyle(
-                        color: grey,
-                        fontSize: 17,
-                      ),
+    return Center(
+      child: Container(
+        height: 54 * screenHeight,
+        width: 367 * screenWidth,
+        decoration: BoxDecoration(
+          color: sectionColor,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: appointmentTimeColor, width: 1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            GestureDetector(
+              onTap: widget.aboutCallback,
+              child: Container(
+                width: 76 * screenWidth,
+                alignment: Alignment.center,
+                child: Text(
+                  'About',
+                  style: aboutSelected
+                      ? TextStyle(
+                          color: primary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600)
+                      : TextStyle(
+                          color: grey,
+                          fontSize: 17,
+                        ),
+                ),
               ),
             ),
-          ),
-        ),
-        Container(
-          height: screenHeight * 25,
-          width: screenWidth * 2,
-          color: grey,
-        ),
-        InkWell(
-          highlightColor: tabLight,
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            setState(() {
-              reviewsSelected = !reviewsSelected;
-              if (reviewsSelected == true) {
-                aboutSelected = false;
-                portfolioSelected = false;
-              }
-              if (aboutSelected == false && portfolioSelected == false)
-                reviewsSelected = true;
-            });
-          },
-          child: Container(
-            height: 35 * screenHeight,
-            width: 90 * screenWidth,
-            decoration: BoxDecoration(
-                color: white, borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Text(
-                'Reviews',
-                style: reviewsSelected == true
-                    ? TextStyle(
-                        color: primary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      )
-                    : TextStyle(
-                        color: grey,
-                        fontSize: 17,
-                      ),
+            Container(
+              height: 54 * screenHeight,
+              width: 5 * screenWidth,
+              color: white,
+            ),
+            GestureDetector(
+              onTap: widget.reviewCallback,
+              child: Container(
+                width: 76 * screenWidth,
+                alignment: Alignment.center,
+                child: Text(
+                  'Review',
+                  style: reviewsSelected
+                      ? TextStyle(
+                          color: primary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600)
+                      : TextStyle(
+                          color: grey,
+                          fontSize: 17,
+                        ),
+                ),
               ),
             ),
-          ),
-        ),
-        Container(
-          height: screenHeight * 25,
-          width: screenWidth * 2,
-          color: grey,
-        ),
-        InkWell(
-          highlightColor: tabLight,
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            setState(() {
-              portfolioSelected = !portfolioSelected;
-              if (portfolioSelected == true) {
-                reviewsSelected = false;
-                aboutSelected = false;
-              }
-              if (reviewsSelected == false && aboutSelected == false)
-                portfolioSelected = true;
-            });
-          },
-          child: Container(
-            height: 35 * screenHeight,
-            width: 90 * screenWidth,
-            decoration: BoxDecoration(
-                color: white, borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Text(
-                'Portfolio',
-                style: portfolioSelected == true
-                    ? TextStyle(
-                        color: primary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      )
-                    : TextStyle(
-                        color: grey,
-                        fontSize: 17,
-                      ),
+            Container(
+              height: 54 * screenHeight,
+              width: 5 * screenWidth,
+              color: white,
+            ),
+            GestureDetector(
+              onTap: widget.portfolioCallback,
+              child: Container(
+                width: 76 * screenWidth,
+                alignment: Alignment.center,
+                child: Text(
+                  'Portfolio',
+                  style: portfolioSelected
+                      ? TextStyle(
+                          color: primary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600)
+                      : TextStyle(
+                          color: grey,
+                          fontSize: 17,
+                        ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

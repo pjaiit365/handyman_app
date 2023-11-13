@@ -13,7 +13,7 @@ class JobCompletedScreen extends StatelessWidget {
       appBar: AppBar(
         leading: DefaultBackButton(),
         title: Text(
-          'Job Offer',
+          'Job Completed',
           style: TextStyle(
             color: black,
             fontSize: 18,

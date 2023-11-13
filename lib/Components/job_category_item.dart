@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Job%20Deatils/job_details_screen.dart';
+import 'package:handyman_app/Screens/Job%20Details/job_details_screen.dart';
 
 import '../constants.dart';
 
 class JobCategoryItem extends StatelessWidget {
   final bool status;
   bool isFavouriteSelected;
+  bool isFavourite;
   final String jobType;
   final String name;
   final String price;
   final String imageLocation;
+  final String chargeRate;
   final int index;
+  final String jobItemId;
 
   JobCategoryItem({
     Key? key,
     required this.status,
     this.isFavouriteSelected = false,
+    this.isFavourite = false,
     required this.jobType,
     required this.name,
     required this.price,
     required this.imageLocation,
     required this.index,
+    required this.chargeRate,
+    required this.jobItemId,
   }) : super(key: key);
 
   @override
@@ -28,13 +34,21 @@ class JobCategoryItem extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
+          if (isFavourite == true) {
+            int jobIndex =
+                jobDashboardID.indexOf(handymanFavouritesIDList[index]);
+
+            jobSelectedIndex = jobIndex;
+          } else {
+            jobSelectedIndex = index;
+          }
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => JobDetailsScreen(),
             ),
           );
-          jobSelectedIndex = index;
+          typeClicked = 'Handyman';
         },
         child: Container(
           height: 123 * screenHeight,
@@ -51,13 +65,20 @@ class JobCategoryItem extends StatelessWidget {
                 height: 123 * screenHeight,
                 width: 115 * screenWidth,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage(
-                        imageLocation,
-                      ),
-                    )),
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(imageLocation),
+                  ),
+                ),
+                child: imageLocation == ''
+                    ? Center(
+                        child: Icon(
+                        Icons.person,
+                        color: grey,
+                        size: 40,
+                      ))
+                    : null,
               ),
               VerticalDivider(thickness: 3.5, color: Colors.white),
               Padding(
@@ -164,7 +185,7 @@ class JobCategoryItem extends StatelessWidget {
                                 ),
                           Spacer(),
                           Text(
-                            '\$' + price,
+                            '\$' + price + '/' + chargeRate,
                             style: TextStyle(
                                 fontSize: 19,
                                 color: primary,

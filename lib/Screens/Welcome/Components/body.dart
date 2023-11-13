@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Registration/registration_screen.dart';
@@ -18,7 +20,6 @@ class Body extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
-                top: 50 * screenHeight,
                 left: screenWidth * 37.0,
                 right: 23 * screenWidth,
               ),
@@ -67,10 +68,14 @@ class Body extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50 * screenHeight),
-            Image.asset(
-              'assets/images/welcome_pic.png',
-              height: 223.41 * screenHeight,
+            Container(
+              height: 243.41 * screenHeight,
               width: 381 * screenWidth,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/images/welcome_pic.png'),
+              )),
             ),
             SizedBox(height: 48 * screenHeight),
             Center(

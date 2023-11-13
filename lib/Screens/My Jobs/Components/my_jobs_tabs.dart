@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 
 class MyJobsTabs extends StatefulWidget {
+  final VoidCallback upcomingCallback;
+  final VoidCallback offersCallback;
+  final VoidCallback completedCallback;
   const MyJobsTabs({
     Key? key,
+    required this.upcomingCallback,
+    required this.offersCallback,
+    required this.completedCallback,
   }) : super(key: key);
 
   @override
@@ -28,17 +34,7 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isJobUpcomingClicked = !isJobUpcomingClicked;
-                });
-                if (isJobUpcomingClicked == true) {
-                  isJobCompletedClicked = false;
-                  isJobOffersClicked = false;
-                }
-                if (isJobCompletedClicked == false &&
-                    isJobOffersClicked == false) isJobUpcomingClicked = true;
-              },
+              onTap: widget.upcomingCallback,
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
@@ -64,22 +60,12 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
               color: white,
             ),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isJobOffersClicked = !isJobOffersClicked;
-                });
-                if (isJobOffersClicked == true) {
-                  isJobCompletedClicked = false;
-                  isJobUpcomingClicked = false;
-                }
-                if (isJobCompletedClicked == false &&
-                    isJobUpcomingClicked == false) isJobOffersClicked = true;
-              },
+              onTap: widget.offersCallback,
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,
                 child: Text(
-                  'Offers',
+                  'O & A',
                   style: isJobOffersClicked
                       ? TextStyle(
                           color: primary,
@@ -100,17 +86,7 @@ class _MyJobsTabsState extends State<MyJobsTabs> {
               color: white,
             ),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isJobCompletedClicked = !isJobCompletedClicked;
-                });
-                if (isJobCompletedClicked == true) {
-                  isJobUpcomingClicked = false;
-                  isJobOffersClicked = false;
-                }
-                if (isJobUpcomingClicked == false &&
-                    isJobOffersClicked == false) isJobCompletedClicked = true;
-              },
+              onTap: widget.completedCallback,
               child: Container(
                 alignment: Alignment.center,
                 width: 108 * screenWidth,

@@ -6,10 +6,12 @@ class AddedFileContainer extends StatefulWidget {
   bool isMomoOptions;
   final int index;
   final Widget child;
+  final String fileName;
   AddedFileContainer(
       {Key? key,
       required this.index,
       required this.child,
+      required this.fileName,
       this.isMomoOptions = false})
       : super(key: key);
 
@@ -40,56 +42,39 @@ class _AddedFileContainerState extends State<AddedFileContainer> {
           widget.isMomoOptions
               ? SizedBox(height: 0, width: 0)
               : Image.asset('assets/icons/pdf.png'),
-          (widget.isMomoOptions == true && widget.index == 0)
-              ? Image.asset('assets/icons/mtn_momo.png')
+          widget.isMomoOptions &&
+                  selectedMomoOptions[widget.index] == momoListOptions[0]
+              ? Image.asset(selectedMomoOptionsIcons[0])
               : SizedBox(height: 0, width: 0),
-          (widget.isMomoOptions == true && widget.index == 1)
-              ? Image.asset('assets/icons/vodafone_cash.png')
+          widget.isMomoOptions &&
+                  selectedMomoOptions[widget.index] == momoListOptions[1]
+              ? Image.asset(selectedMomoOptionsIcons[1])
               : SizedBox(height: 0, width: 0),
-          (widget.isMomoOptions == true && widget.index == 2)
-              ? Image.asset('assets/icons/mtn_momo.png')
+          widget.isMomoOptions &&
+                  selectedMomoOptions[widget.index] == momoListOptions[2]
+              ? Image.asset(selectedMomoOptionsIcons[2])
               : SizedBox(height: 0, width: 0),
-          SizedBox(width: 14.4 * screenWidth),
           widget.isMomoOptions
               ? SizedBox(height: 0, width: 0)
-              : SizedBox(
-                  width: 192 * screenWidth,
-                  //TODO: When Cloud Storage is implemented, grab file name and file and place it here on click
-                  child: Text(
-                    'NWA Plumbing Association kiln',
-                    style: TextStyle(
-                      color: black,
-                      fontSize: 16,
+              : Padding(
+                  padding: EdgeInsets.only(left: screenWidth * 10.0),
+                  child: SizedBox(
+                    width: 192 * screenWidth,
+                    child: Text(
+                      widget.fileName,
+                      style: TextStyle(
+                        color: black,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
                   ),
                 ),
-          (widget.isMomoOptions == true && widget.index == 0)
+          widget.isMomoOptions ? SizedBox(width: 15 * screenWidth) : SizedBox(),
+          widget.isMomoOptions
               ? Text(
-                  momoListOptions[widget.index],
-                  style: TextStyle(
-                    color: black,
-                    fontSize: 16,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                )
-              : SizedBox(height: 0, width: 0),
-          (widget.isMomoOptions == true && widget.index == 1)
-              ? Text(
-                  momoListOptions[widget.index],
-                  style: TextStyle(
-                    color: black,
-                    fontSize: 16,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                )
-              : SizedBox(height: 0, width: 0),
-          (widget.isMomoOptions == true && widget.index == 2)
-              ? Text(
-                  momoListOptions[widget.index],
+                  selectedMomoOptions[widget.index],
                   style: TextStyle(
                     color: black,
                     fontSize: 16,

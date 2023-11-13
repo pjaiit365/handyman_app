@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class AppointmentDate extends StatefulWidget {
+int appointmentDateIndex = 0;
+
+class AppointmentDate extends StatelessWidget {
+  final Function onDaySelected;
+  final int selectedDay;
   final int index;
   final String day;
   final String date;
@@ -11,30 +15,29 @@ class AppointmentDate extends StatefulWidget {
     required this.day,
     required this.date,
     required this.index,
+    required this.onDaySelected,
+    required this.selectedDay,
   }) : super(key: key);
 
   @override
-  State<AppointmentDate> createState() => _AppointmentDateState();
-}
-
-class _AppointmentDateState extends State<AppointmentDate> {
-  @override
   Widget build(BuildContext context) {
+    final isDateSelected = selectedDay == index;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          widget.day,
+          day,
           style: TextStyle(
               color: textGreyColor, fontSize: 14, fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 11),
         GestureDetector(
           onTap: () {
-            setState(() {
-              isDateSelected = !isDateSelected;
-            });
+            appointmentDateIndex = index;
+            if (!isDateSelected) {
+              onDaySelected(index);
+            }
           },
           child: Container(
             height: 38 * screenHeight,
@@ -45,7 +48,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
             ),
             child: Center(
               child: Text(
-                widget.date,
+                date,
                 style: TextStyle(
                   color: isDateSelected ? white : black,
                   fontSize: 14,

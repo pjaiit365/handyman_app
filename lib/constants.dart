@@ -1,4 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Screens/Home/Components/body.dart';
 
 late double width;
 late double height;
@@ -11,8 +13,9 @@ Color green = Color(0xff1EDB53);
 Color black = Color(0xff000000);
 Color yellow = Color(0xffFFC10A);
 Color pink = Color(0xffFF7B92);
-Color sectionColor = Color(0xffF5F7F9);
 Color grey = Color(0xffD9D9D9);
+Color sectionColor = Color(0xffF5F7F9);
+
 Color chatBlue = Color(0xff0076F7);
 Color chatRed = Color(0xffFF1AA3);
 Color chatGrey = Color(0xffF2F4F5);
@@ -53,9 +56,19 @@ List<String> ratingComment = [
 ];
 List<bool> isCommentLiked = [true, false, true];
 
-List<double> ratingsWidth = [140, 100, 35, 12, 0];
+List<double> ratingsWidth = [];
 
-List statusOptions = [false, true, true, false, false, false, true, true, true];
+List jobStatusOptions = [
+  false,
+  true,
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true
+];
 
 late int starsGiven;
 bool isGridViewSelected = true;
@@ -71,9 +84,7 @@ List<String> timeList = [
   '3:00 PM',
   '5:00 PM'
 ];
-bool isDateSelected = false;
 bool isAddressBarClicked = false;
-bool isTimeSelected = false;
 bool isDashboardTabSelected = false;
 bool isSummaryClicked = false;
 
@@ -85,11 +96,7 @@ List<String> addressTypesDD = [
 ];
 
 List<String> dashBoardTabList = [
-  'Painter',
-  'Electrician',
-  'Carpenter',
-  'Gardener',
-  'Gardener on the rollll',
+  'All',
 ];
 
 final serviceCategoryList = [
@@ -99,13 +106,20 @@ final serviceCategoryList = [
   'Gardeners'
 ];
 List selectedServiceProvList = [];
+List selectedCertList = [];
+List selectedExperienceList = [];
 
+List uploadCertList = [];
+List uploadExperienceList = [];
+List uploadReferenceList = [];
+List uploadPortfolioList = [];
+
+//to be deleted
 final servicesProvidedList = [
   'Furniture Painting',
   'Building Painting',
   'Room Painting',
 ];
-List selectedChargeRateList = [];
 
 final expertiseList = [
   'N/A',
@@ -127,7 +141,12 @@ final userRoleList = [
   'Regular Customer',
   'Professional Handyman',
 ];
-List selectedMomoOptions = [];
+List<String> selectedMomoOptions = [];
+List<String> selectedMomoOptionsIcons = [
+  'assets/icons/mtn_momo.png',
+  'assets/icons/vodafone_cash.png',
+  'assets/icons/airtel_tigo.png',
+];
 
 final chargePerList = ['N/A', 'Hour', '6 hours', '12 hours', 'Day'];
 final regionsList = [
@@ -157,9 +176,21 @@ final creditCardList = [
   'Discover Card',
 ];
 
+final bankList = [
+  'N/A',
+  'GCB',
+  'Zenith Bank',
+  'Standard Chartered',
+  'ADB Bank',
+];
+
 String dropdownvalue = 'N/A';
+String addressValue = 'Home';
 String roleValue = 'Regular Customer';
 List selectedServiceCatList = [];
+String jobApplicationNote = '';
+
+bool referenceLinkError = false;
 
 int priceIndex = 0;
 
@@ -169,16 +200,23 @@ List addressStreetName = [];
 List addressTownName = [];
 List addressRegionName = [];
 List addressHouseNum = [];
+List categoryList = [];
+List categoryServicesList = [];
+List certificationList = [];
+List experienceList = [];
 
 bool isJobAboutClicked = true;
 bool isJobPortfolioClicked = false;
 
-late String cardSelected = 'N/A';
+String chargeRateSelected = 'N/A';
+String expertiseSelected = 'N/A';
 late String roleSelected = 'Regular Customer';
 
 bool isJobUpcomingClicked = true;
 bool isJobOffersClicked = false;
 bool isJobCompletedClicked = false;
+
+int selectedJob = 3;
 
 final upcomingOrderStatusList = [
   'View Order',
@@ -292,7 +330,6 @@ final completedServices = [
 ];
 
 bool isJobOfferScreen = false;
-bool isPasswordVisible = false;
 bool isRememberMeClicked = false;
 bool isTermsAndCondAgreed = false;
 
@@ -325,93 +362,50 @@ List<String> supportSectionIcons = [
 ];
 
 List<String> customerFavouritesImageList = [];
+List<String> customerFavouritesIDList = [];
 List<String> customerFavouritesNameList = [];
-List<String> customerFavouritesPriceList = [];
+List<String> customerFavouritesChargeList = [];
+List<String> customerFavouritesChargeRateList = [];
 List<String> customerFavouritesRatingList = [];
 List<String> customerFavouritesJobTypeList = [];
 //-----------------------------------------------------------
 List<String> handymanFavouritesImageList = [];
+List<String> handymanFavouritesIDList = [];
 List<String> handymanFavouritesNameList = [];
-List<String> handymanFavouritesPriceList = [];
+List<String> handymanFavouritesChargeList = [];
+List<String> handymanFavouritesChargeRateList = [];
 List<bool> handymanFavouritesStatusList = [];
 List<String> handymanFavouritesJobTypeList = [];
 
 late int handymanSelectedIndex;
 late int jobSelectedIndex;
 
-List<String> handymanDashboardJobType = [
-  'Furniture Painting',
-  'Building Renovations',
-  'Playground Painting',
-  'Painting',
-  'Willow Painting',
-];
+List<String> handymanDashboardJobType = [];
+String jobItemID = '';
 
-List<String> handymanDashboardImage = [
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-];
+List<String> handymanDashboardImage = [];
 
-List<String> handymanDashboardName = [
-  'Harry Garret',
-  'Kevin De Bruyne',
-  'PJ Agrolics',
-  'Ekow Armah',
-  'Harry Garret',
-];
+List<String> handymanDashboardName = [];
+List<String> handymanDashboardID = [];
 
-List<String> handymanDashboardPrice = [
-  '15/hr',
-  '35/hr',
-  '75/hr',
-  '15/hr',
-  '100/hr',
-];
+List<String> handymanDashboardPrice = [];
 
-List<String> handymanDashboardRating = [
-  '4.9',
-  '2.5',
-  '4.7',
-  '4.3',
-  '3.4',
-];
+List<String> handymanDashboardChargeRate = [];
+
+List<String> handymanDashboardRating = [];
 
 //------------------------------------------------
 
-List<String> jobDashboardJobType = [
-  'Furniture Painting asd asds asd asd',
-  'Building Renovations',
-  'Playground Painting',
-  'Painting',
-  'Willow Painting',
-];
+List<String> jobDashboardJobType = [];
 
-List<String> jobDashboardImage = [
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-  'assets/images/profile_pic.jpeg',
-];
+List<String> jobDashboardImage = [];
 
-List<String> jobDashboardName = [
-  'Harry Garret',
-  'Kevin De Bruyne',
-  'PJ Agrolics',
-  'Ekow Armah',
-  'Harry Garret',
-];
+List<String> jobDashboardName = [];
+List<String> jobDashboardID = [];
 
-List<String> jobDashboardPrice = [
-  '15/hr',
-  '35/hr',
-  '75/hr',
-  '15/hr',
-  '100/hr',
-];
+List<String> jobDashboardPrice = [];
+
+List<String> jobDashboardChargeRate = [];
 
 //------------------------------------------
 
@@ -491,3 +485,111 @@ bool registerNumberError = false;
 int activeIndex = 0;
 
 bool isPersonalInfoReadOnly = true;
+bool isPaymentInfoReadOnly = true;
+bool isLocationReadOnly = true;
+bool isServiceInfoReadOnly = true;
+bool isWorkExpReadOnly = true;
+
+String? cardNumberHintText = '';
+String? expiryDateHintText = '';
+String? cvvHintText = '';
+String? payPalHintText = '';
+String? chargeHintText = '';
+String? chargeRateHintText = 'N/A';
+String? expertiseHintText = 'N/A';
+String seenByHintText = 'All';
+String? ratingHintText = '';
+String? jobTotalHintText = 0.toString();
+
+String loggedInUserId = '';
+String imageUrl = '';
+
+List experienceFileNames = [];
+List certificationFileNames = [];
+List referencesList = [];
+
+List<String> addressOptions = [
+  'Home',
+  'Hotel',
+  'Office',
+  'Hostel',
+];
+
+String apppointmentTown = '';
+String apppointmentStreet = '';
+String apppointmentRegion = '';
+String apppointmentHouseNum = '';
+
+String uploadTown = '';
+String uploadStreet = '';
+String uploadRegion = '';
+String uploadHouseNum = '';
+
+String uploadHandymanTown = '';
+String uploadHandymanStreet = '';
+String uploadHandymanRegion = '';
+String uploadHandymanHouseNum = '';
+
+List<String> addedNote = [];
+
+String fileNameStore = '';
+
+String serviceCatHintText = allCategoriesName[0];
+String serviceProvHintText = servicesProvided[0];
+String chargePHint = 'N/A';
+String expertHint = 'N/A';
+
+String handymanServiceCatHintText = 'Painting';
+String handymanServiceProvHintText = 'Furniture Painting';
+String handymanChargePHint = 'N/A';
+String handymanExpertHint = 'N/A';
+
+List<String> seenByList = [
+  'All',
+  'Specific Category',
+];
+
+bool jobUploadReadOnly = false;
+bool isJobUploadEditReadOnly = true;
+bool jobStatus = true;
+
+const int peopleApplied = 0;
+
+String deadline = '';
+
+String deadlineDay = 'Day';
+String deadlineMonth = 'Month';
+String deadlineYear = 'Year';
+
+FilePickerResult? resultList;
+FilePickerResult? resultCertList;
+FilePickerResult? resultExperienceList;
+
+List<String> jobPortfolioUrls = [];
+List<String> uploadListName = [];
+List<String> uploadListTime = [];
+List<String> uploadListCategory = [];
+List<String> uploadListDate = [];
+List<String> uploadListJobStatus = [];
+List<String> uploadListImageUrl = [
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+  'assets/images/profile_pic.jpeg',
+];
+
+late String selectedJobId;
+late String selectedJobType;
+
+String typeClicked = 'Customer';
+String currentJobClickedUserId = '';
+int selectedJobUploadIndex = 0;
+
+List<String> jobApplicationLinks = [];
+
+String jobApplicationTime = '';

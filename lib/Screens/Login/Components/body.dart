@@ -1,18 +1,23 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Forgot%20Password/forgot_password_screen.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Registration/registration_screen.dart';
+import 'package:handyman_app/Services/read_data.dart';
 import 'package:handyman_app/constants.dart';
+import 'package:handyman_app/wrapper.dart';
 import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
 import '../../../Models/users.dart';
-import '../../../Read Data/get_user_first_name.dart';
+import '../../Home/Components/body.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -22,6 +27,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  ReadData readData = ReadData();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -34,22 +41,14 @@ class _BodyState extends State<Body> {
 
   Future signIn() async {
     try {
-      //user sign in with credentials
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      //obtaining current user's UID from firebase
-      userId = FirebaseAuth.instance.currentUser!.uid;
-      //getting current user's data into in-app variable for easy access
-      getUserData();
-
       //display alert dialog box with loading indicator
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
             content: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,30 +57,132 @@ class _BodyState extends State<Body> {
                 (Platform.isIOS)
                     ? const CupertinoActivityIndicator(
                         radius: 20,
+                        color: Color(0xff32B5BD),
                       )
-                    : const CircularProgressIndicator(),
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
               ],
             ),
           );
         },
       );
+      //user sign in with credentials
+      if (_emailController.text.trim() != 'admin@admin.com') {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      } else {
+        setState(() {
+          loginTextFieldError = true;
+        });
+        throw Exception();
+      }
+
+      //obtaining current user's UID from firebase
+      userId = FirebaseAuth.instance.currentUser!.uid;
+      loggedInUserId = userId;
+      //getting current user's data into in-app variable for easy access
+      getUserData();
+      await readData.getUserJobApplicationIDS();
+      await ReadData().getFCMToken(true);
+
+      final userData = await getUserData();
+
+      // If user data is not found, show an error message
+      if (userData == 'User Not Found.') {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('User Not Found'),
+              content: Text('The provided user data was not found.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
 
       //Delaying opening next route(screen) in order to load data needed on next screen
-      await Future.delayed(Duration(seconds: 3), () {
+      await Future.delayed(Duration(seconds: 1), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => Wrapper(),
           ),
         );
       });
 
-      loginTextFieldError = false;
-    } on FirebaseAuthException catch (e) {
       setState(() {
-        loginTextFieldError = true;
+        loginTextFieldError = false;
       });
-      print(e.message.toString());
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      if (e.code == 'wrong-password') {
+        setState(() {
+          loginTextFieldError = true;
+        });
+      }
+
+      print(e.code.toString());
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                e.code.toString().toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${e.message}\nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
+    } catch (err) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Error'.toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${err.toString()} \nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 
@@ -91,14 +192,21 @@ class _BodyState extends State<Body> {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('User ID', isEqualTo: userId)
-        .get();
+        .get()
+        .timeout(
+      Duration(seconds: 30), // Set your desired timeout duration
+      onTimeout: () {
+        throw TimeoutException("Unable to communicate with server.");
+      },
+    );
 
     if (querySnapshot.docs.isNotEmpty) {
       final userData = querySnapshot.docs.first.data();
       final userLogin = UserData(
-        user_id: userData['User ID'],
-        first_name: userData['First Name'],
-        last_name: userData['Last Name'],
+        pic: userData['Pic'],
+        userId: userData['User ID'],
+        firstName: userData['First Name'],
+        lastName: userData['Last Name'],
         number: userData['Mobile Number'],
         email: userData['Email Address'],
         role: userData['Role'],
@@ -157,20 +265,32 @@ class _BodyState extends State<Body> {
                 ),
               ),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 errorTextField: loginTextFieldError,
                 controller: _emailController,
                 title: 'Email Address',
                 hintText: 'Enter email address',
                 isPassword: false,
                 keyboardType: TextInputType.emailAddress,
+                isPasswordVisible: false,
               ),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(
+                      40) // Deny specific characters
+                ],
                 errorTextField: loginTextFieldError,
                 controller: _passwordController,
                 title: 'Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                isPasswordVisible: true,
               ),
               loginTextFieldError
                   ? SizedBox(height: 20 * screenHeight)
@@ -269,7 +389,7 @@ class _BodyState extends State<Body> {
               ),
               SizedBox(height: 30 * screenHeight),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(

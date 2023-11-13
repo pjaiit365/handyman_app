@@ -1,15 +1,19 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Read%20Data/get_user_first_name.dart';
 import 'package:handyman_app/Screens/My%20Jobs/my_jobs_screen.dart';
 import 'package:handyman_app/Screens/Profile/Profile%20-%20Handyman/profile_handyman.dart';
 import 'package:handyman_app/Screens/Settings/settings_screen.dart';
 
 import '../../../../Components/drawer_header.dart';
 import '../../../../Components/drawer_tile.dart';
+import '../../../../Services/read_data.dart';
 import '../../../../constants.dart';
+import '../../../Chat/Sub Screen/chat.dart';
 import '../../../Favourites/Handyman/handyman_favourites_screen.dart';
 import '../../../Home/home_screen.dart';
+import '../../../Job Upload/Handyman/handyman_job_upload_screen.dart';
 import '../../../Login/login_screen.dart';
 import '../../../Notifications/notification_screen.dart';
 
@@ -23,6 +27,7 @@ class HandymanDrawer extends StatelessWidget {
     Future signOut() async {
       await FirebaseAuth.instance.signOut();
       allUsers.clear();
+      imageUrl = '';
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -35,8 +40,8 @@ class HandymanDrawer extends StatelessWidget {
       child: Drawer(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-          topRight: Radius.circular(10),
-          bottomRight: Radius.circular(10),
+          topRight: Radius.circular(5),
+          bottomRight: Radius.circular(5),
         )),
         elevation: 0,
         width: 287 * screenWidth,
@@ -65,9 +70,7 @@ class HandymanDrawer extends StatelessWidget {
                         SizedBox(
                           width: 190 * screenWidth,
                           child: Text(
-                            allUsers[0].first_name +
-                                ' ' +
-                                allUsers[0].last_name,
+                            allUsers[0].firstName + ' ' + allUsers[0].lastName,
                             style: TextStyle(
                               color: black,
                               fontSize: 17,
@@ -138,6 +141,12 @@ class HandymanDrawer extends StatelessWidget {
                   ),
                   SizedBox(height: 27 * screenHeight),
                   DrawerTile(
+                    title: 'Job Upload',
+                    icon: Icons.cloud_upload,
+                    screen: HandymanJobUploadScreen(),
+                  ),
+                  SizedBox(height: 20 * screenHeight),
+                  DrawerTile(
                     title: 'Notification',
                     icon: Icons.notifications,
                     screen: NotificationScreen(),
@@ -163,10 +172,15 @@ class HandymanDrawer extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 27 * screenHeight),
+                  // DrawerTile(
+                  //   title: 'Contact Us',
+                  //   icon: Icons.call,
+                  //   screen: NotificationScreen(),
+                  // ),
                   DrawerTile(
-                    title: 'Contact Us',
-                    icon: Icons.call,
-                    screen: NotificationScreen(),
+                    title: 'Chats',
+                    icon: Icons.textsms_rounded,
+                    screen: ChatMessaging(),
                   ),
                   SizedBox(height: 20 * screenHeight),
                   DrawerTile(

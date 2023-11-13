@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
 class NoteTextArea extends StatelessWidget {
-  const NoteTextArea({
+  final TextEditingController controller;
+  num width;
+  bool isNoteEditable;
+  NoteTextArea({
     Key? key,
+    required this.controller,
+    this.isNoteEditable = true,
+    this.width = 11,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: screenWidth * 11.0),
+      padding: EdgeInsets.only(left: screenWidth * width),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 16 * screenWidth,
@@ -29,6 +36,11 @@ class NoteTextArea extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextField(
+              enabled: isNoteEditable,
+              controller: controller,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(150),
+              ],
               cursorHeight: 22,
               autofocus: false,
               autocorrect: true,
@@ -50,10 +62,10 @@ class NoteTextArea extends StatelessWidget {
                 ),
               ),
               style: TextStyle(
-                overflow: TextOverflow.visible,
-                color: black,
-                fontSize: 17,
-              ),
+                  overflow: TextOverflow.visible,
+                  color: black,
+                  fontSize: 17,
+                  height: 1.4),
             ),
           ],
         ),

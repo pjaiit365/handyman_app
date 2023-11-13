@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:handyman_app/Components/schedule_day_tab.dart';
+import 'package:handyman_app/Components/schedule_time_tab.dart';
 import 'package:handyman_app/Components/summary_element.dart';
 
+import '../Services/read_data.dart';
 import '../constants.dart';
 
 class SummaryDetails extends StatelessWidget {
@@ -30,27 +33,38 @@ class SummaryDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            SummaryElement(title: 'Name', subtitle: 'Harry Garret'),
+            SummaryElement(
+                title: 'Name',
+                subtitle: allUsers[0].firstName + ' ' + allUsers[0].lastName),
             SizedBox(height: 15 * screenHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SummaryElement(title: 'Charge', subtitle: '\$ ' + '15'),
-                SummaryElement(title: 'Charge per', subtitle: 'Hour'),
+                SummaryElement(
+                    title: 'Charge',
+                    subtitle: '\$ ${allJobItemList[0].charge}'),
+                SummaryElement(
+                    title: 'Charge per', subtitle: appointmentChargeRate),
               ],
             ),
             SizedBox(height: 15 * screenHeight),
-            SummaryElement(title: 'Job', subtitle: 'Plumbing'),
+            SummaryElement(
+                title: 'Job', subtitle: allJobItemList[0].jobService),
             SizedBox(height: 15 * screenHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SummaryElement(title: 'Date', subtitle: '01-05-2023'),
+                SummaryElement(
+                  title: 'Date',
+                  subtitle:
+                      '${dates[selectedDay].day > 9 ? dates[selectedDay].day : '0${dates[selectedDay].day}'}-${dates[selectedDay].month > 9 ? dates[selectedDay].month : '0${dates[selectedDay].month}'}-${dates[selectedDay].year}',
+                ),
                 Padding(
                   padding: EdgeInsets.only(right: screenWidth * 8.0),
-                  child: SummaryElement(title: 'Time', subtitle: '10:30 AM'),
+                  child: SummaryElement(
+                      title: 'Time', subtitle: timeList[selectedTime]),
                 ),
               ],
             ),
@@ -64,23 +78,36 @@ class SummaryDetails extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4 * screenHeight),
-            Text(
-              'M9A, LOWER SADELMI,\n'
-                      'AKOSOMBO,\n'
-                      'E/R,GHANA'
-                  .toUpperCase(),
-              style: TextStyle(
-                color: black,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-            ),
+            (apppointmentRegion == '' ||
+                    apppointmentTown == '' ||
+                    apppointmentHouseNum == '' ||
+                    apppointmentStreet == '')
+                ? Text(
+                    'Address is incomplete or empty',
+                    style: TextStyle(
+                      color: red,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  )
+                : Text(
+                    '$apppointmentHouseNum, $apppointmentStreet,\n'
+                            '$apppointmentTown,\n'
+                            '$apppointmentRegion,GHANA \n($addressValue)'
+                        .toUpperCase(),
+                    style: TextStyle(
+                      color: black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
             SizedBox(height: 15 * screenHeight),
             SummaryElement(
               title: 'Note',
-              subtitle: 'Make sure to lock the door and give the '
-                  'keys to the neighbours on your way our. \n\nThank you. ',
-            )
+              subtitle: (jobApplicationNote == '')
+                  ? 'No notes present.'
+                  : '$jobApplicationNote\n\nThank you.',
+            ),
           ],
         ),
       ),

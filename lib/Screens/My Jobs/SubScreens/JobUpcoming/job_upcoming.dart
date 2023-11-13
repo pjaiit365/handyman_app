@@ -13,7 +13,7 @@ class JobUpcomingScreen extends StatelessWidget {
       appBar: AppBar(
         leading: DefaultBackButton(),
         title: Text(
-          'Job Offer',
+          'Upcoming Job',
           style: TextStyle(
             color: black,
             fontSize: 18,

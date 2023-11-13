@@ -1,15 +1,17 @@
 class UserData {
-  final String user_id;
-  final String first_name;
-  final String last_name;
+  final String userId;
+  final String firstName;
+  final String lastName;
   final int number;
   final String email;
   final String role;
+  final String pic;
 
-  const UserData({
-    required this.user_id,
-    required this.first_name,
-    required this.last_name,
+  UserData({
+    required this.userId,
+    required this.pic,
+    required this.firstName,
+    required this.lastName,
     required this.number,
     required this.email,
     required this.role,

@@ -1,14 +1,21 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handyman_app/Screens/Home/home_screen.dart';
 import 'package:handyman_app/Screens/Login/login_screen.dart';
 import 'package:handyman_app/Screens/Registration/Sub%20Screen/Registration%20Continuation/registration_continuation_screen.dart';
-
 import '../../../Components/credentials_button.dart';
 import '../../../Components/credentials_container.dart';
 import '../../../Components/social_media_container.dart';
+import '../../../Models/users.dart';
+import '../../../Services/read_data.dart';
 import '../../../constants.dart';
 
 class Body extends StatefulWidget {
@@ -37,39 +44,163 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
-  Future signUp() async {
+  Future<void> signUp() async {
     try {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: EdgeInsets.symmetric(horizontal: 150 * screenWidth),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                (Platform.isIOS)
+                    ? const CupertinoActivityIndicator(
+                        radius: 20,
+                        color: Color(0xff32B5BD),
+                      )
+                    : const CircularProgressIndicator(
+                        color: Color(0xff32B5BD),
+                      ),
+              ],
+            ),
+          );
+        },
+      );
+
       if (confirmPassword() &&
           firstName() &&
           lastName() &&
           email() &&
           number()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim());
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => roleSelected == 'Regular Customer'
-                ? HomeScreen()
-                : RegistrationContinuationScreen(),
-          ),
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
         );
 
-        final userId = await FirebaseAuth.instance.currentUser;
+        userId = FirebaseAuth.instance.currentUser!.uid;
+        loggedInUserId = userId;
+
+        await ReadData().getFCMToken(false);
 
         addDetails(
           _firstNameController.text.trim(),
           _lastNameController.text.trim(),
           _emailController.text.trim(),
-          int.parse(_numberController.text.trim()),
+          0 + int.parse(_numberController.text),
           roleSelected,
-          userId!.uid,
+          userId,
+          fcmToken,
         );
+
+        addProfileDetails(
+          userId, //userId
+          '', //momoType
+          null, //card number
+          null, //expiry date
+          null, //cvv
+          null, //paypal
+          '', //street name
+          '', //town
+          '', //region
+          '', //house number
+        );
+
+        allUsers.clear();
+        getUserData();
+
+        final userData = await getUserData();
+
+        // If user data is not found, show an error message
+        if (userData == 'User Not Found.') {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('User Not Found'),
+                content: Text('The provided user data was not found.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+          return;
+        }
+
+        await Future.delayed(Duration(seconds: 1), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => roleValue == 'Regular Customer'
+                  ? HomeScreen()
+                  : RegistrationContinuationScreen(),
+            ),
+          );
+        });
       }
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+
+      print(e.code.toString());
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                e.code.toString().toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${e.message}\nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
+    } catch (err) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Error'.toUpperCase(),
+                style: TextStyle(color: primary, fontSize: 17),
+              ),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: Text(
+              '${err.toString()} \nTry again later.',
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 16,
+                color: black,
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 
@@ -149,7 +280,7 @@ class _BodyState extends State<Body> {
   }
 
   Future addDetails(String firstName, String lastName, String email, int number,
-      String role, String id) async {
+      String role, String id, String token) async {
     FirebaseFirestore.instance.collection('users').add(
       {
         'First Name': firstName,
@@ -158,8 +289,66 @@ class _BodyState extends State<Body> {
         'Mobile Number': number,
         'Role': role,
         'User ID': id,
+        'Pic': '',
+        'FCM Token': token,
       },
     );
+  }
+
+  Future addProfileDetails(
+      String id,
+      String? momoType,
+      int? cardNumber,
+      String? expiryDate,
+      int? cvv,
+      String? payPal,
+      String? streetName,
+      String? town,
+      String? region,
+      String? houseNum) async {
+    //creating a collection in firestore database called 'Profile'
+    await FirebaseFirestore.instance.collection('profile').add({
+      'User ID': id,
+      'Mobile Money Type': selectedMomoOptions,
+      'Credit Card Information': {
+        'Card Number': cardNumber,
+        'Expiry Date': expiryDate,
+        'CVV': cvv,
+      },
+      'PayPal': payPal,
+      'Address Information': {
+        'Street Name': streetName,
+        'Town': town,
+        'Region': region,
+        'House Number': houseNum,
+      },
+    });
+  }
+
+  late final String userId;
+
+  Future getUserData() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('User ID', isEqualTo: userId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final userData = querySnapshot.docs.first.data();
+      final userLogin = UserData(
+        pic: userData['Pic'],
+        userId: userData['User ID'],
+        firstName: userData['First Name'],
+        lastName: userData['Last Name'],
+        number: userData['Mobile Number'],
+        email: userData['Email Address'],
+        role: userData['Role'],
+      );
+      allUsers.add(userLogin);
+      return userData;
+    } else {
+      return 'User Not Found.';
+    }
   }
 
   @override
@@ -203,6 +392,11 @@ class _BodyState extends State<Body> {
                 ),
               ),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 errorTextField: registerFirstNameError,
                 controller: _firstNameController,
                 title: 'First Name',
@@ -225,6 +419,11 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp("[a-zA-Z\\s]")), // Only allow letters and spaces
+                  LengthLimitingTextInputFormatter(25),
+                ],
                 errorTextField: registerLastNameError,
                 controller: _lastNameController,
                 title: 'Last Name',
@@ -247,6 +446,12 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@.]')),
+
+                  LengthLimitingTextInputFormatter(
+                      30) // Deny specific characters
+                ],
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 title: 'Email Address',
@@ -269,10 +474,15 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(
+                      40) // Deny specific characters
+                ],
                 controller: _passwordController,
                 title: 'Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                isPasswordVisible: true,
                 errorTextField: registerPasswordError,
               ),
               registerPasswordError
@@ -290,10 +500,15 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(
+                      40) // Deny specific characters
+                ],
                 controller: _confirmPasswordController,
                 title: 'Confirm Password',
                 hintText: 'Enter password',
                 isPassword: true,
+                isPasswordVisible: true,
                 errorTextField: registerPasswordError,
               ),
               registerPasswordError
@@ -311,6 +526,11 @@ class _BodyState extends State<Body> {
                   : SizedBox(),
               SizedBox(height: 20 * screenHeight),
               CredentialsContainer(
+                inputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                  // numberMask,
+                ],
                 keyboardType: TextInputType.number,
                 controller: _numberController,
                 title: 'Mobile Number',

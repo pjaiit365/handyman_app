@@ -14,6 +14,7 @@ class Wrapper extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            loggedInUserId = FirebaseAuth.instance.currentUser!.uid;
             return HomeScreen();
           } else {
             return WelcomeScreen();

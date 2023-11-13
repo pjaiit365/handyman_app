@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class MediaViewTypeTab extends StatefulWidget {
+  final VoidCallback gridCallback;
+  final VoidCallback singleCallback;
   const MediaViewTypeTab({
     Key? key,
+    required this.gridCallback,
+    required this.singleCallback,
   }) : super(key: key);
 
   @override
@@ -28,14 +32,7 @@ class _MediaViewTypeTabState extends State<MediaViewTypeTab> {
           children: <Widget>[
             SizedBox(width: 42 * screenWidth),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isGridViewSelected = !isGridViewSelected;
-
-                  if (isGridViewSelected == true) isSingleViewSelected = false;
-                  if (isSingleViewSelected == false) isGridViewSelected = true;
-                });
-              },
+              onTap: widget.gridCallback,
               child: Text(
                 'Grid View',
                 style: isGridViewSelected
@@ -61,14 +58,7 @@ class _MediaViewTypeTabState extends State<MediaViewTypeTab> {
             ),
             SizedBox(width: 30.5 * screenWidth),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  isSingleViewSelected = !isSingleViewSelected;
-
-                  if (isSingleViewSelected == true) isGridViewSelected = false;
-                  if (isGridViewSelected == false) isSingleViewSelected = true;
-                });
-              },
+              onTap: widget.singleCallback,
               child: Text(
                 'Single View',
                 style: isSingleViewSelected

@@ -5,6 +5,7 @@ import 'package:handyman_app/Components/personnel_rating_summary.dart';
 import '../constants.dart';
 
 class ProfileItem extends StatelessWidget {
+  final List<TextInputFormatter> inputFormatter;
   TextEditingController? controller;
   String imageAssetLocation;
   final String title;
@@ -18,6 +19,7 @@ class ProfileItem extends StatelessWidget {
   bool isReadOnly;
   bool isHintText;
   num width;
+  int maxLength;
   ProfileItem({
     Key? key,
     required this.title,
@@ -30,8 +32,10 @@ class ProfileItem extends StatelessWidget {
     this.isReadOnly = true,
     this.isInputObscured = false,
     this.isHintText = true,
+    this.maxLength = 1000,
     this.imageAssetLocation = 'assets/icons/credit_card.png',
     this.width = 0,
+    required this.inputFormatter,
     TextEditingController? controller,
   })  : controller = controller ?? TextEditingController(),
         super(key: key);
@@ -69,17 +73,18 @@ class ProfileItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    PersonnelRatingSummary(),
+                    PersonnelRatingSummary(rating: ratingHintText.toString()),
                   ],
                 )
               : TextField(
+                  textAlignVertical: TextAlignVertical.center,
                   controller: controller,
                   readOnly: isReadOnly,
                   obscureText: isInputObscured ? true : false,
                   obscuringCharacter: "*",
-                  maxLength: isInputObscured ? 4 : null,
+                  maxLength: isInputObscured ? 4 : maxLength,
                   keyboardType: keyboardType,
-                  cursorHeight: 25 * screenHeight,
+                  cursorHeight: 18 * screenHeight,
                   enableSuggestions: true,
                   autocorrect: true,
                   cursorColor: black,
@@ -98,10 +103,11 @@ class ProfileItem extends StatelessWidget {
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     hintStyle: TextStyle(
-                        fontSize: 16,
-                        color: black,
-                        fontWeight:
-                            isHintText ? FontWeight.w200 : FontWeight.w400),
+                      fontSize: 16,
+                      color: black,
+                      fontWeight:
+                          isHintText ? FontWeight.w200 : FontWeight.w400,
+                    ),
                     contentPadding: EdgeInsets.symmetric(
                         horizontal: 15 * screenWidth,
                         vertical: 15 * screenHeight),
@@ -113,6 +119,7 @@ class ProfileItem extends StatelessWidget {
                     fontSize: 16,
                     overflow: TextOverflow.clip,
                   ),
+                  inputFormatters: inputFormatter,
                 ),
         ),
       ],
@@ -121,6 +128,7 @@ class ProfileItem extends StatelessWidget {
 }
 
 class ProfileAddressItem extends StatelessWidget {
+  final List<TextInputFormatter> inputFormatter;
   String imageAssetLocation;
   final String title;
   final String hintText;
@@ -145,6 +153,7 @@ class ProfileAddressItem extends StatelessWidget {
     this.imageAssetLocation = 'assets/icons/credit_card.png',
     this.width = 0,
     this.textEditingController,
+    required this.inputFormatter,
   }) : super(key: key);
 
   @override
@@ -173,6 +182,8 @@ class ProfileAddressItem extends StatelessWidget {
             border: Border.all(color: appointmentTimeColor, width: 1),
           ),
           child: TextField(
+            inputFormatters: inputFormatter,
+            textAlignVertical: TextAlignVertical.center,
             enableSuggestions: true,
             // autocorrect: true,
             obscureText: isInputObscured ? true : false,

@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
 class CredentialsContainer extends StatefulWidget {
+  final List<TextInputFormatter> inputFormatter;
   bool errorTextField;
   final TextEditingController controller;
   final String title;
   String iconText;
   final String hintText;
   bool isPassword;
+  bool isPasswordVisible;
+  bool isMobileNumber;
   TextInputType keyboardType;
 
   CredentialsContainer({
     Key? key,
     required this.title,
     this.isPassword = false,
+    this.isPasswordVisible = false,
     this.keyboardType = TextInputType.name,
     this.iconText = '@',
     this.errorTextField = false,
+    this.isMobileNumber = false,
     required this.hintText,
     required this.controller,
+    required this.inputFormatter,
   }) : super(key: key);
 
   @override
@@ -62,7 +69,7 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
                     width: 1),
               ),
               child: Center(
-                child: widget.isPassword
+                child: widget.isPasswordVisible
                     ? Image.asset(
                         'assets/icons/lock.png',
                         height: 14.22 * screenHeight,
@@ -93,18 +100,23 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
               ),
               padding: EdgeInsets.only(left: 16 * screenWidth),
               child: TextField(
+                inputFormatters: widget.inputFormatter,
+                maxLength: widget.isMobileNumber ? 10 : null,
+                textAlign: TextAlign.left,
+                textAlignVertical: TextAlignVertical.center,
                 keyboardType: widget.keyboardType,
                 controller: widget.controller,
                 obscureText: widget.isPassword ? true : false,
                 textCapitalization: TextCapitalization.sentences,
-                cursorHeight: 22,
+                cursorHeight: 18 * screenHeight,
                 autofocus: false,
                 autocorrect: true,
                 enableSuggestions: true,
                 clipBehavior: Clip.antiAlias,
                 cursorColor: black.withOpacity(0.6),
                 decoration: InputDecoration(
-                    suffixIcon: widget.isPassword
+                    counterText: '',
+                    suffixIcon: widget.isPasswordVisible
                         ? Padding(
                             padding: EdgeInsets.only(right: screenWidth * 4.0),
                             child: IconButton(
@@ -112,16 +124,21 @@ class _CredentialsContainerState extends State<CredentialsContainer> {
                                 splashColor: Colors.transparent,
                                 onPressed: () {
                                   setState(() {
-                                    isPasswordVisible = !isPasswordVisible;
+                                    widget.isPassword = !widget.isPassword;
+                                    if (widget.isPassword == true) {
+                                      widget.isPassword = true;
+                                    } else {
+                                      widget.isPassword = false;
+                                    }
                                   });
                                 },
-                                icon: isPasswordVisible
+                                icon: widget.isPassword
                                     ? Icon(
-                                        Icons.visibility_off_rounded,
+                                        Icons.visibility,
                                         color: semiGrey,
                                       )
                                     : Icon(
-                                        Icons.visibility,
+                                        Icons.visibility_off_rounded,
                                         color: semiGrey,
                                       )),
                           )

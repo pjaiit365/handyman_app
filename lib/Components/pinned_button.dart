@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:handyman_app/Screens/Successful/booking_successful_screen.dart';
+import 'package:handyman_app/Screens/Successful/Booking%20Successful/booking_successful_screen.dart';
 
 import '../constants.dart';
 
 class PinnedButton extends StatelessWidget {
+  Function? function;
+  IconData icon;
   Widget screen;
   String buttonText;
   bool isIconPresent;
   PinnedButton({
+    this.icon = Icons.check_circle_rounded,
     Key? key,
     this.buttonText = 'Proceed',
     this.isIconPresent = false,
     this.screen = const BookingSuccessfulScreen(),
+    this.function,
   }) : super(key: key);
 
   @override
@@ -20,11 +24,12 @@ class PinnedButton extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => screen,
-              ));
+          function!();
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => screen,
+          //     ));
         },
         child: Container(
           height: 56 * screenHeight,
@@ -42,10 +47,7 @@ class PinnedButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                      Image.asset(
-                        'assets/icons/correct.png',
-                        color: white,
-                      ),
+                      Icon(icon, color: white),
                       SizedBox(width: 9 * screenWidth),
                       Text(
                         buttonText,
