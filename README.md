@@ -1,4 +1,3 @@
-
 # HomeCareX: A HANDYMAN SERVICE MOBILE APPLICATION FOR BOTH iOS AND ANDROID
 ## KWAME NKRUMAH UNIVERSITY OF SCIENCE AND TECHNOLOGY,
 ## COLLEGE OF SCIENCE, 
@@ -114,7 +113,7 @@ Waterfall methodology is a sequential development process that flows like a wate
 
 The UI elements were built from tools provided by the Flutter Software Development Kit (SDK).
 Cloud Firestore was used  as the back-end database.
-Cloud Firestore is a noSQL database which means it does not follow any schema. However the data had to be modeled after a schema in order to keep this organized.
+Cloud Firestore is a noSQL database which means it does not follow any schema. However, the data had to be modeled after a schema in order to keep this organized.
 
 ### PROJECT MOTIVATION
 
@@ -125,9 +124,43 @@ In addition to that, is the fact that the automation of this process is yet to b
 
 
 ### RESULTS & UI DESIGN
+#### FLOWCHART
+![flowchart (1)](https://github.com/pjaiit365/handyman_app/assets/56177177/f99aacc6-282b-4ee8-8156-4728a428b351)
+
+#### RESULTS (PRODUCT DIFFERENTIATION FEATURES)
+##### Authentication
+Sign In
+![auth_signIn](https://github.com/pjaiit365/handyman_app/assets/56177177/bdad3006-503e-4124-abdc-5d50288ae971)
+
+Sign Out
+![auth_signOut](https://github.com/pjaiit365/handyman_app/assets/56177177/38dbbd03-6854-4910-b65d-d0107215c7c8)
+
+##### Storage
+Add (Write)
+![storage_add](https://github.com/pjaiit365/handyman_app/assets/56177177/c34f7ac6-a3d4-419f-ad57-e284e987885f)
+
+Delete 
+![storage_delete](https://github.com/pjaiit365/handyman_app/assets/56177177/9663170a-6933-466b-bfa9-11d72d583f2b)
+
+##### Cloud Firestore (Database)
+Write
+![database_write](https://github.com/pjaiit365/handyman_app/assets/56177177/6f1ab53b-d7fc-43c4-a10a-b7699d4d1008)
+
+Read
+![database_read](https://github.com/pjaiit365/handyman_app/assets/56177177/82ae28e4-d46a-4120-b830-2c494628b76b)
+
+Delete
+![database_delete_1](https://github.com/pjaiit365/handyman_app/assets/56177177/d8e52dc2-2bf3-4af6-a74a-40972758e7e5)
+![database_delete_2](https://github.com/pjaiit365/handyman_app/assets/56177177/4188b9d7-d43e-4c68-97cf-4890f9da31f1)
+
+##### Chat Service
+![chat_service](https://github.com/pjaiit365/handyman_app/assets/56177177/54767af7-5d22-4aa4-addb-832ad6db05f4)
+
+##### Notification Service
+![notification_service](https://github.com/pjaiit365/handyman_app/assets/56177177/b8af1f0d-e71c-42ea-a741-6bbdbb893c03)
+
 
 #### UI DESIGN
-
 ![splash_1](https://github.com/pjaiit365/handyman_app/assets/56177177/deeda668-96ed-4dcd-9b6b-eeab217eaee7) ![splash_2](https://github.com/pjaiit365/handyman_app/assets/56177177/1f26983b-d246-4a15-a25a-363d8ff2529c) ![welcome](https://github.com/pjaiit365/handyman_app/assets/56177177/3a0bb399-dd2f-46ff-9377-6173d0313aac)
 
 ![login](https://github.com/pjaiit365/handyman_app/assets/56177177/cd2f4602-837a-444f-850b-3d266e1323d3) ![sign_up](https://github.com/pjaiit365/handyman_app/assets/56177177/f60ac0df-9ef7-4cc3-b78d-866b4d455dc6) ![forgot_password](https://github.com/pjaiit365/handyman_app/assets/56177177/6a1dfb7c-3d04-41e3-931e-f3f0fe89c75e)
@@ -136,7 +169,7 @@ In addition to that, is the fact that the automation of this process is yet to b
 
 ![customer_profile](https://github.com/pjaiit365/handyman_app/assets/56177177/8677c9f0-2a96-4dd1-94c7-4ce4f1267fc3) ![notification](https://github.com/pjaiit365/handyman_app/assets/56177177/34754f01-f156-4d77-8fd3-dc10976a757d) ![settings](https://github.com/pjaiit365/handyman_app/assets/56177177/d7f7fb70-71a3-4575-85e7-ec01102ebae5)
 
-![customer_about](https://github.com/pjaiit365/handyman_app/assets/56177177/94cb6530-3bfd-4916-af47-817429fbef3a) ![customer_review](https://github.com/pjaiit365/handyman_app/assets/56177177/02a20b2f-799d-4f53-9a48-2dd1fc6b705e) ![handyman_portfolio](https://github.com/pjaiit365/handyman_app/assets/56177177/2fb0f1e0-8ca6-4634-9084-6b1a6f21558c)
+ ![handyman_about](https://github.com/pjaiit365/handyman_app/assets/56177177/13de8368-d927-4813-be7f-31383cf2d171) ![customer_review](https://github.com/pjaiit365/handyman_app/assets/56177177/a856dbb6-7fdd-4f30-9785-aef0a5ec8356) ![handyman_portfolio](https://github.com/pjaiit365/handyman_app/assets/56177177/2fb0f1e0-8ca6-4634-9084-6b1a6f21558c)
 
 ![appointment](https://github.com/pjaiit365/handyman_app/assets/56177177/d6dcfb36-6436-4a53-9501-cedb42940034) ![appointment_summary](https://github.com/pjaiit365/handyman_app/assets/56177177/bb0e767b-2e5c-4770-aee8-d0372f70a318) ![appointment_schedule](https://github.com/pjaiit365/handyman_app/assets/56177177/bcd060bd-5cab-44cf-9bca-bcc0e8c7d53a)
 
@@ -144,26 +177,23 @@ In addition to that, is the fact that the automation of this process is yet to b
 
 ![job_upload](https://github.com/pjaiit365/handyman_app/assets/56177177/5e80b723-3b0f-40b0-bb69-6e0b8f6f2bad) ![job_upload_list](https://github.com/pjaiit365/handyman_app/assets/56177177/0f2898fc-5b3f-4953-9c0c-8ccff405b62e) ![job_upload_view](https://github.com/pjaiit365/handyman_app/assets/56177177/41c848ae-a52e-4513-adb2-8f7a7eb4a0cd)
 
+![upcoming_booking](https://github.com/pjaiit365/handyman_app/assets/56177177/c8e30d42-d9ca-4b2f-93c2-16d11ada3b16) ![appled offers_booking](https://github.com/pjaiit365/handyman_app/assets/56177177/0af6b832-fc10-4bb9-8b2b-31cbee86eed0) ![completed_bookings](https://github.com/pjaiit365/handyman_app/assets/56177177/b3668334-c961-481b-a99a-b8d369c7c56b)
 
+![applied_booking_view](https://github.com/pjaiit365/handyman_app/assets/56177177/f7f4e828-d513-4f82-9325-0d45ac84a620) ![job_applic_delete](https://github.com/pjaiit365/handyman_app/assets/56177177/0d40d255-0ae3-41e2-b85d-0314bc095457)
 
+![jobs_dashboard](https://github.com/pjaiit365/handyman_app/assets/56177177/7e873b6e-1559-48cb-9a95-af8b86d299e7) ![customer_about](https://github.com/pjaiit365/handyman_app/assets/56177177/b511dd4a-5292-4866-a078-ec704c0f39e4) ![customer_portfolio](https://github.com/pjaiit365/handyman_app/assets/56177177/933ec2b8-fe78-4054-81ed-77cff7a380b9)
 
+![handyman_job_applic](https://github.com/pjaiit365/handyman_app/assets/56177177/da542945-9d95-4fd8-9c79-0d0dd0535002) ![apply](https://github.com/pjaiit365/handyman_app/assets/56177177/a4e82ef4-b804-473d-a3de-86025488e206) ![apply_error](https://github.com/pjaiit365/handyman_app/assets/56177177/98f10045-d553-4b8b-bfde-7d11800ada36)
 
+![o a_offers](https://github.com/pjaiit365/handyman_app/assets/56177177/543ab5f9-2a86-4c79-9c28-8816c6e4448a) ![offer_acceptance](https://github.com/pjaiit365/handyman_app/assets/56177177/2fdb23ef-bccd-4e2e-a5c9-d08f0b031c2f) ![job_offer_decline](https://github.com/pjaiit365/handyman_app/assets/56177177/871dac18-1f74-4b87-9f91-96f8928181cc)
 
+![upcoming job](https://github.com/pjaiit365/handyman_app/assets/56177177/4ddb7c9f-892e-4f72-b3fe-5570026db1f6) ![job_in_progress](https://github.com/pjaiit365/handyman_app/assets/56177177/d9052e3d-9516-403a-88c9-34a50516a845) ![location](https://github.com/pjaiit365/handyman_app/assets/56177177/1f6989fd-6f79-42b6-aca5-20de1a356f4e)
 
+![rate handyman](https://github.com/pjaiit365/handyman_app/assets/56177177/db22a7fd-df63-4ac4-82e4-7f649630398f) ![completed_screen](https://github.com/pjaiit365/handyman_app/assets/56177177/4cc06b46-ea2e-41dc-a168-977b52d63fa2) ![job_completed_view](https://github.com/pjaiit365/handyman_app/assets/56177177/fa72305f-1524-4752-a18c-a6c766a24dc1)
 
+![payment_options](https://github.com/pjaiit365/handyman_app/assets/56177177/f982d00c-b16c-4e1e-9add-31d6e741bc30) ![momo_payment](https://github.com/pjaiit365/handyman_app/assets/56177177/0490460e-3341-4bce-92a4-de97026a9a88) ![cc_payment](https://github.com/pjaiit365/handyman_app/assets/56177177/81749560-0553-4825-997d-2757cbab5ec3)
 
-
-
-
-
-
-
-
-
-
-
-
-
+![payment](https://github.com/pjaiit365/handyman_app/assets/56177177/89f26fd8-d259-4fef-9c23-4341e183e6ad) ![payment_and_cards](https://github.com/pjaiit365/handyman_app/assets/56177177/f83457ed-46e5-414e-baa5-4f8ac1ea635f) ![favourites](https://github.com/pjaiit365/handyman_app/assets/56177177/16a9af38-80dc-4082-8fa5-a69d6e31e9de)
 
 
 ### IMPLEMENTATION
